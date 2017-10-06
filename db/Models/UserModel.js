@@ -19,13 +19,16 @@ var UserModel= (function () {
 
     /**
      * @param data
+     * @param callback
      */
-    var insertOrUpdate = function(data){
-        data._id= 1;
-        db.collection(collection_name).upsert(data);
+    var store = function(data, callback){
+        callback= PolishedUtility_.callback(callback);
+
+        db.collection(collection_name).insert(data);
+
         db.collection(collection_name).save(function (err) {
-            if (!err) {/* Save was successful */}
-            else{ alert('Error al guardar en '+collection_name);}
+            if (!err) {callback.success();}
+            else{callback.fail(); alert('Error al guardar en '+collection_name);}
         });
     };
 
@@ -41,12 +44,6 @@ var UserModel= (function () {
         return get() === null;
     };
 
-    var is_user_logged = function(){
-        if(isEmpty())
-            return false;
-        return true;
-    };
-
     var loaded= function(callback){
         if(isLoaded)
             callback();
@@ -56,11 +53,10 @@ var UserModel= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            insertOrUpdate    : insertOrUpdate,
             get               : get,
-            isEmpty           : isEmpty,
+            store             : store,
             loaded            : loaded,
-            is_user_logged    : is_user_logged,
+            isEmpty           : isEmpty,
         }
     };
     return {construct:construct};//retorna los metodos publicos

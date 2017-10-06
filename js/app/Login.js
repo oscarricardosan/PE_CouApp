@@ -1,8 +1,9 @@
 var Login= (function () {
 
     /**
-     * @param user string
+     * @param email string
      * @param password string
+     * @param callback json
      */
     var login= function(email, password, callback){
         var request = $.ajax({
@@ -10,7 +11,7 @@ var Login= (function () {
             type: 'post',
             dataType: "json",
             data: {
-                email: email,
+                email_usr: email,
                 password: password
             }
         });
