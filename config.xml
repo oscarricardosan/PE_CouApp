@@ -11,6 +11,8 @@
 
     <name>Courier APP</name>
 
+    <content src="login.html"/>
+
     <description>Aplicación para courier</description>
 
     <author href="http://savne.net/" email="oscar.sanchez@savne.net">Oscar Sanchez</author>
