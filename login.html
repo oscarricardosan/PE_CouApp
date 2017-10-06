@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-
     <title>Courier App</title>
-
 
     <!-- ForerunNerdb -->
     <script src="resources/ForerunnerDB-master/js/dist/fdb-all.js" type="text/javascript"></script>
@@ -16,6 +14,9 @@
     <script type="application/javascript" src="db/Models/MigrationModel.js"></script>
     <script type="application/javascript" src="db/Models/UserModel.js"></script>
     <script type="application/javascript" src="db/run_migrations.js"></script>
+
+    <!-- jQuery 3 -->
+    <script src="tpl/bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- VUE -->
     <script src="js/vue.min.js" type="text/javascript"></script>
@@ -25,34 +26,51 @@
 
     <script type="text/javascript" src="cordova.js"></script>
 
-    <!-- JQUERY -->
-    <script src="resources/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
-
     <!-- ACCOUNTING_JS -->
     <script src="resources/bower_components/accounting/accounting.min.js" type="text/javascript"></script>
 
-    <!-- BOOTSTRAP -->
-    <link rel="stylesheet" href="resources/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <script src="resources/bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-
-    <!-- ADMINLTE -->
-    <link rel="stylesheet" href="css/adminLte.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="tpl/dist/css/AdminLTE.min.css">
 
     <!-- BOOTSTRAP-VALIDATOR -->
     <script src="resources/bower_components/bootstrap-validator/dist/validator.min.js" type="text/javascript"></script>
 
-    <!-- SELECT 2 -->
-    <link rel="stylesheet" href="resources/bower_components/select2/dist/css/select2.min.css">
-    <script src="resources/bower_components/select2/dist/js/select2.js" type="text/javascript"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="tpl/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="tpl/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="tpl/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="tpl/bower_components/select2/dist/css/select2.min.css">
 
-    <!-- FONTAWESOME -->
-    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="tpl/dist/css/AdminLTE.min.css">
+
+    <script src="tpl/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     <!-- MENU -->
     <link rel="stylesheet" href="css/menu.css">
 
     <!-- UTILITIES -->
     <link rel="stylesheet" href="css/app.css">
+
+    <!-- UTILITIES -->
+    <script src="js/utilities/JqueryUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/AjaxUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/FormUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/ToastrUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/UrlUtility_.js" type="text/javascript"></script>
+
+    <!-- APP -->
+    <script src="js/app/Settings.js" type="text/javascript"></script>
+    <script src="js/app/Login.js" type="text/javascript"></script>
+    <script src="js/setup_front.js" type="text/javascript"></script>
+
+    <script src="js/Options/login.js" type="text/javascript"></script>
+    <script src="tpl/bower_components/moment/min/locales.js"></script>
+
 </head>
 <body class="hold-transition login-page" style="padding-top: 0;">
     <div class="login-box">
@@ -63,14 +81,23 @@
         <div class="login-box-body">
             <p class="login-box-msg">Datos de Usuario</p>
 
-            <form action="../../index2.html" method="post">
+            <form method="post" id="formLogin" data-toggle="validator" >
                 <div class="form-group has-feedback">
-                    <input type="email" class="form-control" placeholder="Email">
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    <input type="text" class="form-control" placeholder="Usuario" id="username" required>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Contraseña">
+                    <select class="select2 form-control" id="user_email_domain" required>
+                        <option value="@pasar.net">@pasar.net</option>
+                    </select>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="Contraseña" id="userpassword" required>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
