@@ -1,6 +1,6 @@
 
 UserModel.loaded(function(){
-    alert('entre');
-    //console.log(Default_calculatorModel.get());
+    if(!UserModel.is_user_logged())
+        window.location.href = 'login.html';
 });
 

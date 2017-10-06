@@ -41,6 +41,12 @@ var UserModel= (function () {
         return get() === null;
     };
 
+    var is_user_logged = function(){
+        if(isEmpty())
+            return false;
+        return true;
+    };
+
     var loaded= function(callback){
         if(isLoaded)
             callback();
@@ -53,7 +59,8 @@ var UserModel= (function () {
             insertOrUpdate    : insertOrUpdate,
             get               : get,
             isEmpty           : isEmpty,
-            loaded            : loaded
+            loaded            : loaded,
+            is_user_logged    : is_user_logged,
         }
     };
     return {construct:construct};//retorna los metodos publicos
