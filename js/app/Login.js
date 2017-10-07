@@ -24,9 +24,16 @@ var Login= (function () {
         });
     };
 
+    var is_logged_in= function (callback) {
+        UserModel.loaded(function(){
+            callback(!UserModel.isEmpty(), UserModel.get())
+        });
+    }
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            login    : login,
+            login        : login,
+            is_logged_in : is_logged_in,
         }
     };
     return {construct:construct};//retorna los metodos publicos
