@@ -14,6 +14,7 @@ $(document).ready(function(){
 
         callback= {
             success: function(response){
+                response.token_generated_at= moment().year()+''+moment().month()+''+moment().date();
                 UserModel.store(response, {
                     success: function(){ window.location.href= 'index.html';}
                 });

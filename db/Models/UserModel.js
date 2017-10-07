@@ -2,7 +2,7 @@ var UserModel= (function () {
 
     var collection_name= 'user';
 
-    var loaded_Callback= function(){};
+    var loaded_Callback= [];
     var isLoaded= false;
 
     /**
@@ -10,7 +10,9 @@ var UserModel= (function () {
      */
     db.collection(collection_name, {capped: true, size: 1}).load(function (err, tableStats, metaStats) {
         if (!err) {
-            loaded_Callback();
+            $.each(loaded_Callback, function(){
+                this();
+            });
             isLoaded= true;
         }else{
             alert('Error al cargar colección '+collection_name)
@@ -44,11 +46,19 @@ var UserModel= (function () {
         return get() === null;
     };
 
+    var drop= function(callback){
+        var coll = db.collection(collection_name);
+        coll.on("drop", function () {
+            callback()
+        });
+        coll.drop();
+    }
+
     var loaded= function(callback){
         if(isLoaded)
             callback();
         else
-            loaded_Callback= callback;
+            loaded_Callback.push(callback);
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
@@ -57,6 +67,7 @@ var UserModel= (function () {
             store             : store,
             loaded            : loaded,
             isEmpty           : isEmpty,
+            drop              : drop
         }
     };
     return {construct:construct};//retorna los metodos publicos

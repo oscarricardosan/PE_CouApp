@@ -26,7 +26,18 @@ var Login= (function () {
 
     var is_logged_in= function (callback) {
         UserModel.loaded(function(){
-            callback(!UserModel.isEmpty(), UserModel.get())
+            var user= UserModel.get();
+            var nowadte= moment().year()+''+moment().month()+''+moment().date();
+            var success= false;
+            if(!UserModel.isEmpty() && user.token_generated_at == nowadte)
+                success= true;
+            callback(success, user)
+        });
+    }
+
+    var logout= function (callback) {
+        UserModel.drop(function(){
+            window.location.href= 'login.html';
         });
     }
 
@@ -34,6 +45,7 @@ var Login= (function () {
         return {
             login        : login,
             is_logged_in : is_logged_in,
+            logout       : logout,
         }
     };
     return {construct:construct};//retorna los metodos publicos
