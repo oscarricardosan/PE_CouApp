@@ -5,7 +5,13 @@ var App= new Vue({
             name:'',
             email:'',
         }
-    }, mounted: function(){
+    },
+    methods: {
+        synchronize_data_operations: function() {
+            Operations.get_data('2017-10-04');
+        }
+    },
+    mounted: function(){
         UserModel.loaded(function(){
             var user= UserModel.get();
             App.user.email= user.user_data.email;

@@ -16,6 +16,7 @@ var Login= (function () {
             }
         });
         request.done(function(response){
+            response.token_generated_at= MomentUtility_.numericDate();
             callback.success(response);
         });
         request.fail(function(jqXHR, textStatus) {
@@ -27,7 +28,7 @@ var Login= (function () {
     var is_logged_in= function (callback) {
         UserModel.loaded(function(){
             var user= UserModel.get();
-            var nowadte= moment().year()+''+moment().month()+''+moment().date();
+            var nowadte= MomentUtility_.numericDate();
             var success= false;
             if(!UserModel.isEmpty() && user.token_generated_at == nowadte)
                 success= true;
