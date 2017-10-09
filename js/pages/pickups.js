@@ -48,6 +48,7 @@ var App= new Vue({
 $(document).ready(function(){
     $('.takePhoto').click(function(event){
         event.preventDefault();
+        var button= $(this);
         navigator.camera.getPicture(onSuccess, onFail, {
             quality: 50,
             destinationType: Camera.DestinationType.DATA_URL,
@@ -57,7 +58,7 @@ $(document).ready(function(){
 
         function onSuccess(imageData) {
             dataUriImage= "data:image/jpeg;base64," + imageData;
-            var image = $(this).prev('.photo');
+            var image = button.prev('.photo');
             image.attr('src', dataUriImage);
             //$('#message').html(dataUriImage);
         }

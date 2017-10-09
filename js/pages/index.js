@@ -39,3 +39,7 @@ var App= new Vue({
         });
     }
 });
+
+$(document).ready(function(){
+    $('.synchronize_data_operations').trigger("click");
+});
