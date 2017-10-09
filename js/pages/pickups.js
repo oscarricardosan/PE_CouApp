@@ -58,7 +58,7 @@ $(document).ready(function(){
         });
 
         function onSuccess(imageURI) {
-            var image = button.prev('.photo');
+            var image = $('.photo_of_camera');
             image.attr('src', imageURI);
         }
 
