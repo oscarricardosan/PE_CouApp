@@ -58,7 +58,9 @@ $(document).ready(function(){
 
         function onSuccess(imageData) {
             dataUriImage= "data:image/jpeg;base64," + imageData;
+            alert(dataUriImage);
             var image = button.prev('.photo');
+            alert(image);
             image.attr('src', dataUriImage);
             //$('#message').html(dataUriImage);
         }
