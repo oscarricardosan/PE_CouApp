@@ -3,14 +3,16 @@ var MigrationModel= (function () {
 
     var collection_name= 'migrations';
 
-    var loaded_Callback= function(){};
+    var loaded_Callback= [];
     var isLoaded= false;
     /**
      * Carga los datos si ya estan en localstorage
      */
     db.collection(collection_name).load(function (err, tableStats, metaStats) {
         if (!err) {
-            loaded_Callback();
+            $.each(loaded_Callback, function(){
+                this();
+            });
             isLoaded= true;
         }else{
             alert('Error al cargar colección '+collection_name)
@@ -52,7 +54,7 @@ var MigrationModel= (function () {
         if(isLoaded)
             callback();
         else
-            loaded_Callback= callback;
+            loaded_Callback.push(callback);
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
