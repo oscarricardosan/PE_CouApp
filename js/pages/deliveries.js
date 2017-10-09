@@ -51,16 +51,15 @@ $(document).ready(function(){
         var button= $(this);
         navigator.camera.getPicture(onSuccess, onFail, {
             quality: 50,
-            destinationType: Camera.DestinationType.FILE_URI,
-            sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+            destinationType: Camera.DestinationType.NATIVE_URI,
+            sourceType: Camera.PictureSourceType.CAMERA,
             targetHeight: 700,
-            targetWidth: 700
+            targetWidth: 700,
         });
 
-        function onSuccess(imageData) {
-            dataUriImage= "data:image/jpeg;base64," + imageData;
+        function onSuccess(imageURI) {
             var image = button.prev('.photo');
-            image.attr('src', dataUriImage);
+            image.attr('src', imageURI);
         }
 
         function onFail(message) {
