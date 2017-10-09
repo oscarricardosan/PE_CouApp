@@ -66,4 +66,25 @@ $(document).ready(function(){
             alert('Failed because: ' + message);
         }
     });
+
+    $('.selectPhoto').click(function(event){
+        event.preventDefault();
+        var button= $(this);
+        navigator.camera.getPicture(onSuccess, onFail, {
+            quality: 50,
+            destinationType: Camera.DestinationType.NATIVE_URI,
+            sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+            targetHeight: 700,
+            targetWidth: 700,
+        });
+
+        function onSuccess(imageURI) {
+            var image = button.prev('.photo');
+            image.attr('src', imageURI);
+        }
+
+        function onFail(message) {
+            alert('Failed because: ' + message);
+        }
+    });
 });
