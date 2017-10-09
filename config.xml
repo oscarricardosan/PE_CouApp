@@ -23,7 +23,7 @@
     <plugin spec="https://github.com/apache/cordova-plugin-camera" source="git"/>
 
     <preference name="orientation" value="default" />
-    <preference name="fullscreen" value="true" />
+    <preference name="fullscreen" value="false" />
 
     <icon src="images/icon.png" />
 

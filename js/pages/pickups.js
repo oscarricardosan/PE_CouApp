@@ -51,7 +51,8 @@ $(document).ready(function(){
         var button= $(this);
         navigator.camera.getPicture(onSuccess, onFail, {
             quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
             targetHeight: 700,
             targetWidth: 700
         });

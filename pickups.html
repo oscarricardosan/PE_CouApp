@@ -253,12 +253,13 @@
             <!-- Main content -->
             <section class="content">
                 <div class="list-group pickups">
-                    <a href="#" class="pickup list-group-item" v-for="pickup in _.sortBy(operations.pickups, 'hora_pgr')"
+                    <a href="#" class="pickup list-group-item" v-for="(pickup, index) in _.sortBy(operations.pickups, 'hora_pgr')"
                        @click.prevent="showModal(pickup)"
                     >
                         <span class="text-muted pull-right">
                             <i class="fa fa-clock-o"></i> {{ pickup.hora_pgr }} - {{ pickup.hora_pgrfin }}
                         </span>
+                        <span class="label label-default">{{ index+1 }}</span>
                         <b>Empresa:</b><br>
                         {{ pickup.cliente_razonsoc }}
                         <b>{{ pickup.cliente_tipdoc }}</b>: {{ pickup.cliente_numdoc }}<br>
