@@ -90,16 +90,16 @@
     <script src="js/vue.min.js" type="text/javascript"></script>
 
     <style>
-        .pickups .pickup{
+        .deliveries .delivery{
             border-bottom: 3px solid #9bb567;
             line-height: 24px;
             padding-top: 7px;
             padding-bottom: 7px;
         }
-        .pickups .pickup>b{
+        .deliveries .delivery>b{
             color: #3c8dbc;
         }
-        .pickups .pickup>i{
+        .deliveries .delivery>i{
             color: #7b7b7b;
         }
     </style>
@@ -245,28 +245,36 @@
                     </button>
                 </div>
                 <h1>
-                    Recolecciones para hoy
-                    <b>{{ operations.pickups.length }}</b>
+                    Entregas para hoy
+                    <b>{{ operations.deliveries.length }}</b>
                 </h1>
             </section>
 
             <!-- Main content -->
             <section class="content">
-                <div class="list-group pickups">
-                    <a href="#" class="pickup list-group-item" v-for="pickup in _.sortBy(operations.pickups, 'hora_pgr')"
-                       @click.prevent="showModal(pickup)"
+                <div class="list-group deliveries">
+                    <a href="#" class="delivery list-group-item" v-for="(delivery, index) in _.sortBy(operations.deliveries, 'destinatario_direccion')"
+                       @click.prevent="showDelivery(delivery)"
                     >
-                        <span class="text-muted pull-right">
-                            <i class="fa fa-clock-o"></i> {{ pickup.hora_pgr }} - {{ pickup.hora_pgrfin }}
-                        </span>
+                        <span class="label label-default">{{ index+1 }}</span>
                         <b>Empresa:</b><br>
-                        {{ pickup.cliente_razonsoc }}
-                        <b>{{ pickup.cliente_tipdoc }}</b>: {{ pickup.cliente_numdoc }}<br>
-
-                        <i class="fa fa-user"></i> <b>Contacto:</b>{{ pickup.cliente_nombre }}<br>
-                        <i class="fa fa-map-marker"></i> <b>Dirección:</b>{{ pickup.cliente_direccion }}<br>
-                        <i class="fa fa-phone"></i> <b>Teléfono:</b>{{ pickup.cliente_telefono }}<br>
-                        <i class="fa fa-envelope-o"></i> <b>Email:</b>{{ pickup.cliente_email }}<br>
+                        {{ delivery.destinatario_compania }}<br>
+                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.destinatario_nombre }}<br>
+                        <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.destinatario_direccion }}<br>
+                        <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.cliente_telefono }}<br>
+                        <i class="fa fa-arrow-up"></i> <b>Origen:</b> {{ delivery.ciudad_origen }} ({{ delivery.pais_origen }})<br>
+                        <i class="fa fa-arrow-down"></i> <b>Destino:</b> {{ delivery.ciudad_destino }} <br>
+                        <table class="table table-condensed table-bordered">
+                            <tr>
+                                <th>Piezas</th>
+                                <th>Peso</th>
+                            </tr>
+                            <tr>
+                                <td>{{ delivery.piezas }}</td>
+                                <td>{{ delivery.peso }}</td>
+                            </tr>
+                        </table>
+                        <i class="fa fa-comment-o"></i> <b>Descripción:</b> {{ delivery.descripcion }} <br>
                     </a>
                 </div>
             </section>
@@ -284,12 +292,12 @@
 
 
 
-        <div class="modal fade" id="pickupModal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Datos de recolección</h4>
+                        <h4 class="modal-title" id="myModalLabel">Datos de entrega</h4>
                     </div>
                     <div class="modal-body">
                         <form>
@@ -348,7 +356,7 @@
     <!-- AdminLTE for demo purposes -->
     <script src="tpl/dist/js/demo.js"></script>
 
-    <script src="js/pages/pickups.js" type="text/javascript"></script>
+    <script src="js/pages/deliveries.js" type="text/javascript"></script>
     <script src="js/pages/intranet.js" type="text/javascript"></script>
     </body>
 </html>
