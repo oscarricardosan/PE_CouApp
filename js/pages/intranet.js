@@ -41,7 +41,7 @@ function onDeviceReady() {
             cordova.plugins.backgroundMode.configure({
                 text:
                     "Recolecciones pendientes 5 de  "+index_execution+
-                    "Entregas pendientes 1 de  "+index_execution
+                    "\nEntregas pendientes 1 de  "+index_execution
                 }
             );
             index_execution++;
