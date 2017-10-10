@@ -45,8 +45,19 @@ function onDeviceReady() {
                 }
             );
             index_execution++;
-            if(index_execution % 20 == 0)
+            if(index_execution % 20 == 0) {
+                navigator.notification.beep(2);
+
+                function alertDismissed() {/* do something*/}
+                navigator.notification.alert(
+                    'Recolección programada',  // message
+                    alertDismissed,         // callback
+                    'Mensaje ',            // title
+                    'Entendido y aceptado'                  // buttonName
+                );
                 navigator.notification.vibrate(2500);
+
+            }
         }, 1000);
     });
 
