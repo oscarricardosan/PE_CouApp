@@ -18,10 +18,10 @@ $(document).ready(function(){
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
-    var index_execution= 0;
     window.open = cordova.InAppBrowser.open;
 
     /** BACKGROUND PROCESS**/
+    var index_execution= 0;
     cordova.plugins.backgroundMode.enable();
     cordova.plugins.backgroundMode.disableWebViewOptimizations();
     cordova.plugins.backgroundMode.overrideBackButton();
@@ -39,7 +39,13 @@ function onDeviceReady() {
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
             cordova.plugins.notification.badge.increase();
-            cordova.plugins.backgroundMode.configure({text: 'Execución '+index_execution });
+            cordova.plugins.backgroundMode.configure({
+                text:
+                    "Execución "+index_execution+
+                    "\nExecución "+index_execution+
+                    "<br>Execución "+index_execution
+                }
+            );
             index_execution++;
         }, 1000);
     });
@@ -47,7 +53,7 @@ function onDeviceReady() {
     cordova.plugins.backgroundMode.on('deactivate', function () {
         cordova.plugins.notification.badge.clear();
     });
-
+    /** CLOSE BACKGROUND PROCESS**/
 }
 
 $(document).bind("mobileinit", function(){
