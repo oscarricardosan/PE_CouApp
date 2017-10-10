@@ -43,26 +43,16 @@ function onDeviceReady() {
             var location= '';
             function onSuccess(position) {
                 location=
+                    "\n-------------------------------"+
+                    "\nUbicación: \n"+
                     '___Latitud: ' + position.coords.latitude + "\n"+
                     '___Longitud: ' + position.coords.longitude;
-
-                cordova.plugins.backgroundMode.configure({
-                        text:
-                        "Recolecciones pendientes 5 de  "+index_execution+
-                        "\nEntregas pendientes 1 de  "+index_execution+
-                        "\n -------------------------------"+
-                        "\n Ubicación"+location
-                    }
-                );
             }
             function onError(error) {
-                cordova.plugins.backgroundMode.configure({
-                        text:
-                        "Recolecciones pendientes 5 de  "+index_execution+
-                        "\nEntregas pendientes 1 de  "+index_execution+
-                        "\n -------------------------------"+
-                        "\n Error en ubicación: "+error.message+'.'
-                    }
+                location=
+                    "\n -------------------------------"+
+                    "\nUbicación: \n"+
+                    "\n___Error en ubicación: "+error.message+'.'
                 );
             }
             var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {
@@ -80,7 +70,8 @@ function onDeviceReady() {
             cordova.plugins.backgroundMode.configure({
                 text:
                     "Recolecciones pendientes 5 de  "+index_execution+
-                    "\nEntregas pendientes 1 de  "+index_execution
+                    "\nEntregas pendientes 1 de  "+index_execution+
+                    location
                 }
             );
             index_execution++;
