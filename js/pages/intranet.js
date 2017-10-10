@@ -44,27 +44,20 @@ function onDeviceReady() {
             function onSuccess(position) {
                 location=
                     "\n-------------------------------"+
-                    "\nUbicación: \n"+
-                    '___Latitud: ' + position.coords.latitude + "\n"+
-                    '___Longitud: ' + position.coords.longitude;
+                    "\nUbicación: "+
+                    '\n___Latitud: ' + position.coords.latitude +
+                    '\n___Longitud: ' + position.coords.longitude;
             }
             function onError(error) {
                 location=
                     "\n -------------------------------"+
-                    "\nUbicación: \n"+
-                    "\n___Error en ubicación: "+error.message+'.'
-                );
+                    "\nUbicación: "+
+                    "\n___Error en ubicación: "+error.message+'.';
             }
             var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {
                 timeout: 7000,
                 enableHighAccuracy: true
             });
-
-
-
-
-
-
 
 
             cordova.plugins.backgroundMode.configure({
