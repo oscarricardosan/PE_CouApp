@@ -19,18 +19,32 @@ $(document).ready(function(){
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     window.open = cordova.InAppBrowser.open;
-    cordova.plugins.backgroundMode.setEnabled(true);
+
+    /** BACKGROUND PROCESS**/
+    cordova.plugins.backgroundMode.enable();
+    cordova.plugins.backgroundMode.disableWebViewOptimizations();
     cordova.plugins.backgroundMode.overrideBackButton();
 
     cordova.plugins.backgroundMode.setDefaults({
         title: 'Courier App',
         text: 'Me estoy ejecutando',
         //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
-        color: 'F14F4D', // hex format like 'F14F4D'
-        resume: Boolean,
-        hidden: Boolean,
-        bigText: Boolean
-    })
+        color: 'b3b3ff', // hex format like 'F14F4D'
+        resume: true,
+        hidden: false,
+        bigText: false
+    });
+
+    cordova.plugins.backgroundMode.on('activate', function () {
+        setInterval(function () {
+            cordova.plugins.notification.badge.increase();
+        }, 1000);
+    });
+
+    cordova.plugins.backgroundMode.on('deactivate', function () {
+        cordova.plugins.notification.badge.clear();
+    });
+
 }
 
 $(document).bind("mobileinit", function(){
