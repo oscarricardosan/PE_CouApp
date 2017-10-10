@@ -55,7 +55,7 @@ function onDeviceReady() {
                     'Mensaje ',            // title
                     'Entendido y aceptado'                  // buttonName
                 );
-                navigator.notification.vibrate(2500);
+                navigator.notification.vibrate([1500, 500, 1500]);
 
             }
         }, 1000);
