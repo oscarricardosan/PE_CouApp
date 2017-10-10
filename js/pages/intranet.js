@@ -18,6 +18,7 @@ $(document).ready(function(){
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
+    var index_execution= 0;
     window.open = cordova.InAppBrowser.open;
 
     /** BACKGROUND PROCESS**/
@@ -29,7 +30,7 @@ function onDeviceReady() {
         title: 'Courier App',
         text: 'Me estoy ejecutando',
         //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
-        color: 'b3b3ff', // hex format like 'F14F4D'
+        color: '#b3b3ff', // hex format like 'F14F4D'
         resume: true,
         hidden: false,
         bigText: false
@@ -38,6 +39,8 @@ function onDeviceReady() {
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
             cordova.plugins.notification.badge.increase();
+            cordova.plugins.backgroundMode.configure({text: 'Execución '+index_execution });
+            index_execution++;
         }, 1000);
     });
 
