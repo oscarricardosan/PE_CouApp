@@ -38,26 +38,48 @@ function onDeviceReady() {
 
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
-            cordova.plugins.backgroundMode.configure({
-                text:
-                    "Recolecciones pendientes 5 de  "+index_execution+
-                    "\nEntregas pendientes 1 de  "+index_execution
-                }
-            );
+
+            var location= '';
+            function onSuccess(position) {
+                location=
+                    '___Latitud: ' + position.coords.latitude + "\n"+
+                    '___Longitud: ' + position.coords.longitude;
+
+                cordova.plugins.backgroundMode.configure({
+                        text:
+                        "Recolecciones pendientes 5 de  "+index_execution+
+                        "\nEntregas pendientes 1 de  "+index_execution+
+                        "\n -------------------------------"+
+                        "\n Ubicación"+location
+                    }
+                );
+            }
+            function onError(error) {
+                cordova.plugins.backgroundMode.configure({
+                        text:
+                        "Recolecciones pendientes 5 de  "+index_execution+
+                        "\nEntregas pendientes 1 de  "+index_execution+
+                        "\n -------------------------------"+
+                        "\n Error en ubicación: "+error.message+'.'
+                    }
+                );
+
+            }
+
+            // Options: throw an error if no update is received every 30 seconds.
+            //
+            var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 30000 });
+
+
             index_execution++;
             if(index_execution % 20 == 0) {
                 navigator.notification.beep(2);
-
-                function alertDismissed() {/* do something*/}
-                navigator.notification.alert(
-                    'Recolección programada',  // message
-                    alertDismissed,         // callback
-                    'Mensaje ',            // title
-                    'Entendido y aceptado'                  // buttonName
-                );
                 navigator.notification.vibrate([1500, 500, 1500]);
-
             }
+
+
+
+
         }, 1000);
     });
 
