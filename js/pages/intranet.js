@@ -38,15 +38,15 @@ function onDeviceReady() {
 
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
-            cordova.plugins.notification.badge.increase();
             cordova.plugins.backgroundMode.configure({
                 text:
-                    "Execución "+index_execution+
-                    "\nExecución "+index_execution+
-                    "<br>Execución "+index_execution
+                    "Recolecciones pendientes 5 de  "+index_execution+
+                    "Entregas pendientes 1 de  "+index_execution
                 }
             );
             index_execution++;
+            if(index_execution % 20 == 0)
+                navigator.notification.vibrate(2500);
         }, 1000);
     });
 

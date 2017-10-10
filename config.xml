@@ -22,7 +22,7 @@
     <plugin spec="https://github.com/apache/cordova-plugin-whitelist" source="git"/>
     <plugin spec="https://github.com/apache/cordova-plugin-camera" source="git"/>
     <plugin spec="https://github.com/katzer/cordova-plugin-background-mode" source="git"/>
-    <plugin spec="https://github.com/katzer/cordova-plugin-badge" source="git"/>
+    <plugin spec="https://github.com/apache/cordova-plugin-vibration" source="git"/>
 
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
