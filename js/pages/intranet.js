@@ -63,12 +63,20 @@ function onDeviceReady() {
                         "\n Error en ubicación: "+error.message+'.'
                     }
                 );
+            }
 
+            cordova.plugins.backgroundMode.configure({
+                text:
+                "Recolecciones pendientes 5 de  "+index_execution+
+                "\nEntregas pendientes 1 de  "+index_execution
             }
 
             // Options: throw an error if no update is received every 30 seconds.
             //
-            var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 30000 });
+            var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {
+                timeout: 30000,
+                enableHighAccuracy: true
+            });
 
 
             index_execution++;
