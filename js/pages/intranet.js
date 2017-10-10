@@ -37,7 +37,8 @@ function onDeviceReady() {
     });
 
     cordova.plugins.backgroundMode.on('activate', function () {
-        setInterval(function () {
+        var index_execution=0;
+/*        setInterval(function () {
             var location= '';
             function onSuccess(position) {
                 location=
@@ -75,7 +76,7 @@ function onDeviceReady() {
                 enableHighAccuracy: true
             });
         }, 10000);
-
+*/
         setInterval(function () {
             index_execution++;
             if(index_execution % 20 == 0) {
