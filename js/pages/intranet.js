@@ -39,6 +39,7 @@ function onDeviceReady() {
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
 
+
             var location= '';
             function onSuccess(position) {
                 location=
@@ -64,21 +65,24 @@ function onDeviceReady() {
                     }
                 );
             }
-
-            cordova.plugins.backgroundMode.configure({
-                text:
-                "Recolecciones pendientes 5 de  "+index_execution+
-                "\nEntregas pendientes 1 de  "+index_execution
-            }
-
-            // Options: throw an error if no update is received every 30 seconds.
-            //
             var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {
                 timeout: 7000,
                 enableHighAccuracy: true
             });
 
 
+
+
+
+
+
+
+            cordova.plugins.backgroundMode.configure({
+                text:
+                    "Recolecciones pendientes 5 de  "+index_execution+
+                    "\nEntregas pendientes 1 de  "+index_execution
+                }
+            );
             index_execution++;
             if(index_execution % 20 == 0) {
                 navigator.notification.beep(2);
