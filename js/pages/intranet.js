@@ -40,6 +40,13 @@ function onDeviceReady() {
         setInterval(function () {
 
 
+            index_execution++;
+            if(index_execution % 20 == 0) {
+                navigator.notification.beep(2);
+                navigator.notification.vibrate([1500, 500, 1500]);
+            }
+
+
             var location= '';
             function onSuccess(position) {
                 location=
@@ -47,31 +54,35 @@ function onDeviceReady() {
                     "\nUbicación: "+
                     '\n___Latitud: ' + position.coords.latitude +
                     '\n___Longitud: ' + position.coords.longitude;
+
+
+                cordova.plugins.backgroundMode.configure({
+                        text:
+                        "Recolecciones pendientes 5 de  "+index_execution+
+                        "\nEntregas pendientes 1 de  "+index_execution+
+                        location
+                    }
+                );
             }
             function onError(error) {
                 location=
                     "\n -------------------------------"+
                     "\nUbicación: "+
                     "\n___Error en ubicación: "+error.message+'.';
+
+
+                cordova.plugins.backgroundMode.configure({
+                        text:
+                        "Recolecciones pendientes 5 de  "+index_execution+
+                        "\nEntregas pendientes 1 de  "+index_execution+
+                        location
+                    }
+                );
             }
             var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {
-                timeout: 7000,
+                timeout: 5000,
                 enableHighAccuracy: true
             });
-
-
-            cordova.plugins.backgroundMode.configure({
-                text:
-                    "Recolecciones pendientes 5 de  "+index_execution+
-                    "\nEntregas pendientes 1 de  "+index_execution+
-                    location
-                }
-            );
-            index_execution++;
-            if(index_execution % 20 == 0) {
-                navigator.notification.beep(2);
-                navigator.notification.vibrate([1500, 500, 1500]);
-            }
 
 
 
