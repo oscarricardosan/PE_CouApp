@@ -38,15 +38,6 @@ function onDeviceReady() {
 
     cordova.plugins.backgroundMode.on('activate', function () {
         setInterval(function () {
-
-
-            index_execution++;
-            if(index_execution % 20 == 0) {
-                navigator.notification.beep(2);
-                navigator.notification.vibrate([1500, 500, 1500]);
-            }
-
-
             var location= '';
             function onSuccess(position) {
                 location=
@@ -83,10 +74,21 @@ function onDeviceReady() {
                 timeout: 5000,
                 enableHighAccuracy: true
             });
+        }, 10000);
 
+        setInterval(function () {
+            index_execution++;
+            if(index_execution % 20 == 0) {
+                navigator.notification.beep(2);
+                navigator.notification.vibrate([1500, 500, 1500]);
+            }
 
-
-
+            cordova.plugins.backgroundMode.configure({
+                text:
+                    "Recolecciones pendientes 5 de  "+index_execution+
+                    "\nEntregas pendientes 1 de  "+index_execution
+                }
+            );
         }, 1000);
     });
 
