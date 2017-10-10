@@ -106,6 +106,7 @@ function printMyImage() {
 }
 
 function printMyBarcode() {
+    try{
     window.DatecsPrinter.printBarcode(
         75, //here goes the barcode type code
         '13132498746313210584982011487', //your barcode data
@@ -116,4 +117,7 @@ function printMyBarcode() {
             alert(JSON.stringify(error));
         }
     );
+    }catch (error){
+        alert(JSON.stringify(error));
+    }
 }
