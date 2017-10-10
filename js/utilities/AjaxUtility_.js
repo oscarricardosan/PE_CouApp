@@ -5,9 +5,10 @@ var AjaxUtility_= (function () {
             alert(_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
         else if(jqXHR.status==500)
             alert("Error de conexion con el servidor.\nRevise su conexion a internet.");
-        else if(jqXHR.status==403)
+        else if(jqXHR.status==403){
             alert('Acceso denegado.');
-        else if(jqXHR.status==401)
+            Login.logout();
+        }else if(jqXHR.status==401)
             alert('Usuario sin autorización. Revise que la sesión no haya finalizado.');
         else
             alert("No se han podido cargar los datos. Intente mas tarde.**--"+ textStatus );
