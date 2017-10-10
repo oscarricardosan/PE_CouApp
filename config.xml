@@ -21,6 +21,7 @@
     <plugin spec="https://github.com/apache/cordova-plugin-inappbrowser" source="git"/>
     <plugin spec="https://github.com/apache/cordova-plugin-whitelist" source="git"/>
     <plugin spec="https://github.com/apache/cordova-plugin-camera" source="git"/>
+    <plugin spec="https://github.com/katzer/cordova-plugin-background-mode" source="git"/>
 
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
