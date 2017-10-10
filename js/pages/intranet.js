@@ -20,10 +20,6 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     window.open = cordova.InAppBrowser.open;
 
-    /** RUN IN BOOT **/
-    cordova.plugins.autoStart.enable();
-
-
 
     /** BACKGROUND PROCESS**/
     var index_execution= 0;
@@ -98,9 +94,6 @@ function onDeviceReady() {
         }, 1000);
     });
 
-    cordova.plugins.backgroundMode.on('deactivate', function () {
-        cordova.plugins.notification.badge.clear();
-    });
     /** CLOSE BACKGROUND PROCESS**/
 }
 
