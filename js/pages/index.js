@@ -79,16 +79,13 @@ function printText() {
 
     alert(1);
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('0___ 1 ', 'ISO-8859-1');
-    //window.DatecsPrinter.drawPageRectangle(x, y, width, height, fillMode, onSuccess, onError);
-    //window.DatecsPrinter.feedPaper(1);
-    //window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 2  , function(){}, function(){});
-    window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.printText('Aca 1', 'ISO-8859-1');
+    window.DatecsPrinter.feedPaper(1);
+    window.DatecsPrinter.printText('Acá 1', 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.printText('Aca 2', 'UTF-8');
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('Acá 3', 'ISO-8859-1');
+    window.DatecsPrinter.printText('Acá 2', 'UTF-8');
     window.DatecsPrinter.feedPaper(1);
 return true;
     //(x, y, width, height, fillMode, thickness, onSuccess, onError
