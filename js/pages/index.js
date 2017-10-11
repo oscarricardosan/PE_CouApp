@@ -80,13 +80,15 @@ function printText() {
     window.DatecsPrinter.printText(text, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
     for(i=65; i<=76; i++){
+        window.DatecsPrinter.printText('Code '+i);
+        window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printBarcode(
             i, //here goes the barcode type code
             text, //your barcode data
             function() {},
             function() {alert(JSON.stringify(error));}
         );
+        window.DatecsPrinter.feedPaper(2);
 
     }
-    window.DatecsPrinter.feedPaper(1);
 }
