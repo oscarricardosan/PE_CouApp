@@ -26,7 +26,7 @@
     <plugin spec="https://github.com/apache/cordova-plugin-dialogs" source="git"/>
     <plugin spec="https://github.com/apache/cordova-plugin-geolocation" source="git"/>
     <plugin spec="https://github.com/giorgiofellipe/cordova-plugin-datecs-printer" source="git"/>
-    <plugin spec="https://github.com/tjwoon/csZBar" source="git"/>
+    <plugin spec="https://github.com/nuCashDev/cordova-plugin-cszbar" source="git"/>
 
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
