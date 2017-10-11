@@ -89,6 +89,8 @@ $(document).ready(function(){
     });
 
     $('#scan_barcode').click(function(event){
-        mwbScanner.startScanning();
+        mwbScanner.startScanning(function(result){
+            alert(result);
+        });
     });
 });
