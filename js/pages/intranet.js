@@ -21,6 +21,46 @@ function onDeviceReady() {
     window.open = cordova.InAppBrowser.open;
 
 
+
+    /**
+     * GPS
+     */
+    backgroundGeolocation.configure(callbackFn, failureFn, {
+        desiredAccuracy: 10,
+        stationaryRadius: 20,
+        distanceFilter: 30,
+        url: 'http://192.168.81.15:3000/locations',
+        httpHeaders: { 'X-FOO': 'bar' },
+        maxLocations: 1000,
+        // Android only section
+        locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
+        interval: 60000,
+        fastestInterval: 5000,
+        activitiesInterval: 10000,
+        notificationTitle: 'Background tracking',
+        notificationText: 'enabled',
+        notificationIconColor: '#FEDD1E',
+        notificationIconLarge: 'mappointer_large',
+        notificationIconSmall: 'mappointer_small'
+    });
+
+    backgroundGeolocation.watchLocationMode(
+        function (enabled) {
+            if (enabled) {
+                // location service are now enabled
+                // call backgroundGeolocation.start
+                // only if user already has expressed intent to start service
+            } else {
+                // location service are now disabled or we don't have permission
+                // time to change UI to reflect that
+            }
+        },
+        function (error) {
+            alert('Error watching location mode. Error:' + error);
+        }
+    );
+
+
     /** BACKGROUND PROCESS**/
     var index_execution= 0;
     cordova.plugins.backgroundMode.enable();
@@ -38,43 +78,6 @@ function onDeviceReady() {
     });
 
     cordova.plugins.backgroundMode.on('activate', function () {
-        /**
-         * GPS
-         */
-        backgroundGeolocation.configure(callbackFn, failureFn, {
-            desiredAccuracy: 10,
-            stationaryRadius: 20,
-            distanceFilter: 30,
-            url: 'http://192.168.81.15:3000/locations',
-            httpHeaders: { 'X-FOO': 'bar' },
-            maxLocations: 1000,
-            // Android only section
-            locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
-            interval: 60000,
-            fastestInterval: 5000,
-            activitiesInterval: 10000,
-            notificationTitle: 'Background tracking',
-            notificationText: 'enabled',
-            notificationIconColor: '#FEDD1E',
-            notificationIconLarge: 'mappointer_large',
-            notificationIconSmall: 'mappointer_small'
-        });
-
-        backgroundGeolocation.watchLocationMode(
-            function (enabled) {
-                if (enabled) {
-                    // location service are now enabled
-                    // call backgroundGeolocation.start
-                    // only if user already has expressed intent to start service
-                } else {
-                    // location service are now disabled or we don't have permission
-                    // time to change UI to reflect that
-                }
-            },
-            function (error) {
-                console.log('Error watching location mode. Error:' + error);
-            }
-        );
 
         backgroundGeolocation.isLocationEnabled(function (enabled) {
             if (enabled) {
