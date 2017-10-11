@@ -79,12 +79,14 @@ function printText() {
     var text= prompt('Texto a imprimir');
     window.DatecsPrinter.printText(text, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printBarcode(
-        5, //here goes the barcode type code
-        text, //your barcode data
-        function() {},
-        function() {
-            alert(JSON.stringify(error));
-        }
-    );
+    for(i=65; i<=76; i++){
+        window.DatecsPrinter.printBarcode(
+            i, //here goes the barcode type code
+            text, //your barcode data
+            function() {},
+            function() {alert(JSON.stringify(error));}
+        );
+
+    }
+    window.DatecsPrinter.feedPaper(1);
 }
