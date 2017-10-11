@@ -54,6 +54,7 @@ function onDeviceReady() {
 
     window.DatecsPrinter.listBluetoothDevices(
         function (devices) {
+            alert(JSON.stringify(devices));
             window.DatecsPrinter.connect(devices[0].address,
                 function() {
                     printSomeTestText();
