@@ -78,6 +78,7 @@ function onDeviceReady() {
 function printText() {
 
     alert(1);
+    window.DatecsPrinter.selectPageMode(function(){}, function(){});
     window.DatecsPrinter.printText('-Aca ISO-8859-1 - ', 'ISO-8859-1');
     window.DatecsPrinter.printText('-Aca UTF-8 - ', 'UTF-8');
     window.DatecsPrinter.printText('-Acá utf-8 -', 'utf-8');
