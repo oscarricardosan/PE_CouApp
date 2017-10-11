@@ -78,15 +78,9 @@ function onDeviceReady() {
 function printText() {
 
     alert(1);
-    window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('Aca 1', 'ISO-8859-1');
-    window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('Acá 1', 'ISO-8859-1');
-    window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('Aca 2', 'UTF-8');
-    window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printText('Acá 2', 'UTF-8');
-    window.DatecsPrinter.feedPaper(1);
+    window.DatecsPrinter.printText('-Aca ISO-8859-1 - ', 'ISO-8859-1');
+    window.DatecsPrinter.printText('-Aca UTF-8 - ', 'UTF-8');
+    window.DatecsPrinter.printText('-Acá utf-8 -', 'utf-8');
 return true;
     //(x, y, width, height, fillMode, thickness, onSuccess, onError
     window.DatecsPrinter.feedPaper(1);
