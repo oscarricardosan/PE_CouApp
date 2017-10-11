@@ -26,11 +26,13 @@ function onDeviceReady() {
         /**
          * GPS
          */
+        alert(JSON.stringify(backgroundGeolocation));
         backgroundGeolocation.configure(callbackFn, failureFn, {
             desiredAccuracy: 10,
             stationaryRadius: 20,
             distanceFilter: 30,
-            url: Settings.route_api_pasar('store_gps'),
+            url: 'http://192.168.81.15:3000/locations',
+            httpHeaders: { 'X-FOO': 'bar' },
             maxLocations: 1000,
             // Android only section
             locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
@@ -51,13 +53,12 @@ function onDeviceReady() {
                     // call backgroundGeolocation.start
                     // only if user already has expressed intent to start service
                 } else {
-                    backgroundGeolocation.start();
                     // location service are now disabled or we don't have permission
                     // time to change UI to reflect that
                 }
             },
             function (error) {
-                alert('Error watching location mode. Error:' + error);
+                console.log('Error watching location mode. Error:' + error);
             }
         );
 
