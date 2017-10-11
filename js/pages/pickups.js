@@ -89,8 +89,16 @@ $(document).ready(function(){
     });
 
     $('#scan_barcode').click(function(event){
-        mwbScanner.startScanning(function(result){
-            alert(result);
-        });
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                alert("We got a barcode\n" +
+                    "Result: " + result.text + "\n" +
+                    "Format: " + result.format + "\n" +
+                    "Cancelled: " + result.cancelled);
+            },
+            function (error) {
+                alert("Scanning failed: " + error);
+            }
+        );
     });
 });
