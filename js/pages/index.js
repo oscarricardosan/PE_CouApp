@@ -76,7 +76,14 @@ function onDeviceReady() {
 
 
 function printText() {
-    var text= prompt('Texto a imprimir');
+
+    //window.DatecsPrinter.drawPageRectangle(x, y, width, height, fillMode, onSuccess, onError);
+    window.DatecsPrinter.drawPageRectangle(0, 0, 58, 20, 0, function(){}, function(){});
+    window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 0, function(){}, function(){});
+    window.DatecsPrinter.drawPageRectangle(2, 0, 54, 20, 0, function(){}, function(){});
+    window.DatecsPrinter.drawPageRectangle(5, 0, 48, 20, 0, function(){}, function(){});
+
+    /*var text= prompt('Texto a imprimir');
     window.DatecsPrinter.printText('{center}--------________-----{center}');
     window.DatecsPrinter.printText('Code '+i, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
@@ -86,5 +93,5 @@ function printText() {
         function() {},
         function() {alert(JSON.stringify(error));}
     );
-    window.DatecsPrinter.feedPaper(2);
+    window.DatecsPrinter.feedPaper(2);*/
 }
