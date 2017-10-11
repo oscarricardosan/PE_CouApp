@@ -77,40 +77,21 @@ function onDeviceReady() {
 
 function printText() {
 
-    alert(1);
+    window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.selectPageMode(function(){}, function(){});
-    window.DatecsPrinter.printText('-Aca ISO-8859-1 - ', 'ISO-8859-1');
-    window.DatecsPrinter.printText('-Acá ISO-8859-1 - ', 'ISO-8859-1');
-    window.DatecsPrinter.printText('-Aca UTF-8 - ', 'UTF-8');
-    window.DatecsPrinter.printText('-Acá utf-8 -', 'utf-8');
-return true;
-    //(x, y, width, height, fillMode, thickness, onSuccess, onError
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.drawPageFrame(1, 0, 56, 20, 2, 2, function(){}, function(){});
-    window.DatecsPrinter.printText('Acá 2', 'ISO-8859-1');
 
-    //(x, y, width, height, direction, onSuccess, onError)
-    window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.setPageRegion(1, 0, 56, 20, 2, function(){}, function(){});
-    window.DatecsPrinter.printText('Acá 3', 'ISO-8859-1');
-
-    window.DatecsPrinter.feedPaper(1);
-    // window.DatecsPrinter.drawPageRectangle(0, 0, 58, 20, 0, function(){}, function(){});
-    // alert(2);
-    // window.DatecsPrinter.printText('0___ 2 ', 'ISO-8859-1');
-    // window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 0, function(){}, function(){});
-    // window.DatecsPrinter.drawPageRectangle(2, 0, 54, 20, 0, function(){}, function(){});
-    // window.DatecsPrinter.drawPageRectangle(5, 0, 48, 20, 0, function(){}, function(){});
-
-    /*var text= prompt('Texto a imprimir');
+    var text= prompt('Texto a imprimir');
     window.DatecsPrinter.printText('{center}--------________-----{center}');
-    window.DatecsPrinter.printText('Code '+i, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.printBarcode(
+    window.DatecsPrinter.printText(text, 'UTF-8');
+    window.DatecsPrinter.printText(text, 'ISO-8859-1');
+    window.DatecsPrinter.feedPaper(1);
+
+    /*window.DatecsPrinter.printBarcode(
         69, //here goes the barcode type code
         text, //your barcode data
         function() {},
         function() {alert(JSON.stringify(error));}
-    );
-    window.DatecsPrinter.feedPaper(2);*/
+    );*/
 }
