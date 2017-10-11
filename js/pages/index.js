@@ -78,7 +78,9 @@ function onDeviceReady() {
 function printText() {
 
     //window.DatecsPrinter.drawPageRectangle(x, y, width, height, fillMode, onSuccess, onError);
+    alert(1);
     window.DatecsPrinter.drawPageRectangle(0, 0, 58, 20, 0, function(){}, function(){});
+    alert(2);
     window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 0, function(){}, function(){});
     window.DatecsPrinter.drawPageRectangle(2, 0, 54, 20, 0, function(){}, function(){});
     window.DatecsPrinter.drawPageRectangle(5, 0, 48, 20, 0, function(){}, function(){});
