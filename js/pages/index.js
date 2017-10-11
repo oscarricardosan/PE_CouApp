@@ -8,7 +8,9 @@ var App= new Vue({
         operations: {
             deliveries: [],
             pickups: [],
-        }
+        },
+        bluetooth_devices: [],
+        printer_device: null
     },
     methods: {
         synchronize_data_operations: function(e) {
@@ -18,6 +20,18 @@ var App= new Vue({
                 success: function(){element.unloading();},
                 fail: function(){ element.unloading(); }
             });
+        }
+    },
+    watch: {
+        printer_device: function(device){
+            window.DatecsPrinter.connect(device.address,
+                function() {
+                    printSomeTestText();
+                },
+                function() {
+                    alert(JSON.stringify(error));
+                }
+            );
         }
     },
     mounted: function(){
@@ -50,19 +64,9 @@ $(document).ready(function(){
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
-
-
     window.DatecsPrinter.listBluetoothDevices(
         function (devices) {
-            alert(JSON.stringify(devices));
-            window.DatecsPrinter.connect(devices[0].address,
-                function() {
-                    printSomeTestText();
-                },
-                function() {
-                    alert(JSON.stringify(error));
-                }
-            );
+            App.bluetooth_devices= devices;
         },
         function (error) {
             alert(JSON.stringify(error));

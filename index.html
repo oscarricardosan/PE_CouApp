@@ -194,6 +194,15 @@
                             </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-print"></i>
+                            <span>Impresora</span>
+                        </a>
+                        <select class="form-control" v-model="printer_device">
+                            <option v-for="device in bluetooth_devices" :value="device">{{ device.name }}</option>
+                        </select>
+                    </li>
                     <li><a href="#" class="logout"><i class="fa fa-sign-out"></i> <span>Cerrar sesión</span></a></li>
                 </ul>
             </section>
