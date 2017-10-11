@@ -79,7 +79,7 @@ function printText() {
 
     window.DatecsPrinter.feedPaper(1);
     var text= prompt('Texto a imprimir');
-    window.DatecsPrinter.printText("{center} "+text, 'UTF-8');
+    window.DatecsPrinter.printText(text, 'UTF-8');
     window.DatecsPrinter.feedPaper(1);
 
     /*window.DatecsPrinter.printBarcode(
