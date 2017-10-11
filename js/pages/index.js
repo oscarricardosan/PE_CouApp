@@ -79,19 +79,24 @@ function printText() {
 
     window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.selectPageMode(function(){}, function(){});
+    window.DatecsPrinter.feedPaper(384, function(){}, function(){});
     window.DatecsPrinter.feedPaper(1);
 
     var text= prompt('Texto a imprimir');
-    window.DatecsPrinter.printText('{center}--------________-----{center}');
+    window.DatecsPrinter.printText('{center}--------________-----', 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.printText(text, 'UTF-8');
-    window.DatecsPrinter.printText(text, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
 
-    /*window.DatecsPrinter.printBarcode(
+
+    window.DatecsPrinter.setBarcode(1, 0, 50, 0, 10,
+        function() {},
+        function() {alert(JSON.stringify(error));}
+    );
+    window.DatecsPrinter.printBarcode(
         69, //here goes the barcode type code
         text, //your barcode data
         function() {},
         function() {alert(JSON.stringify(error));}
-    );*/
+    );
 }
