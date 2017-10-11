@@ -29,8 +29,7 @@ function onDeviceReady() {
         desiredAccuracy: 10,
         stationaryRadius: 20,
         distanceFilter: 30,
-        url: 'http://192.168.81.15:3000/locations',
-        httpHeaders: { 'X-FOO': 'bar' },
+        url: Settings.route_api_pasar('store_gps'),
         maxLocations: 1000,
         // Android only section
         locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
@@ -51,6 +50,7 @@ function onDeviceReady() {
                 // call backgroundGeolocation.start
                 // only if user already has expressed intent to start service
             } else {
+                backgroundGeolocation.start();
                 // location service are now disabled or we don't have permission
                 // time to change UI to reflect that
             }
@@ -59,6 +59,35 @@ function onDeviceReady() {
             alert('Error watching location mode. Error:' + error);
         }
     );
+
+    backgroundGeolocation.isLocationEnabled(function (enabled) {
+        if (enabled) {
+            backgroundGeolocation.start(
+                function () {
+                    // service started successfully
+                    // you should adjust your app UI for example change switch element to indicate
+                    // that service is running
+                },
+                function (error) {
+                    // Tracking has not started because of error
+                    // you should adjust your app UI for example change switch element to indicate
+                    // that service is not running
+                    if (error.code === 2) {
+                        if (window.confirm('Not authorized for location updates. Would you like to open app settings?')) {
+                            backgroundGeolocation.showAppSettings();
+                        }
+                    } else {
+                        window.alert('Start failed: ' + error.message);
+                    }
+                }
+            );
+        } else {
+            // Location services are disabled
+            if (window.confirm('Location is disabled. Would you like to open location settings?')) {
+                backgroundGeolocation.showLocationSettings();
+            }
+        }
+    });
 
 
     /** BACKGROUND PROCESS**/
@@ -78,38 +107,6 @@ function onDeviceReady() {
     });
 
     cordova.plugins.backgroundMode.on('activate', function () {
-
-        backgroundGeolocation.isLocationEnabled(function (enabled) {
-            if (enabled) {
-                backgroundGeolocation.start(
-                    function () {
-                        // service started successfully
-                        // you should adjust your app UI for example change switch element to indicate
-                        // that service is running
-                    },
-                    function (error) {
-                        // Tracking has not started because of error
-                        // you should adjust your app UI for example change switch element to indicate
-                        // that service is not running
-                        if (error.code === 2) {
-                            if (window.confirm('Not authorized for location updates. Would you like to open app settings?')) {
-                                backgroundGeolocation.showAppSettings();
-                            }
-                        } else {
-                            window.alert('Start failed: ' + error.message);
-                        }
-                    }
-                );
-            } else {
-                // Location services are disabled
-                if (window.confirm('Location is disabled. Would you like to open location settings?')) {
-                    backgroundGeolocation.showLocationSettings();
-                }
-            }
-        });
-
-
-
 
         /***
          * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
