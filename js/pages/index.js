@@ -99,4 +99,5 @@ function printText() {
         function() {},
         function() {alert(JSON.stringify(error));}
     );
+    window.DatecsPrinter.feedPaper(1);
 }
