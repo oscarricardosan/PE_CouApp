@@ -77,5 +77,14 @@ function onDeviceReady() {
 
 function printText() {
     var text= prompt('Texto a imprimir');
-    window.DatecsPrinter.printText(text+"\n\n\n", 'ISO-8859-1');
+    window.DatecsPrinter.printText(text, 'ISO-8859-1');
+    window.DatecsPrinter.feedPaper(1);
+    window.DatecsPrinter.printBarcode(
+        69, //here goes the barcode type code
+        text, //your barcode data
+        function() {},
+        function() {
+            alert(JSON.stringify(error));
+        }
+    );
 }
