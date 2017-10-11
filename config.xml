@@ -26,11 +26,10 @@
     <plugin spec="https://github.com/apache/cordova-plugin-dialogs" source="git"/>
     <plugin spec="https://github.com/apache/cordova-plugin-geolocation" source="git"/>
     <plugin spec="https://github.com/giorgiofellipe/cordova-plugin-datecs-printer" source="git"/>
-    <plugin spec="https://github.com/flyacts/phonegap-plugin-barcodescanner" source="git"/>
+    <plugin spec="https://github.com/tjwoon/csZBar" source="git"/>
 
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
-    <preference name="android-build-tool" value="gradle" />
 
     <icon src="images/icon.png" />
 
@@ -39,6 +38,5 @@
     <access origin="*" />
     <allow-intent href="*" />
     <allow-navigation href="*" subdomains="true" />
-
 
 </widget>
