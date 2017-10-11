@@ -27,11 +27,12 @@ function onDeviceReady() {
          * GPS
          */
         alert(JSON.stringify(backgroundGeolocation));
+        alert(Settings.route_api_pasar('store_gps'));
         backgroundGeolocation.configure(callbackFn, failureFn, {
             desiredAccuracy: 10,
             stationaryRadius: 20,
             distanceFilter: 30,
-            url: 'http://192.168.81.15:3000/locations',
+            url: Settings.route_api_pasar('store_gps'),
             httpHeaders: { 'X-FOO': 'bar' },
             maxLocations: 1000,
             // Android only section
