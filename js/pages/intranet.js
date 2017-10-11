@@ -80,7 +80,7 @@ function onDeviceReady() {
 
         setInterval(function () {
             index_execution++;
-            if(index_execution % 20 == 0) {
+            if(index_execution % 100 == 0) {
                 navigator.notification.beep(2);
                 navigator.notification.vibrate([1500, 500, 1500]);
             }
