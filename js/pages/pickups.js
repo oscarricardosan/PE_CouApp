@@ -104,8 +104,8 @@ $(document).ready(function(){
                 showTorchButton : true, // iOS and Android
                 torchOn: false, // Android, launch with the torch switched on (if available)
                 prompt : "Pon el código de barras dentro del cuadrado", // Android
-                resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-                orientation : "portrait", // Android only (portrait|landscape), default unset so it rotates with the device
+                resultDisplayDuration: 0, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
                 disableSuccessBeep: false // iOS and Android
             }
         );
