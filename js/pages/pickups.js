@@ -90,8 +90,8 @@ $(document).ready(function(){
 
     $('#scan_barcode').click(function(event){
         cloudSky.zBar.scan({
-            text_title: "OPTIONAL Title Text - default = 'Scan QR Code'", // Android only
-            text_instructions: "OPTIONAL Instruction Text - default = 'Please point your camera at the QR code.'", // Android only
+            text_title: "Scan código de barras", // Android only
+            text_instructions: "Pon el código de barras a una buena distancia", // Android only
             camera: "back", // defaults to "back"
             flash: "auto", // defaults to "auto". See Quirks
             drawSight: true //defaults to true, create a red sight/line in the center of the scanner view.
