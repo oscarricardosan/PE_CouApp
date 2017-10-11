@@ -38,84 +38,75 @@ function onDeviceReady() {
     });
 
     cordova.plugins.backgroundMode.on('activate', function () {
+        /**
+         * GPS
+         */
+        backgroundGeolocation.configure(callbackFn, failureFn, {
+            desiredAccuracy: 10,
+            stationaryRadius: 20,
+            distanceFilter: 30,
+            url: 'http://192.168.81.15:3000/locations',
+            httpHeaders: { 'X-FOO': 'bar' },
+            maxLocations: 1000,
+            // Android only section
+            locationProvider: backgroundGeolocation.provider.ANDROID_ACTIVITY_PROVIDER,
+            interval: 60000,
+            fastestInterval: 5000,
+            activitiesInterval: 10000,
+            notificationTitle: 'Background tracking',
+            notificationText: 'enabled',
+            notificationIconColor: '#FEDD1E',
+            notificationIconLarge: 'mappointer_large',
+            notificationIconSmall: 'mappointer_small'
+        });
 
-            // Get a reference to the plugin.
-            var bgGeo = window.BackgroundGeolocation;
+        backgroundGeolocation.watchLocationMode(
+            function (enabled) {
+                if (enabled) {
+                    // location service are now enabled
+                    // call backgroundGeolocation.start
+                    // only if user already has expressed intent to start service
+                } else {
+                    // location service are now disabled or we don't have permission
+                    // time to change UI to reflect that
+                }
+            },
+            function (error) {
+                console.log('Error watching location mode. Error:' + error);
+            }
+        );
 
-            //This callback will be executed every time a geolocation is recorded in the background.
-            var callbackFn = function(location) {
-                var coords = location.coords;
-                var lat    = coords.latitude;
-                var lng    = coords.longitude;
-                console.log('- Location: ', JSON.stringify(location));
-                cordova.plugins.backgroundMode.configure({
-                        text: '- Location: '+ JSON.stringify(location)
+        backgroundGeolocation.isLocationEnabled(function (enabled) {
+            if (enabled) {
+                backgroundGeolocation.start(
+                    function () {
+                        // service started successfully
+                        // you should adjust your app UI for example change switch element to indicate
+                        // that service is running
+                    },
+                    function (error) {
+                        // Tracking has not started because of error
+                        // you should adjust your app UI for example change switch element to indicate
+                        // that service is not running
+                        if (error.code === 2) {
+                            if (window.confirm('Not authorized for location updates. Would you like to open app settings?')) {
+                                backgroundGeolocation.showAppSettings();
+                            }
+                        } else {
+                            window.alert('Start failed: ' + error.message);
+                        }
                     }
                 );
-            };
-
-            // This callback will be executed if a location-error occurs.  Eg: this will be called if user disables location-services.
-            var failureFn = function(errorCode) {
-                console.warn('- BackgroundGeoLocation error: ', errorCode);
-            }
-
-            // Listen to location events & errors.
-            bgGeo.on('location', callbackFn, failureFn);
-            // Fired whenever state changes from moving->stationary or vice-versa.
-            bgGeo.on('motionchange', function(isMoving) {
-                console.log('- onMotionChange: ', isMoving);
-            });
-            // Fired whenever a geofence transition occurs.
-            bgGeo.on('geofence', function(geofence) {
-                console.log('- onGeofence: ', geofence.identifier, geofence.location);
-            });
-            // Fired whenever an HTTP response is received from your server.
-            bgGeo.on('http', function(response) {
-                console.log('http success: ', response.responseText);
-            }, function(response) {
-                console.log('http failure: ', response.status);
-            });
-
-            // BackgroundGeoLocation is highly configurable.
-            bgGeo.configure({
-                // Geolocation config
-                desiredAccuracy: 0,
-                distanceFilter: 10,
-                stationaryRadius: 25,
-                // Activity Recognition config
-                activityRecognitionInterval: 10000,
-                stopTimeout: 5,
-                // Application config
-                debug: true,  // <-- Debug sounds & notifications.
-                stopOnTerminate: false,
-                startOnBoot: true,
-                // HTTP / SQLite config
-                url: "http://your.server.com/locations",
-                method: "POST",
-                autoSync: true,
-                maxDaysToPersist: 3,
-                headers: {  // <-- Optional HTTP headers
-                    "X-FOO": "bar"
-                },
-                params: {   // <-- Optional HTTP params
-                    "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-                }
-            }, function(state) {
-                // This callback is executed when the plugin is ready to use.
-                console.log("BackgroundGeolocation ready: ", state);
-                if (!state.enabled) {
-                    bgGeo.start();
-                }
-            });
-
-            // The plugin is typically toggled with some button on your UI.
-            function onToggleEnabled(value) {
-                if (value) {
-                    bgGeo.start();
-                } else {
-                    bgGeo.stop();
+            } else {
+                // Location services are disabled
+                if (window.confirm('Location is disabled. Would you like to open location settings?')) {
+                    backgroundGeolocation.showLocationSettings();
                 }
             }
+        });
+
+
+
 
         /***
          * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
