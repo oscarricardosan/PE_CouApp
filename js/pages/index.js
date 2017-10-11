@@ -77,12 +77,21 @@ function onDeviceReady() {
 
 function printText() {
 
-    //window.DatecsPrinter.drawPageRectangle(x, y, width, height, fillMode, onSuccess, onError);
     alert(1);
     window.DatecsPrinter.feedPaper(1);
     window.DatecsPrinter.printText('0___ 1 ', 'ISO-8859-1');
+    //window.DatecsPrinter.drawPageRectangle(x, y, width, height, fillMode, onSuccess, onError);
     window.DatecsPrinter.feedPaper(1);
-    window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 0, function(){}, function(){});
+    window.DatecsPrinter.drawPageRectangle(1, 0, 56, 20, 1, function(){}, function(){});
+
+    //(x, y, width, height, fillMode, thickness, onSuccess, onError
+    window.DatecsPrinter.feedPaper(1);
+    window.DatecsPrinter.drawPageFrame(1, 0, 56, 20, 1, 1, function(){}, function(){});
+
+    //(x, y, width, height, direction, onSuccess, onError)
+    window.DatecsPrinter.feedPaper(1);
+    window.DatecsPrinter.setPageRegion(1, 0, 56, 20, 1, function(){}, function(){});
+
     window.DatecsPrinter.feedPaper(1);
     // window.DatecsPrinter.drawPageRectangle(0, 0, 58, 20, 0, function(){}, function(){});
     // alert(2);
