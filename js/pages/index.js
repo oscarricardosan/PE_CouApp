@@ -80,7 +80,7 @@ function printText() {
     window.DatecsPrinter.printText(text, 'ISO-8859-1');
     window.DatecsPrinter.feedPaper(1);
     for(i=65; i<=76; i++){
-        window.DatecsPrinter.printText('Code '+i);
+        window.DatecsPrinter.printText('Code '+i, 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printBarcode(
             i, //here goes the barcode type code
