@@ -89,6 +89,7 @@ $(document).ready(function(){
     $(document).ready(function(){
         $('.takePhoto').click(function(event){
             event.preventDefault();
+            var current_element= $(this);
             var button= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
@@ -99,7 +100,7 @@ $(document).ready(function(){
             });
 
             function onSuccess(imageURI) {
-                var image = $(this).closest('form').find('.photo_of_camera');
+                var image = current_element.closest('form').find('.photo_of_camera');
                 image.attr('src', imageURI);
             }
 
@@ -110,6 +111,7 @@ $(document).ready(function(){
 
         $('.selectPhoto').click(function(event){
             event.preventDefault();
+            var current_element= $(this);
             var button= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
@@ -120,7 +122,7 @@ $(document).ready(function(){
             });
 
             function onSuccess(imageURI) {
-                var image = $(this).closest('form').find('.photo_of_camera');
+                var image = current_element.closest('form').find('.photo_of_camera');
                 image.attr('src', imageURI);
             }
 
