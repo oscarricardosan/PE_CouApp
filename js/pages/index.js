@@ -85,6 +85,50 @@ var App= new Vue({
 
 $(document).ready(function(){
     //$('.synchronize_data_operations').trigger("click");
+
+    $(document).ready(function(){
+        $('.takePhoto').click(function(event){
+            event.preventDefault();
+            var button= $(this);
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.NATIVE_URI,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                targetHeight: 700,
+                targetWidth: 700,
+            });
+
+            function onSuccess(imageURI) {
+                var image = $(this).closest('form').find('.photo_of_camera');
+                image.attr('src', imageURI);
+            }
+
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+        });
+
+        $('.selectPhoto').click(function(event){
+            event.preventDefault();
+            var button= $(this);
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.NATIVE_URI,
+                sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+                targetHeight: 700,
+                targetWidth: 700,
+            });
+
+            function onSuccess(imageURI) {
+                var image = $(this).closest('form').find('.photo_of_camera');
+                image.attr('src', imageURI);
+            }
+
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+        });
+    });
 });
 
 
