@@ -30,11 +30,34 @@ var App= new Vue({
         /**
          * Create map
          */
-        map = L.map('addressMap').setView([0, 0], 14);
+        var map = L.map('map').fitWorld();
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18
         }).addTo(map);
+        map.locate({setView: true, maxZoom: 16});
 
+        /** DETECTAR UBICACIÓN ACTUAL **/
+        function onLocationFound(e) {
+            var radius = e.accuracy / 2;
+
+            L.marker(e.latlng).addTo(map)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+            L.circle(e.latlng, radius).addTo(map);
+        }
+        map.on('locationfound', onLocationFound);
+
+        /** ERROR SI NO ENCUENTRA UBICACIÓN ACTUAL **/
+        function onLocationError(e) {
+            alert(e.message);
+        }
+        map.on('locationerror', onLocationError);
+
+
+        /**
+         * CARGA MARCAS
+         */
         DeliveriesModel.loaded(function(){
             App_.operations.deliveries= DeliveriesModel.get();
 
