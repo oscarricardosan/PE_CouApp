@@ -118,15 +118,15 @@ function onDeviceReady() {
         var index_execution=0;
         setInterval(function () {
             index_execution++;
-            if(index_execution % 100 == 0) {
+  /*          if(index_execution % 100 == 0) {
                 navigator.notification.beep(2);
                 navigator.notification.vibrate([1500, 500, 1500]);
             }
-
+*/
             cordova.plugins.backgroundMode.configure({
                 text:
-                    "Recolecciones pendientes 5 de  "+index_execution+
-                    "\nEntregas pendientes 1 de  "+index_execution
+                    "Recolecciones "+App.operations.deliveries.length+
+                    "\nEntregas "+App.operations.pickups.length
                 }
             );
         }, 5000);
