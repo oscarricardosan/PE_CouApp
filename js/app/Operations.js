@@ -8,10 +8,9 @@ var Operations= (function () {
             url: Settings.route_api_pasar("operations_data"),
             type: 'post',
             dataType: "json",
-            data: {
-                date: date,
-                user: SecurityUtility_.get_auth()
-            }
+            data: SecurityUtility_.add_user_authenticated({
+                date: date
+            })
         });
         request.done(function(response){
             callback.success(response);
@@ -25,13 +24,29 @@ var Operations= (function () {
 
     var synchronize_data_operations= function (external_callbacks){
         var external_callbacks= PolishedUtility_.callback(external_callbacks);
-        Operations.get_data('2017-10-04', {
-            success: function(data){
-                DeliveriesModel.remove();
-                DeliveriesModel.store(data.deliveries);
+        Operations.get_data('2017-10-15', {
+            success: function(response){
+                if(!response.deliveries.success){
+                    alert(response.deliveries.message);
+                }else{
+                    DeliveriesModel.remove();
+                    DeliveriesModel.store(response.deliveries.data, {
+                        success:function(){
+                            App.operations.deliveries= DeliveriesModel.get();
+                        }
+                    });
+                }
 
-                PickupModel.remove();
-                PickupModel.store(data.pickups);
+                if(!response.pickups.success){
+                    alert(response.deliveries.message);
+                }else{
+                    PickupModel.remove();
+                    PickupModel.store(response.pickups.data, {
+                        success:function(){
+                            App.operations.pickups= PickupModel.get();
+                        }
+                    });
+                }
                 external_callbacks.success();
 
             },fail: function(){

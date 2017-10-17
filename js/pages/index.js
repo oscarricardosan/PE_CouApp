@@ -8,6 +8,8 @@ var App= new Vue({
         operations: {
             deliveries: [],
             pickups: [],
+            current_pickup: {},
+            current_delivery: {}
         },
         bluetooth_devices: [],
         printer_device: null
@@ -20,6 +22,20 @@ var App= new Vue({
                 success: function(){element.unloading();},
                 fail: function(){ element.unloading(); }
             });
+        }, showPickupModal: function(pickup){
+            this.operations.current_pickup= pickup;
+            $('#pickup_action_modal').modal('show');
+        }, showDeliveryModal: function(delivery){
+            this.operations.current_delivery= delivery;
+            $('#delivery_action_modal').modal('show');
+        }
+    },
+    filters: {
+        formatMoney: function (value) {
+            return accounting.formatMoney(value);
+        },
+        formatNumber: function (value) {
+            return accounting.formatNumber(value);
         }
     },
     watch: {
@@ -33,6 +49,21 @@ var App= new Vue({
         }
     },
     mounted: function(){
+        accounting.settings = {
+            currency: {
+                symbol : "$",   // default currency symbol is '$'
+                format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                decimal : ",",  // decimal point separator
+                thousand: ".",  // thousands separator
+                precision : 2   // decimal places
+            },
+            number: {
+                precision : 0,  // default precision on numbers is 0
+                thousand: ".",
+                decimal : ","
+            }
+        };
+
         App_= this;
         UserModel.loaded(function(){
             var user= UserModel.get();
@@ -53,7 +84,7 @@ var App= new Vue({
 });
 
 $(document).ready(function(){
-    $('.synchronize_data_operations').trigger("click");
+    //$('.synchronize_data_operations').trigger("click");
 });
 
 

@@ -1,6 +1,6 @@
 var Settings= {
-    url_pasar_server: 'https://courier-app.pasarex-app.net',
+    url_server: 'http://courier-app.pasarex-app.app',
     route_api_pasar: function(route){
-        return this.url_pasar_server+'/mobile_api/'+route;
+        return this.url_server+'/mobile_api/'+route;
     }
 };

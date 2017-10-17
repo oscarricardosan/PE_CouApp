@@ -6,7 +6,7 @@ var AjaxUtility_= (function () {
         else if(jqXHR.status==500)
             alert("Error de conexion con el servidor.\nRevise su conexion a internet.");
         else if(jqXHR.status==403){
-            alert('Acceso denegado.');
+            alert('Acceso denegado. '+ jqXHR.responseJSON.message);
             Login.logout();
         }else if(jqXHR.status==401)
             alert('Usuario sin autorización. Revise que la sesión no haya finalizado.');

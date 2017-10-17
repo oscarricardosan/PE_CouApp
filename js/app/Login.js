@@ -10,10 +10,10 @@ var Login= (function () {
             url: Settings.route_api_pasar("login"),
             type: 'post',
             dataType: "json",
-            data: {
-                email_usr: email,
+            data: SecurityUtility_.add_token_to_server({
+                email: email,
                 password: password
-            }
+            })
         });
         request.done(function(response){
             response.token_generated_at= MomentUtility_.numericDate();

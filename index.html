@@ -48,6 +48,10 @@
     <link rel="stylesheet" href="tpl/bower_components/select2/dist/css/select2.min.css">
     <!-- TOASTER_JS -->
     <link rel="stylesheet" href="resources/bower_components/toastr/toastr.min.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="tpl/plugins/datepicker/datepicker3.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="tpl/plugins/timepicker/bootstrap-timepicker.min.css">
 
     <!-- Theme style -->
     <link rel="stylesheet" href="tpl/dist/css/AdminLTE.min.css">
@@ -91,6 +95,23 @@
 
     <!-- VUE -->
     <script src="js/vue.min.js" type="text/javascript"></script>
+
+    <style>
+        .pickups .pickup:first-child{
+            border-top: none;
+        }
+        .pickups .pickup{
+            border-left: none;
+            border-right: none;
+        }
+        .deliveries .delivery:first-child{
+            border-top: none;
+        }
+        .deliveries .delivery{
+            border-left: none;
+            border-right: none;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="wrapper" id="App">
@@ -114,14 +135,14 @@
                     <ul class="nav navbar-nav">
                         <!-- Notifications: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu">
-                            <a href="pickups.html">
+                            <a href="#">
                                 <i class="fa fa-truck"></i>
                                 <span class="label label-warning">{{ operations.pickups.length }}</span>
                             </a>
                         </li>
                         <!-- Tasks: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu">
-                            <a href="deliveries.html">
+                            <a href="#">
                                 <i class="fa fa-tags"></i>
                                 <span class="label label-danger">{{ operations.deliveries.length }}</span>
                             </a>
@@ -176,21 +197,19 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Menú principal</li>
-                    <li>
-                        <a href="pickups.html">
-                            <i class="fa fa-truck"></i>
-                            <span>Recolecciones</span>
-                            <span class="pull-right-container">
-                                <span class="label label-primary pull-right">{{ operations.pickups.length }}</span>
+                    <li class="active">
+                        <a href="index.html">
+                            <i class="fa fa-dashboard"></i>
+                            <span>
+                                Inicio
                             </span>
                         </a>
                     </li>
                     <li>
-                        <a href="deliveries.html">
-                            <i class="fa fa-tags"></i>
-                            <span>Entregas</span>
-                            <span class="pull-right-container">
-                                <span class="label label-primary pull-right">{{ operations.deliveries.length }}</span>
+                        <a href="map.html">
+                            <i class="fa fa-globe"></i>
+                            <span>
+                                Mapa
                             </span>
                         </a>
                     </li>
@@ -219,86 +238,65 @@
                 <button class="synchronize_data_operations btn btn-link pull-right" @click.prevent="synchronize_data_operations" style="padding-right: 0;">
                     <i class="fa fa-refresh"></i> Sincronizar
                 </button>
-                <h5>Bienvenido {{ user.name }}</h5>
+                <h5>{{ user.name }}</h5>
             </section>
 
             <!-- Main content -->
             <section class="content">
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <i class="fa fa-tags"></i>
-                                <h3 class="box-title">Tus entregas</h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua" style="margin-bottom: 0;">
-                                        <div class="inner">
-                                            <h3>{{ operations.deliveries.length }}</h3>
-                                            <p>Para hoy</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-person-add"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-green" style="margin-bottom: 0;">
-                                        <div class="inner">
-                                            <h3>0</h3>
-                                            <p>Por entregar</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-person-add"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box-footer clearfix">
-                                <a href="deliveries.html" class="btn btn-default pull-right">
-                                    Ver entregas para hoy
-                                    <i class="fa fa-arrow-circle-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#tab_1" data-toggle="tab">
+                                        Recolecciones <span class="label bg-green">{{ operations.pickups.length }}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_2" data-toggle="tab">
+                                        Entregas <span class="label bg-blue">{{ operations.deliveries.length }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content no-padding">
+                                <div class="tab-pane active" id="tab_1">
+                                    <div class="list-group pickups">
+                                        <a href="#" class="pickup list-group-item" v-for="(pickup, index) in _.sortBy(operations.pickups, 'pickup_start_time')"
+                                           @click.prevent="showPickupModal(pickup)" data-picked="1"
+                                        >
+                                        <span class="text-muted pull-right">
+                                            <i class="fa fa-clock-o"></i> {{ pickup.pickup_start_time }} - {{ pickup.pickup_end_time }}
+                                        </span>
+                                            <span :class="['label bg-'+pickup.pickup_state.class]">{{ index+1 }}) {{ pickup.pickup_state.name }}</span>
+                                            <br>
+                                            <b>Empresa:</b> {{ pickup.company_name }}
+                                            <b>{{ pickup.type_of_identity_document.short_name }}</b>: {{ pickup.identity_document }}<br>
 
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <i class="fa fa-truck"></i>
-                                <h3 class="box-title">Tus recolecciones</h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-aqua" style="margin-bottom: 0;">
-                                        <div class="inner">
-                                            <h3>{{ operations.pickups.length }}</h3>
-                                            <p>Para hoy</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-person-add"></i>
-                                        </div>
+                                            <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
+                                            <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact_name }}<br>
+                                            <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-xs-6">
-                                    <div class="small-box bg-red" style="margin-bottom: 0;">
-                                        <div class="inner">
-                                            <h3>{{ operations.pickups.length }}</h3>
-                                            <p>Por recoger</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-person-add"></i>
-                                        </div>
+                                <div class="tab-pane" id="tab_2">
+                                    <div class="list-group deliveries">
+                                        <a href="#" class="delivery list-group-item" v-for="(delivery, index) in _.sortBy(operations.deliveries, 'delivery_start_time')"
+                                           @click.prevent="showDeliveryModal(delivery)" data-picked="1"
+                                        >
+                                        <span class="text-muted pull-right">
+                                            <i class="fa fa-clock-o"></i> {{ delivery.delivery_start_time }} - {{ delivery.delivery_end_time }}
+                                        </span>
+                                            <span :class="['label bg-'+delivery.delivery_state.class]">{{ index+1 }}) {{ delivery.delivery_state.name }}</span>
+                                            <br>
+                                            <b>Empresa:</b> {{ delivery.company_name }}
+                                            <b>{{ delivery.type_of_identity_document.short_name }}</b>: {{ delivery.identity_document }}<br>
+
+                                            <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
+                                            <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact_name }}<br>
+                                            <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="box-footer clearfix">
-                                <a href="pickups.html" class="btn btn-default pull-right">
-                                    Ver recolecciones para hoy
-                                    <i class="fa fa-arrow-circle-right"></i>
-                                </a>
                             </div>
                         </div>
                         <button onclick="printText();">Imprimir</button>
@@ -316,8 +314,386 @@
             Un sistema desarrollado por <a href="http://www.savne.net" target="_blank">www.savne.net</a>
         </footer>
 
+
+
+
+        <!--  MODALS -->
+        <!-- MODAL ACTION PICKUP -->
+        <div class="modal fade" id="pickup_action_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="control-label" style="font-weight: normal; text-align: center; padding-bottom: 1em;">Deseas?</div>
+                            <button class="btn btn-block btn-flat btn-success" data-toggle="modal" data-target="#pickup_success_modal">
+                                <i class="fa fa-check-circle"></i> Registrar recolección
+                            </button>
+                        </div>
+                        <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;">
+                            <button class="btn btn-block btn-flat btn-danger" data-toggle="modal" data-target="#pickup_exception_modal">
+                                <i class="fa fa-ban"></i> Registrar excepción
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-block btn-flat btn-primary">
+                                <i class="fa fa-print"></i> Imprimir label
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESS PICKUP -->
+        <div class="modal fade" id="pickup_success_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <button class="btn btn-block btn-flat btn-warning" data-toggle="modal" data-target="#pickup_success_modal">
+                                    {{ operations.current_pickup.value | formatMoney }}
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <div class="callout callout-info">
+                                    <p>
+                                        <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                            <div class="form-group" >
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </div>
+                                    <input type="text" class="form-control datepicker">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control timepicker">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Número de guía:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Número de guía">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-barcode" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Observaciones en recolección:</label>
+                                <textarea class="form-control"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success">Registrar recolección</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL EXCEPTION PICKUP -->
+        <div class="modal fade" id="pickup_exception_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <div class="callout callout-info">
+                                    <p>
+                                        <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                            <div class="form-group" >
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </div>
+                                    <input type="text" class="form-control datepicker">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control timepicker">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Motivo excepción:</label>
+                                <select class="form-control">
+                                    <option>Nadie en casa</option>
+                                    <option>En vacaciones</option>
+                                    <option>Direcció errada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Observaciones en recolección:</label>
+                                <textarea class="form-control"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- MODAL ACTION DELIVERY -->
+        <div class="modal fade" id="delivery_action_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="control-label" style="font-weight: normal; text-align: center; padding-bottom: 1em;">Deseas?</div>
+                            <button class="btn btn-block btn-flat btn-success" data-toggle="modal" data-target="#delivery_success_modal">
+                                <i class="fa fa-check-circle"></i> Registrar entrega
+                            </button>
+                        </div>
+                        <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;">
+                            <button class="btn btn-block btn-flat btn-danger" data-toggle="modal" data-target="#delivery_exception_modal">
+                                <i class="fa fa-ban"></i> Registrar excepción
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-block btn-flat btn-primary">
+                                <i class="fa fa-print"></i> Imprimir label
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL SUCCESS DELIVERY -->
+        <div class="modal fade" id="delivery_success_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <button class="btn btn-block btn-flat btn-warning" data-toggle="modal" data-target="#pickup_success_modal">
+                                    {{ operations.current_delivery.value | formatMoney }}
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <div class="callout callout-info">
+                                    <p>
+                                        <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                            <div class="form-group" >
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </div>
+                                    <input type="text" class="form-control datepicker">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control timepicker">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Número de guía:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Número de guía">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-barcode" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Observaciones en entrega:</label>
+                                <textarea class="form-control"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success">Registrar entrega</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL EXCEPTION DELIVERY -->
+        <div class="modal fade" id="delivery_exception_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <div class="callout callout-info">
+                                    <p>
+                                        <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                            <div class="form-group" >
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </div>
+                                    <input type="text" class="form-control datepicker">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="bootstrap-timepicker">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control timepicker">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Motivo excepción:</label>
+                                <select class="form-control">
+                                    <option>Nadie en casa</option>
+                                    <option>En vacaciones</option>
+                                    <option>Direcció errada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Observaciones en entrega:</label>
+                                <textarea class="form-control"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- ./wrapper -->
+
+
+
 
     <!-- jQuery UI 1.11.4 -->
     <script src="tpl/bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -344,6 +720,10 @@
     <script src="tpl/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
     <!-- Slimscroll -->
     <script src="tpl/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- bootstrap datepicker -->
+    <script src="tpl/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!-- bootstrap time picker -->
+    <script src="tpl/plugins/timepicker/bootstrap-timepicker.min.js"></script>
     <!-- FastClick -->
     <script src="tpl/bower_components/fastclick/lib/fastclick.js"></script>
     <!-- AdminLTE App -->
@@ -353,5 +733,6 @@
 
     <script src="js/pages/index.js" type="text/javascript"></script>
     <script src="js/pages/intranet.js" type="text/javascript"></script>
+
     </body>
 </html>
