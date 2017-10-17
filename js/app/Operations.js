@@ -24,7 +24,7 @@ var Operations= (function () {
 
     var synchronize_data_operations= function (external_callbacks){
         var external_callbacks= PolishedUtility_.callback(external_callbacks);
-        Operations.get_data('2017-10-15', {
+        Operations.get_data(MomentUtility_.current_date(), {
             success: function(response){
                 if(!response.deliveries.success){
                     alert(response.deliveries.message);
