@@ -69,7 +69,7 @@ var App= new Vue({
                     lng: delivery.longitude,
                     lat: delivery.latitude
                 }).addTo(map).bindPopup(
-                    "<div style='text-align:center;'>Entrega</div>"+
+                    "<div style='text-align:center;'>Entrega <span class='label bg-"+delivery.delivery_state.class+"'>"+delivery.delivery_state.name+"</span></div>"+
                     "<i class='fa fa-user'></i>"+delivery.courier.email+" - <b>"+delivery.delivery_number+"</b><br>"+
                     "<b>Dirección: </b> "+delivery.address+" <br>"+
                     "<b>Observaciones dirección: </b> "+delivery.long_address+"<br>"+
@@ -89,7 +89,7 @@ var App= new Vue({
                     lng: pickup.longitude,
                     lat: pickup.latitude
                 }).addTo(map).bindPopup(
-                    "<div style='text-align:center;'>Recolección</div>"+
+                    "<div style='text-align:center;'>Recolección <span class='label bg-"+pickup.pickup_state.class+"'>"+pickup.pickup_state.name+"</span></div>"+
                     "<i class='fa fa-user'></i>"+pickup.courier.email+" - <b>"+pickup.pickup_number+"</b><br>"+
                     "<b>Dirección: </b> "+pickup.address+" <br>"+
                     "<b>Observaciones dirección: </b> "+pickup.long_address+"<br>"+
