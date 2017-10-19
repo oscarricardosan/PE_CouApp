@@ -111,6 +111,10 @@
             border-left: none;
             border-right: none;
         }
+        .nav.navbar-nav>li>a{
+            font-size: 21px;
+            padding-left: 40px;
+        }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -133,6 +137,12 @@
 
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        <!-- Notifications: style can be found in dropdown.less -->
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="synchronize_data_operations" @click.prevent="synchronize_data_operations">
+                                <i class="fa fa-refresh"></i>
+                            </a>
+                        </li>
                         <!-- Notifications: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu">
                             <a href="#">
@@ -233,14 +243,6 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="padding-top: 50px">
-            <!-- Content Header (Page header) -->
-            <section class="content-header" style="padding-top: 8px;">
-                <button class="synchronize_data_operations btn btn-link pull-right" @click.prevent="synchronize_data_operations" style="padding-right: 0;">
-                    <i class="fa fa-refresh"></i> Sincronizar
-                </button>
-                <h5>{{ user.name }}</h5>
-            </section>
-
             <!-- Main content -->
             <section class="content">
                 <div class="row">
@@ -343,6 +345,11 @@
                                 <i class="fa fa-print"></i> Imprimir label
                             </button>
                         </div>
+                        <div class="form-group">
+                            <button class="btn btn-block btn-flat bg-purple" data-toggle="modal" data-target="#pickup_attach_photo">
+                                <i class="fa fa-camera"></i> Asociar foto
+                            </button>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -372,28 +379,12 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
-                                <div class="col-xs-12">
-                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
-                                </div>
-                                <div class="col-xs-6">
-                                    <button class="takePhoto btn btn-block btn-primary">
-                                        <i class="fa fa-camera"></i>
-                                    </button>
-                                </div>
-                                <div class="col-xs-6">
-                                    <button class="selectPhoto btn btn-block btn-primary">
-                                        <i class="fa fa-picture-o"></i>
-                                    </button>
-                                </div>
-                                <div class="col-xs-12">&nbsp;</div>
-                            </div>
                             <div class="form-group" >
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </div>
-                                    <input type="text" class="form-control datepicker">
+                                    <input type="date" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -426,6 +417,41 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-success">Registrar recolección</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL ATTACH PHOTO-->
+        <div class="modal fade" id="pickup_attach_photo" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success">Asociar foto</button>
                     </div>
                 </div>
             </div>
@@ -530,6 +556,11 @@
                                 <i class="fa fa-print"></i> Imprimir label
                             </button>
                         </div>
+                        <div class="form-group">
+                            <button class="btn btn-block btn-flat bg-purple" data-toggle="modal" data-target="#delivery_attach_photo">
+                                <i class="fa fa-camera"></i> Asociar foto
+                            </button>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -559,28 +590,12 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
-                                <div class="col-xs-12">
-                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
-                                </div>
-                                <div class="col-xs-6">
-                                    <button class="takePhoto btn btn-block btn-primary">
-                                        <i class="fa fa-camera"></i>
-                                    </button>
-                                </div>
-                                <div class="col-xs-6">
-                                    <button class="selectPhoto btn btn-block btn-primary">
-                                        <i class="fa fa-picture-o"></i>
-                                    </button>
-                                </div>
-                                <div class="col-xs-12">&nbsp;</div>
-                            </div>
                             <div class="form-group" >
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </div>
-                                    <input type="text" class="form-control datepicker">
+                                    <input type="date" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -613,6 +628,41 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-success">Registrar entrega</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL ATTACH PHOTO-->
+        <div class="modal fade" id="delivery_attach_photo" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group" style="text-align: center; padding-bottom: 20px;">
+                                <div class="col-xs-12">
+                                    <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="takePhoto btn btn-block btn-primary">
+                                        <i class="fa fa-camera"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="selectPhoto btn btn-block btn-primary">
+                                        <i class="fa fa-picture-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-xs-12">&nbsp;</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success">Asociar foto</button>
                     </div>
                 </div>
             </div>

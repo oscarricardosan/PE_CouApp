@@ -65,10 +65,21 @@ var App= new Vue({
              * Add deliveries in Map
              */
             $.each(App_.operations.deliveries, function(index, delivery){
+
+                var icon= L.icon({
+                    iconUrl: 'images/map_icons/delivery_'+delivery.delivery_state.class+'.png?1',
+                    shadowUrl:     'images/map_icons/marker-shadow.png',
+                    iconSize:    [25, 41],
+                    iconAnchor:  [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize:  [41, 41]
+                });
+
                 new L.marker().setLatLng({
                     lng: delivery.longitude,
                     lat: delivery.latitude
-                }).addTo(map).bindPopup(
+                }).setIcon(icon).addTo(map).bindPopup(
                     "<div style='text-align:center;'>Entrega <span class='label bg-"+delivery.delivery_state.class+"'>"+delivery.delivery_state.name+"</span></div>"+
                     "<i class='fa fa-user'></i>"+delivery.courier.email+" - <b>"+delivery.delivery_number+"</b><br>"+
                     "<b>Dirección: </b> "+delivery.address+" <br>"+
@@ -85,10 +96,21 @@ var App= new Vue({
              * Add deliveries in Map
              */
             $.each(App_.operations.pickups, function(index, pickup){
+
+                var icon= L.icon({
+                    iconUrl: 'images/map_icons/pickup_'+pickup.pickup_state.class+'.png?1',
+                    shadowUrl:     'images/map_icons/marker-shadow.png',
+                    iconSize:    [25, 41],
+                    iconAnchor:  [12, 41],
+                    popupAnchor: [1, -34],
+                    tooltipAnchor: [16, -28],
+                    shadowSize:  [41, 41]
+                });
+
                 new L.marker().setLatLng({
                     lng: pickup.longitude,
                     lat: pickup.latitude
-                }).addTo(map).bindPopup(
+                }).setIcon(icon).addTo(map).bindPopup(
                     "<div style='text-align:center;'>Recolección <span class='label bg-"+pickup.pickup_state.class+"'>"+pickup.pickup_state.name+"</span></div>"+
                     "<i class='fa fa-user'></i>"+pickup.courier.email+" - <b>"+pickup.pickup_number+"</b><br>"+
                     "<b>Dirección: </b> "+pickup.address+" <br>"+

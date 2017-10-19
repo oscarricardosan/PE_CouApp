@@ -37,8 +37,9 @@ var Login= (function () {
     }
 
     var logout= function (callback) {
-        db.drop();
-        window.location.href= 'login.html';
+        db.drop(function(){
+            window.location.href= 'login.html';
+        });
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
