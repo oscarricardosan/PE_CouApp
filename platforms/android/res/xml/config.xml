@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="savne.courier_app" version="2.1.1" versionCode="4" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="BackgroundMode">
+        <param name="android-package" value="de.appplant.cordova.plugin.background.BackgroundMode" />
+    </feature>
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="CsZBar">
+        <param name="android-package" value="org.cloudsky.cordovaPlugins.ZBar" />
+    </feature>
+    <feature name="DatecsPrinter">
+        <param name="android-package" value="com.giorgiofellipe.datecsprinter.DatecsPrinter" />
+    </feature>
+    <feature name="Notification">
+        <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
+    <feature name="Vibration">
+        <param name="android-package" value="org.apache.cordova.vibration.Vibration" />
+    </feature>
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <name>Courier APP</name>
+    <content src="login.html" />
+    <description>Aplicación para courier</description>
+    <author email="oscar.sanchez@savne.net" href="http://savne.net/">Oscar Sanchez</author>
+    <gap:platform name="android" />
+    <icon src="www/images/icon.png" />
+    <allow-navigation href="*" />
+    <access origin="*" />
+    <allow-intent href="*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-navigation href="*" subdomains="true" />
+    <allow-intent href="market:*" />
+    <preference name="loglevel" value="DEBUG" />
+    <preference name="KeepRunning" value="true" />
+    <preference name="AndroidLaunchMode" value="singleInstance" />
+    <preference name="orientation" value="default" />
+    <preference name="fullscreen" value="false" />
+</widget>

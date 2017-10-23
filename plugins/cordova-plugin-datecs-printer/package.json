@@ -1,0 +1,63 @@
+{
+  "_from": "cordova-plugin-datecs-printer",
+  "_id": "cordova-plugin-datecs-printer@0.7.4",
+  "_inBundle": false,
+  "_integrity": "sha1-lMT3O/RVYhxomaRUdjX9O09dQfk=",
+  "_location": "/cordova-plugin-datecs-printer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-datecs-printer",
+    "name": "cordova-plugin-datecs-printer",
+    "escapedName": "cordova-plugin-datecs-printer",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-datecs-printer/-/cordova-plugin-datecs-printer-0.7.4.tgz",
+  "_shasum": "94c4f73bf455621c6899a4547635fd3b4f5d41f9",
+  "_spec": "cordova-plugin-datecs-printer",
+  "_where": "/home/masterdev/Code/savne/Mobile_apps/courier_app/phone/node_modules",
+  "author": {
+    "name": "Apache Software Foundation"
+  },
+  "bugs": {
+    "url": "https://github.com/giorgiofellipe/cordova-plugin-datecs-printer/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-datecs-printer",
+    "platforms": [
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova Datecs Printer Plugin",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "homepage": "https://github.com/giorgiofellipe/cordova-plugin-datecs-printer#readme",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "datecs",
+    "printer",
+    "bluetooth"
+  ],
+  "license": "Apache 2.0",
+  "name": "cordova-plugin-datecs-printer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giorgiofellipe/cordova-plugin-datecs-printer.git"
+  },
+  "version": "0.7.4"
+}
