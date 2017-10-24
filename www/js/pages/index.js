@@ -156,6 +156,8 @@ $(document).ready(function(){
             }
         });
 
+
+        /** ABRE STORE DE FOTOS */
         $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
             App.current_photo= 'images/camera.png';
         });
@@ -221,6 +223,98 @@ $(document).ready(function(){
                 },
             });
         });
+        /** <!-- CIERRA STORE DE FOTOS */
+
+        /** ABRE STORE DE EXCEPCIONES */
+        $('#pickup_exception_modal, #delivery_exception_modal').on('show.bs.modal', function () {
+            $(this).find('[current_time]').val(
+                MomentUtility_.current_time().substr(0,5)
+            );
+            $(this).find('[current_date]').val(MomentUtility_.current_date());
+        });
+        $('#pickup_exception_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.recoleccion_id= App.operations.current_pickup.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/store_exception',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function(){
+                                App.operations.current_pickup=  response.data;
+                                ToastrUtility_.success(response.message);
+                                $('#pickup_exception_modal').modal('hide');
+                                App.operations.pickups= PickupModel.get();
+                            }
+                        });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_pickup.pickup_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
+                    App.operations.current_pickup.pickup_state_id= 3;
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function(){
+                            $('#pickup_exception_modal').modal('hide');
+                            App.operations.pickups= PickupModel.get();
+                        }
+                    });
+                },
+            });
+        });
+        $('#delivery_exception_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.entrega_id= App.operations.current_delivery.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/store_exception',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function(){
+                                App.operations.current_delivery=  response.data;
+                                ToastrUtility_.success(response.message);
+                                $('#delivery_exception_modal').modal('hide');
+                                App.operations.deliveries= DeliveriesModel.get();
+                            }
+                        });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_delivery.delivery_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
+                    App.operations.current_delivery.delivery_state_id= 3;
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function(){
+                            $('#delivery_exception_modal').modal('hide');
+                            App.operations.deliveries= DeliveriesModel.get();
+                        }
+                    });
+                },
+            });
+        });
+        /** <!-- CIERRA STORE DE EXCEPCIONES */
 
     });
 });

@@ -30,7 +30,7 @@ var FormUtility_= (function () {
                 }
             }
         });
-    }
+    };
 
     var namesToId = function(element) {
         if(element===undefined)element='body';
@@ -45,7 +45,7 @@ var FormUtility_= (function () {
                 }
             }
         });
-    }
+    };
 
     var idToName = function(element) {
         if(element===undefined)element='body';
@@ -53,7 +53,7 @@ var FormUtility_= (function () {
             if($(this).attr('name')==undefined)
                 $(this).attr('name',$(this).attr('id'));
         });
-    }
+    };
 
     /**
      * Find by Id in array
@@ -62,7 +62,7 @@ var FormUtility_= (function () {
      */
     var findById = function (array, id) {
         return _.findWhere(array, {id: id*1});
-    }
+    };
 
     var limpiarForm = function (contenedor, except) {
         if(except==undefined)except='.select-dropdown, input[name="_token"]';
@@ -70,15 +70,26 @@ var FormUtility_= (function () {
         $(contenedor).find('input:not('+except+')').val('');
         $(contenedor).find('textarea:not('+except+')').val('');
         $(contenedor).find('select:not('+except+')').val('');
+    };
+
+
+    function serialized_data_to_json(serialized_data){
+        var jsonObj = {};
+        jQuery.map( serialized_data, function( n, i ) {
+            jsonObj[n.name] = n.value;
+        });
+
+        return jsonObj;
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            asignaValByName     : asignaValByName,
-            idToName            : idToName,
-            findById            : findById,
-            limpiarForm         : limpiarForm,
-            namesToId           : namesToId,
+            asignaValByName           : asignaValByName,
+            idToName                  : idToName,
+            findById                  : findById,
+            limpiarForm               : limpiarForm,
+            namesToId                 : namesToId,
+            serialized_data_to_json   : serialized_data_to_json,
         }
     };
     return {construct:construct};//retorna los metodos publicos

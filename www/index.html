@@ -362,11 +362,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="control-label" style="font-weight: normal; text-align: center; padding-bottom: 1em;">Deseas?</div>
+                    </div>
+                    <div class="form-group" v-if="operations.current_pickup.pickup_state_id === 1">
                         <button class="btn btn-block btn-flat btn-success" data-toggle="modal" data-target="#pickup_success_modal">
                             <i class="fa fa-check-circle"></i> Registrar recolección
                         </button>
                     </div>
-                    <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;">
+                    <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;" v-if="operations.current_pickup.pickup_state_id === 1">
                         <button class="btn btn-block btn-flat btn-danger" data-toggle="modal" data-target="#pickup_exception_modal">
                             <i class="fa fa-ban"></i> Registrar excepción
                         </button>
@@ -415,7 +417,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" current_date>
                             </div>
                         </div>
                         <div class="form-group">
@@ -424,19 +426,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker">
+                                    <input type="text" class="form-control timepicker" current_time>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Número de guía:</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Número de guía">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">
-                                            <i class="fa fa-barcode" aria-hidden="true"></i>
-                                        </button>
-                                    </span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -491,41 +482,25 @@
     <div class="modal fade" id="pickup_exception_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    <b>Observaciones para recolección: </b> {{ operations.current_pickup.observation_to_pickup }}
                                 </p>
                             </div>
-                        </div>
-                        <div class="form-group" style="text-align: center; padding-bottom: 20px;">
-                            <div class="col-xs-12">
-                                <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
-                            </div>
-                            <div class="col-xs-6">
-                                <button class="takePhoto btn btn-block btn-primary">
-                                    <i class="fa fa-camera"></i>
-                                </button>
-                            </div>
-                            <div class="col-xs-6">
-                                <button class="selectPhoto btn btn-block btn-primary">
-                                    <i class="fa fa-picture-o"></i>
-                                </button>
-                            </div>
-                            <div class="col-xs-12">&nbsp;</div>
                         </div>
                         <div class="form-group" >
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="text" class="form-control datepicker">
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -534,28 +509,34 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker">
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Motivo excepción:</label>
-                            <select class="form-control">
-                                <option>Nadie en casa</option>
-                                <option>En vacaciones</option>
-                                <option>Direcció errada</option>
+                            <select class="form-control" name="razon_excepcion" required>
+                                <option disabled readonly selected value="">Seleccciona motivo</option>
+                                <option value="Nadie en casa">Nadie en casa</option>
+                                <option value="En vacaciones">En vacaciones</option>
+                                <option value="Dirección errada">Dirección errada</option>
+                                <option value="Otros">Otros</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en recolección:</label>
-                            <textarea class="form-control"></textarea>
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger">Registrar exepción</button>
-                </div>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones en recolección:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -573,11 +554,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="control-label" style="font-weight: normal; text-align: center; padding-bottom: 1em;">Deseas?</div>
+                    </div>
+                    <div class="form-group" v-if="operations.current_delivery.delivery_state_id === 1">
                         <button class="btn btn-block btn-flat btn-success" data-toggle="modal" data-target="#delivery_success_modal">
                             <i class="fa fa-check-circle"></i> Registrar entrega
                         </button>
                     </div>
-                    <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;">
+                    <div class="form-group" style="margin-top: 1em; margin-bottom: 1em;" v-if="operations.current_delivery.delivery_state_id  === 1">
                         <button class="btn btn-block btn-flat btn-danger" data-toggle="modal" data-target="#delivery_exception_modal">
                             <i class="fa fa-ban"></i> Registrar excepción
                         </button>
@@ -626,7 +609,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" current_date>
                             </div>
                         </div>
                         <div class="form-group">
@@ -635,19 +618,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker">
+                                    <input type="text" class="form-control timepicker" current_time>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Número de guía:</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Número de guía">
-                                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">
-                                            <i class="fa fa-barcode" aria-hidden="true"></i>
-                                        </button>
-                                    </span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -702,12 +674,12 @@
     <div class="modal fade" id="delivery_exception_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
@@ -715,28 +687,12 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="form-group" style="text-align: center; padding-bottom: 20px;">
-                            <div class="col-xs-12">
-                                <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
-                            </div>
-                            <div class="col-xs-6">
-                                <button class="takePhoto btn btn-block btn-primary">
-                                    <i class="fa fa-camera"></i>
-                                </button>
-                            </div>
-                            <div class="col-xs-6">
-                                <button class="selectPhoto btn btn-block btn-primary">
-                                    <i class="fa fa-picture-o"></i>
-                                </button>
-                            </div>
-                            <div class="col-xs-12">&nbsp;</div>
-                        </div>
                         <div class="form-group" >
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="text" class="form-control datepicker">
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -745,28 +701,34 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker">
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Motivo excepción:</label>
-                            <select class="form-control">
-                                <option>Nadie en casa</option>
-                                <option>En vacaciones</option>
-                                <option>Direcció errada</option>
+                            <select class="form-control" name="razon_excepcion" required>
+                                <option disabled readonly selected value="">Seleccciona motivo</option>
+                                <option value="Nadie en casa">Nadie en casa</option>
+                                <option value="En vacaciones">En vacaciones</option>
+                                <option value="Dirección errada">Dirección errada</option>
+                                <option value="Otros">Otros</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en entrega:</label>
-                            <textarea class="form-control"></textarea>
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger">Registrar exepción</button>
-                </div>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones en recolección:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -34,6 +34,22 @@ var DeliveriesModel= (function () {
         });
     };
 
+    /**
+     * @param where condition
+     * @param new_values object
+     * @param callback
+     */
+    var update = function(where, new_values, callback){
+        callback= PolishedUtility_.callback(callback);
+
+        db.collection(collection_name).update(where, new_values);
+
+        db.collection(collection_name).save(function (err) {
+            if (!err) {callback.success();}
+            else{callback.fail(); alert('Error al guardar en '+collection_name);}
+        });
+    };
+
     var get = function(){
         var records= db.collection(collection_name).find();
         return records;
@@ -75,6 +91,7 @@ var DeliveriesModel= (function () {
         return {
             get               : get,
             store             : store,
+            update            : update,
             loaded            : loaded,
             isEmpty           : isEmpty,
             drop              : drop,
