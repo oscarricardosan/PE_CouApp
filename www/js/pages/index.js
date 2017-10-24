@@ -13,7 +13,8 @@ var App= new Vue({
         },
         bluetooth_devices: [],
         printer_device: null,
-        current_photo: null
+        current_photo: 'images/camera.png',
+        ajax_queue_count: 0
     },
     methods: {
         synchronize_data_operations: function(e) {
@@ -29,6 +30,25 @@ var App= new Vue({
         }, showDeliveryModal: function(delivery){
             this.operations.current_delivery= delivery;
             $('#delivery_action_modal').modal('show');
+        },
+        check_ajax_queue: function(e) {
+            var element= $(e.target);
+            element.loading();
+            AjaxQueue.check_queue({
+                empty:function(){
+                    App_.ajax_queue_count= Ajax_queueModel.get().length;
+                    element.unloading();
+                    ToastrUtility_.success('Cola vacía');
+                },
+                fail: function(){
+                    App_.ajax_queue_count= Ajax_queueModel.get().length;
+                    element.unloading();
+                    ToastrUtility_.error('Fallo transmisión');
+                },
+                success: function(){
+                    App_.ajax_queue_count= Ajax_queueModel.get().length;
+                }
+            });
         }
     },
     filters: {
@@ -81,6 +101,10 @@ var App= new Vue({
         PickupModel.loaded(function(){
             App_.operations.pickups= PickupModel.get();
         });
+
+        Ajax_queueModel.loaded(function(){
+            App_.ajax_queue_count= Ajax_queueModel.get().length;
+        });
     }
 });
 
@@ -102,7 +126,6 @@ $(document).ready(function(){
 
             function onSuccess(imageURI) {
                 var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
-                image.attr('src', imageURI);
                 App.current_photo= imageURI;
             }
 
@@ -125,7 +148,6 @@ $(document).ready(function(){
 
             function onSuccess(imageURI) {
                 var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
-                image.attr('src', imageURI);
                 App.current_photo= imageURI;
             }
 
@@ -135,10 +157,14 @@ $(document).ready(function(){
         });
 
         $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
-            $(this).find('.photo_of_camera').attr('src', 'images/camera.png');
-            App.current_photo= null;
+            App.current_photo= 'images/camera.png';
         });
         $('.attach_photo_to_delivery').click(function(){
+            if(App.current_photo === 'images/camera.png'){
+                alert('Debes cargar una foto'); return false;
+            }
+            form= $(this).closest('.modal');
+            form.loading();
             AjaxQueue.add({
                 type: 'post',
                 url: 'delivery/attach_photo',
@@ -148,6 +174,7 @@ $(document).ready(function(){
                     entrega_id: App.operations.current_delivery.id,
                 },
                 successful_online: function(response){
+                    form.unloading();
                     if(response.success){
                         ToastrUtility_.success(response.message);
                         $('#delivery_attach_photo').modal('hide');
@@ -156,12 +183,19 @@ $(document).ready(function(){
                     }
                 },
                 failed_online: function(jqXHR, textStatus){
+                    form.unloading();
                     ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
                     $('#delivery_attach_photo').modal('hide');
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
                 },
             });
         });
         $('.attach_photo_to_pickup').click(function(){
+            if(App.current_photo === 'images/camera.png'){
+                alert('Debes cargar una foto'); return false;
+            }
+            form= $(this).closest('.modal');
+            form.loading();
             AjaxQueue.add({
                 type: 'post',
                 url: 'pickup/attach_photo',
@@ -171,6 +205,7 @@ $(document).ready(function(){
                     recoleccion_id: App.operations.current_pickup.id,
                 },
                 successful_online: function(response){
+                    form.unloading();
                     if(response.success){
                         ToastrUtility_.success(response.message);
                         $('#pickup_attach_photo').modal('hide');
@@ -179,8 +214,10 @@ $(document).ready(function(){
                     }
                 },
                 failed_online: function(jqXHR, textStatus){
+                    form.unloading();
                     ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
                     $('#pickup_attach_photo').modal('hide');
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
                 },
             });
         });

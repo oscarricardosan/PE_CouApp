@@ -11,6 +11,14 @@ var App= new Vue({
         },
     },
     methods: {
+        synchronize_data_operations: function(e) {
+            var element= $(e.target);
+            element.loading();
+            Operations.synchronize_data_operations({
+                success: function(){element.unloading();},
+                fail: function(){ element.unloading(); }
+            });
+        }
     },
     filters: {
     },

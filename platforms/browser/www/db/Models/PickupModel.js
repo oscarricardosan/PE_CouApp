@@ -48,9 +48,20 @@ var PickupModel= (function () {
         coll.drop(callback());
     };
 
-    var remove= function(where){
+    var remove= function(where, callback){
         var where= where===undefined?{}:where;
-        db.collection(collection_name).remove(where);
+        db.collection(collection_name).remove(
+            where,
+            function(){
+                db.collection(collection_name).save(function (err) {
+                    if (!err){
+                        if(typeof(callback) === 'function'){callback();}
+                    }else{
+                        alert('Error al borrar en colección '+collection_name);
+                    }
+                });
+            }
+        );
     };
 
     var loaded= function(callback){

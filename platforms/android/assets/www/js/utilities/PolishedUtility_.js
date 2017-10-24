@@ -29,17 +29,21 @@ var PolishedUtility_= (function () {
         });
 
 
-        properties.successful_offline= eval(properties, 'successful_offline', function(){
+        properties.successful_offline= eval(properties, 'successful_offline', function(response){
+            properties.response_server_successful= response;
             LogModel.store({
-                message: 'Error al transmitir al servidor petición offline.',
+                message: 'Transmisión de petición offline a servidor exitosa.',
                 status: 'success',
                 data: properties
             });
         });
-        properties.failed_offline= eval(properties, 'failed_offline', function(){
+        properties.failed_offline= eval(properties, 'failed_offline', function(jqXHR, textStatus){
+            properties.response_server_fail= {
+                jqXHR: jqXHR, textStatus: textStatus
+            };
             LogModel.store({
                 message: 'Error al transmitir al servidor petición offline.',
-                status: 'fail',
+                status: 'danger',
                 data: properties
             });
         });

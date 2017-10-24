@@ -8,6 +8,10 @@
 
     <title>Courier App</title>
 
+    <!-- jQuery 3 -->
+    <script src="tpl/bower_components/jquery/dist/jquery.min.js"></script>
+
+
     <!-- ForerunNerdb -->
     <script src="resources/ForerunnerDB-master/js/dist/fdb-all.js" type="text/javascript"></script>
     <script type="application/javascript" src="db/setup.js"></script>
@@ -16,10 +20,8 @@
     <script type="application/javascript" src="db/Models/DeliveriesModel.js"></script>
     <script type="application/javascript" src="db/Models/PickupModel.js"></script>
     <script type="application/javascript" src="db/Models/Ajax_queueModel.js"></script>
+    <script type="application/javascript" src="db/Models/LogModel.js"></script>
     <script type="application/javascript" src="db/run_migrations.js"></script>
-
-    <!-- jQuery 3 -->
-    <script src="tpl/bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- UNDERSCORE JS -->
     <script src="js/underscore-min.js" type="text/javascript"></script>
@@ -113,7 +115,8 @@
         }
         .nav.navbar-nav>li>a{
             font-size: 21px;
-            padding-left: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
         }
     </style>
 </head>
@@ -139,6 +142,13 @@
                 <ul class="nav navbar-nav">
                     <!-- Notifications: style can be found in dropdown.less -->
                     <li class="dropdown notifications-menu">
+                        <a href="#" class="synchronize_data_operations" @click.prevent="check_ajax_queue">
+                            <i class="fa fa-history"></i>
+                            <span class="label label-warning">{{ ajax_queue_count }}</span>
+                        </a>
+                    </li>
+                    <!-- Notifications: style can be found in dropdown.less -->
+                    <li class="dropdown notifications-menu">
                         <a href="#" class="synchronize_data_operations" @click.prevent="synchronize_data_operations">
                             <i class="fa fa-refresh"></i>
                         </a>
@@ -147,14 +157,14 @@
                     <li class="dropdown notifications-menu">
                         <a href="#">
                             <i class="fa fa-truck"></i>
-                            <span class="label label-warning">{{ operations.pickups.length }}</span>
+                            <span class="label label-success">{{ operations.pickups.length }}</span>
                         </a>
                     </li>
                     <!-- Tasks: style can be found in dropdown.less -->
                     <li class="dropdown notifications-menu">
                         <a href="#">
                             <i class="fa fa-tags"></i>
-                            <span class="label label-danger">{{ operations.deliveries.length }}</span>
+                            <span class="label label-primary">{{ operations.deliveries.length }}</span>
                         </a>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
@@ -234,6 +244,22 @@
                             <option v-for="device in bluetooth_devices" :value="device">{{ device.name }}</option>
                         </select>
                     </form>
+                </li>
+                <li class="header">SISTEMA</li>
+                <li>
+                    <a href="log.html">
+                        <i class="fa fa-file-text"></i>
+                        <span> Log </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ajax_queues.html">
+                        <i class="fa fa-history"></i>
+                        <span>Peticiones en cola</span>
+                        <span class="pull-right-container">
+                            <span class="label label-warning pull-right">{{ ajax_queue_count }}</span>
+                        </span>
+                    </a>
                 </li>
                 <li><a href="#" class="logout"><i class="fa fa-sign-out"></i> <span>Cerrar sesión</span></a></li>
             </ul>
@@ -438,7 +464,7 @@
                     <form>
                         <div class="form-group" style="text-align: center; padding-bottom: 20px;">
                             <div class="col-xs-12">
-                                <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" src="images/camera.png">
+                                <img class="photo_of_camera" style="max-height: 150px; max-width: 100%;" :src="current_photo">
                             </div>
                             <div class="col-xs-6">
                                 <button class="takePhoto btn btn-block btn-primary">
@@ -456,7 +482,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success attach_photo_to_pickup">Asociar foto</button>
+                    <button type="button" class="submit btn btn-success attach_photo_to_pickup">Asociar foto</button>
                 </div>
             </div>
         </div>
@@ -667,7 +693,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success attach_photo_to_delivery">Asociar foto</button>
+                    <button type="button" class="submit btn btn-success attach_photo_to_delivery">Asociar foto</button>
                 </div>
             </div>
         </div>
