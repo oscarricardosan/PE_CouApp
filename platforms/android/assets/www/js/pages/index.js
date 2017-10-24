@@ -227,6 +227,7 @@ $(document).ready(function(){
 
         /** ABRE STORE DE EXCEPCIONES */
         $('#pickup_exception_modal, #delivery_exception_modal').on('show.bs.modal', function () {
+            $(this).find('[name]').val('');
             $(this).find('[current_time]').val(
                 MomentUtility_.current_time().substr(0,5)
             );
