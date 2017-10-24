@@ -37,8 +37,12 @@ var Login= (function () {
     }
 
     var logout= function (callback) {
-        db.drop(function(){
-            window.location.href= 'login.html';
+        DeliveriesModel.drop(function(){
+            PickupModel.drop(function(){
+                UserModel.drop(function(){
+                    window.location.href= 'login.html';
+                });
+            });
         });
     }
 

@@ -48,11 +48,8 @@ var UserModel= (function () {
 
     var drop= function(callback){
         var coll = db.collection(collection_name);
-        coll.on("drop", function () {
-            callback()
-        });
-        coll.drop();
-    }
+        coll.drop(callback());
+    };
 
     var loaded= function(callback){
         if(isLoaded)

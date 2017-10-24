@@ -1,6 +1,6 @@
-var UserModel= (function () {
+var Ajax_queueModel= (function () {
 
-    var collection_name= 'user';
+    var collection_name= 'ajax_queue';
 
     var loaded_Callback= [];
     var isLoaded= false;
@@ -8,7 +8,7 @@ var UserModel= (function () {
     /**
      * Carga los datos si ya estan en localstorage
      */
-    db.collection(collection_name, {capped: true, size: 1}).load(function (err, tableStats, metaStats) {
+    db.collection(collection_name).load(function (err, tableStats, metaStats) {
         if (!err) {
             $.each(loaded_Callback, function(){
                 this();
@@ -36,10 +36,7 @@ var UserModel= (function () {
 
     var get = function(){
         var records= db.collection(collection_name).find();
-        if(records.length===0)
-            return null;
-        else
-            return records[0];
+        return records;
     };
 
     var isEmpty = function(){
@@ -49,6 +46,11 @@ var UserModel= (function () {
     var drop= function(callback){
         var coll = db.collection(collection_name);
         coll.drop(callback());
+    };
+
+    var remove= function(where){
+        var where= where===undefined?{}:where;
+        db.collection(collection_name).remove(where);
     };
 
     var loaded= function(callback){
@@ -64,7 +66,8 @@ var UserModel= (function () {
             store             : store,
             loaded            : loaded,
             isEmpty           : isEmpty,
-            drop              : drop
+            drop              : drop,
+            remove            : remove
         }
     };
     return {construct:construct};//retorna los metodos publicos

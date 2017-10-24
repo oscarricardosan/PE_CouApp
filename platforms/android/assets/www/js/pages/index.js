@@ -12,7 +12,8 @@ var App= new Vue({
             current_delivery: {}
         },
         bluetooth_devices: [],
-        printer_device: null
+        printer_device: null,
+        current_photo: null
     },
     methods: {
         synchronize_data_operations: function(e) {
@@ -90,18 +91,19 @@ $(document).ready(function(){
         $('.takePhoto').click(function(event){
             event.preventDefault();
             var current_element= $(this);
-            var button= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
-                destinationType: Camera.DestinationType.NATIVE_URI,
+                destinationType: Camera.DestinationType.DATA_URL,
                 sourceType: Camera.PictureSourceType.CAMERA,
+                encodingType: Camera.EncodingType.PNG,
                 targetHeight: 700,
                 targetWidth: 700,
             });
 
             function onSuccess(imageURI) {
-                var image = current_element.closest('form').find('.photo_of_camera');
+                var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
                 image.attr('src', imageURI);
+                App.current_photo= imageURI;
             }
 
             function onFail(message) {
@@ -112,24 +114,77 @@ $(document).ready(function(){
         $('.selectPhoto').click(function(event){
             event.preventDefault();
             var current_element= $(this);
-            var button= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
-                destinationType: Camera.DestinationType.NATIVE_URI,
+                destinationType: Camera.DestinationType.DATA_URL,
                 sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+                encodingType: Camera.EncodingType.PNG,
                 targetHeight: 700,
                 targetWidth: 700,
             });
 
             function onSuccess(imageURI) {
-                var image = current_element.closest('form').find('.photo_of_camera');
+                var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
                 image.attr('src', imageURI);
+                App.current_photo= imageURI;
             }
 
             function onFail(message) {
                 alert('Failed because: ' + message);
             }
         });
+
+        $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
+            $(this).find('.photo_of_camera').attr('src', 'images/camera.png');
+            App.current_photo= null;
+        });
+        $('.attach_photo_to_delivery').click(function(){
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/attach_photo',
+                dataType: 'json',
+                data: {
+                    data_uri_photo: App.current_photo,
+                    entrega_id: App.operations.current_delivery.id,
+                },
+                successful_online: function(response){
+                    if(response.success){
+                        ToastrUtility_.success(response.message);
+                        $('#delivery_attach_photo').modal('hide');
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    $('#delivery_attach_photo').modal('hide');
+                },
+            });
+        });
+        $('.attach_photo_to_pickup').click(function(){
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/attach_photo',
+                dataType: 'json',
+                data: {
+                    data_uri_photo: App.current_photo,
+                    recoleccion_id: App.operations.current_pickup.id,
+                },
+                successful_online: function(response){
+                    if(response.success){
+                        ToastrUtility_.success(response.message);
+                        $('#pickup_attach_photo').modal('hide');
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    $('#pickup_attach_photo').modal('hide');
+                },
+            });
+        });
+
     });
 });
 

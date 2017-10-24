@@ -8,7 +8,7 @@ var DeliveriesModel= (function () {
     /**
      * Carga los datos si ya estan en localstorage
      */
-    db.collection(collection_name, {capped: true, size: 200}).load(function (err, tableStats, metaStats) {
+    db.collection(collection_name, {capped: true, size: 500}).load(function (err, tableStats, metaStats) {
         if (!err) {
             $.each(loaded_Callback, function(){
                 this();
@@ -45,10 +45,7 @@ var DeliveriesModel= (function () {
 
     var drop= function(callback){
         var coll = db.collection(collection_name);
-        coll.on("drop", function () {
-            callback();
-        });
-        coll.drop();
+        coll.drop(callback());
     };
 
     var remove= function(where){
