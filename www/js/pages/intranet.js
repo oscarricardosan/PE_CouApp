@@ -6,13 +6,13 @@ function check_LocationAvailable(){
     cordova.plugins.diagnostic.isLocationAvailable(function(available){
         if(available){
             location_available= true;
+            check_hardware();
         }else{
             location_available= false;
             alert('Para continuar debes activar tu GPS.');
             cordova.plugins.diagnostic.switchToLocationSettings();
             window.location.reload();
         }
-        check_hardware();
     }, function(error){
         alert("The following error occurred: "+error);
     });
@@ -22,13 +22,13 @@ function check_BluetoothAvailable(){
     cordova.plugins.diagnostic.isBluetoothAvailable(function(available){
         if(available){
             bluetooth_available= true;
+            check_hardware();
         }else{
             bluetooth_available= false;
             alert('Para continuar debes activar tu Bluetooth.');
             cordova.plugins.diagnostic.switchToBluetoothSettings();
             window.location.reload();
         }
-        check_hardware();
     }, function(error){
         alert("The following error occurred: "+error);
     });
