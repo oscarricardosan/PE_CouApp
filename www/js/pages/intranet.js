@@ -47,12 +47,12 @@ function initializeIntranet(){
             hidden: false,
             bigText: false
         });
-
+        cordova.plugins.backgroundMode.disableWebViewOptimizations();
         cordova.plugins.backgroundMode.on('activate', function() {
-            cordova.plugins.backgroundMode.disableWebViewOptimizations();
+
             index_execution++;
             if(first_execution){
-                navigator.notification.beep(2);
+                navigator.notification.vibrate([1500, 1500]);
                 /***
                  * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
                  */
@@ -70,7 +70,6 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            cordova.plugins.backgroundMode.enableWebViewOptimizations();
         });
 
         cordova.plugins.backgroundMode.on('enable', function() {
