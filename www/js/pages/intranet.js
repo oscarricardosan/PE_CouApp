@@ -51,7 +51,7 @@ function initializeIntranet(){
 
         var index_executionBack= 0;
         function BackgroundProcessFunction(){
-            navigator.notification.vibrate([1000]);
+            //navigator.notification.vibrate([1000]);
             index_executionBack++;
             cordova.plugins.backgroundMode.configure({
                 text:
@@ -63,7 +63,7 @@ function initializeIntranet(){
 
         var index_executionFor= 0;
         function ForeGroundProcessFunction(){
-            navigator.notification.beep(2);
+            //navigator.notification.beep(1);
             index_executionFor++;
             ToastrUtility_.success(
                 "ENtrada "+index_executionFor+"\n"+
@@ -76,14 +76,14 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ BackgroundProcessFunction() }, 5000);
+            backgroundProcessTimer= setInterval(function(){ BackgroundProcessFunction() }, 60000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
+            foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 60000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
+        foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 60000);
 
         cordova.plugins.backgroundMode.enable();
 
