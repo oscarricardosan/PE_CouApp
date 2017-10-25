@@ -32,8 +32,7 @@ function initializeIntranet(){
         /** BACKGROUND PROCESS**/
         var index_execution= 0;
         var first_execution= true;
-        //disable most optimizations done by Android/CrossWalk.
-        //cordova.plugins.backgroundMode.disableWebViewOptimizations();
+
         //Override the back button on Android to go to background instead of closing the app.
         cordova.plugins.backgroundMode.overrideBackButton();
         //active background process
@@ -49,8 +48,8 @@ function initializeIntranet(){
             bigText: false
         });
 
-        //deactivate
-        cordova.plugins.backgroundMode.on('activate', function () {
+        cordova.plugins.backgroundMode.on('activate', function() {
+            cordova.plugins.backgroundMode.disableWebViewOptimizations();
             index_execution++;
             if(first_execution){
                 navigator.notification.beep(2);
@@ -58,22 +57,27 @@ function initializeIntranet(){
                  * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
                  */
                 setInterval(function () {
-                    /*          if(index_execution % 100 == 0) {
-                                  navigator.notification.beep(2);
-                                  navigator.notification.vibrate([1500, 500, 1500]);
-                              }
-                  */
+                    /* navigator.notification.beep(2);
+                       navigator.notification.vibrate([1500, 500, 1500]); */
                     cordova.plugins.backgroundMode.configure({
                         text:
                         "ENtrada "+index_execution+"\n"+
                         "Primer ejecución "+(first_execution?'si':'no')
                     });
                 }, 100);
-
                 first_execution= false;
             }
-
         });
+
+        cordova.plugins.backgroundMode.on('deactivate', function() {
+            cordova.plugins.backgroundMode.enableWebViewOptimizations();
+        });
+
+        cordova.plugins.backgroundMode.on('enable', function() {
+        });
+
+        cordova.plugins.backgroundMode.enable();
+
 
         /** CLOSE BACKGROUND PROCESS**/
     }
