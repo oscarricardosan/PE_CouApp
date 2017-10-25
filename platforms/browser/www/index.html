@@ -240,7 +240,7 @@
                         <span> Log </span>
                     </a>
                 </li>
-                <li>
+                <li :style="ajax_queue_count>0?'background: darkred;':''">
                     <a href="ajax_queues.html">
                         <i class="fa fa-history"></i>
                         <span>Peticiones en cola</span>
