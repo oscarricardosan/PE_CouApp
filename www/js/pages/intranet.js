@@ -1,44 +1,33 @@
 var location_available= false;
 var bluetooth_available= false;
 
+var Permissions = cordova.plugins.permissions;
 
-function check_LocationAvailable(){
-    cordova.plugins.diagnostic.isLocationAvailable(function(available){
-        if(available){
-            location_available= true;
-        }else{
-            location_available= false;
-            alert('Para continuar debes activar tu GPS.');
-            cordova.plugins.diagnostic.switchToLocationSettings();
-        }
-        check_hardware();
-    }, function(error){
-        alert("The following error occurred: "+error);
-    });
+
+var list = [
+    permissions.BLUETOOTH,
+    permissions.ACCESS_COARSE_LOCATION,
+    permissions.ACCESS_FINE_LOCATION
+];
+
+Permissions.hasPermission(list, success, error);
+
+function error() {
+    alert('GPS y Bluetooth deben estar activados.');
+    window.location.reload();
 }
 
-function check_BluetoothAvailable(){
-    cordova.plugins.diagnostic.isBluetoothAvailable(function(available){
-        if(available){
-            bluetooth_available= true;
-        }else{
-            bluetooth_available= false;
-            alert('Para continuar debes activar tu Bluetooth.');
-            cordova.plugins.diagnostic.switchToBluetoothSettings();
-        }
-        check_hardware();
-    }, function(error){
-        alert("The following error occurred: "+error);
-    });
-}
-
-function check_hardware() {
-    if(!location_available)check_LocationAvailable();
-    if(!bluetooth_available)check_BluetoothAvailable();
-    if(location_available && bluetooth_available)
+function success( status ) {
+    if (!status.hasPermission) {
+        permissions.requestPermissions(
+            list,
+            function (status) {
+                if (!status.hasPermission) error();
+            },
+            error);
+    }else{
         initializeIntranet();
-    else
-        window.location.reload();
+    }
 }
 
 /** Ready on mobiles **/
