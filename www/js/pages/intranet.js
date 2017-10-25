@@ -61,7 +61,7 @@ function initializeIntranet(){
                     cordova.plugins.backgroundMode.configure({
                         text:
                         "ENtrada "+index_execution+"\n"+
-                        "Primer ejecución "+first_execution?'si':'no'
+                        "Primer ejecución "+(first_execution?'si':'no')
                     });
                 }, 100);
 
