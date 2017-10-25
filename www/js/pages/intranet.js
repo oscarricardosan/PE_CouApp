@@ -10,24 +10,32 @@ try{
             Permissions.ACCESS_FINE_LOCATION
         ];
         alert(5);
-        Permissions.hasPermission(list, success, error);
-        alert(6);
-        function error() {
-            alert('GPS y Bluetooth deben estar activados.');
-            window.location.reload();
-        }
 
-        function success( status ) {
-            if (!status.hasPermission) {
-                Permissions.requestPermissions(
-                    list,
-                    function (status) {
-                        if (!status.hasPermission) error();
-                    },
-                    error);
-            }else{
-                initializeIntranet();
+        try{
+            Permissions.hasPermission(list, success, error);
+            alert(6 );
+            function error() {
+                alert("error");
+                alert('GPS y Bluetooth deben estar activados.');
+                window.location.reload();
             }
+
+            function success( status ) {
+                alert("success");
+                if (!status.hasPermission) {
+                    Permissions.requestPermissions(
+                        list,
+                        function (status) {
+                            if (!status.hasPermission) error();
+                        },
+                        error);
+                }else{
+                    initializeIntranet();
+                }
+            }
+        }catch (error){
+            alert(error);
+            alert(JSON.stringify(error));
         }
     }
 
