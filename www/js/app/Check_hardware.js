@@ -53,8 +53,8 @@ var Check_hardware= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            check_LocationAvailable     : check_LocationAvailable,
-            check_BluetoothAvailable    : check_BluetoothAvailable,
+            check_LocationAvailable     : locationAvailable,
+            check_BluetoothAvailable    : bluetoothAvailable,
             diagnostic_in_intranet      : diagnostic_in_intranet
         }
     };
