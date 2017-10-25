@@ -47,6 +47,10 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-navigation href="*" subdomains="true" />
+    <gap:config-file mode="delete" parent="/manifest" platform="android">
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    </gap:config-file>
     <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="KeepRunning" value="true" />
