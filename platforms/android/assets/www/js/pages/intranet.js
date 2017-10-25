@@ -49,6 +49,7 @@ function initializeIntranet(){
             bigText: false
         });
 
+        //deactivate
         cordova.plugins.backgroundMode.on('activate', function () {
             index_execution++;
             if(first_execution){
