@@ -49,6 +49,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.on('activate', function () {
             index_execution++;
             if(first_execution){
+                navigator.notification.beep(2);
                 /***
                  * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
                  */
