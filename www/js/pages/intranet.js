@@ -83,6 +83,7 @@ function initializeIntranet(){
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
         });
+        foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
 
         cordova.plugins.backgroundMode.enable();
 
