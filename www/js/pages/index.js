@@ -160,8 +160,7 @@ function initializePage(){
             });
 
             function onSuccess(imageURI) {
-                var image = "data:image/png;base64," + imageURI;
-                App.current_photo= imageURI;
+                App.current_photo= "data:image/png;base64," + imageURI;
             }
 
             function onFail(message) {
