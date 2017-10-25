@@ -193,7 +193,7 @@ function initializePage(){
                         ToastrUtility_.success(response.message);
                         $('#delivery_attach_photo').modal('hide');
                     }else{
-                        alert(response.message);
+                        alert("Error en servidor: "+response.message);
                     }
                 },
                 failed_online: function(jqXHR, textStatus){
@@ -224,7 +224,7 @@ function initializePage(){
                         ToastrUtility_.success(response.message);
                         $('#pickup_attach_photo').modal('hide');
                     }else{
-                        alert(response.message);
+                        alert("Error en servidor: "+response.message);
                     }
                 },
                 failed_online: function(jqXHR, textStatus){
