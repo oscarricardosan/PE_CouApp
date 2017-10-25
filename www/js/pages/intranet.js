@@ -30,7 +30,6 @@ function initializeIntranet(){
         window.open = cordova.InAppBrowser.open;
 
         /** BACKGROUND PROCESS**/
-        var index_execution= 0;
         var first_execution= true;
 
         //Override the back button on Android to go to background instead of closing the app.
@@ -47,29 +46,42 @@ function initializeIntranet(){
             hidden: false,
             bigText: false
         });
-        cordova.plugins.backgroundMode.disableWebViewOptimizations();
-        cordova.plugins.backgroundMode.on('activate', function() {
+        cordova.plugins.backgroundMode.enableWebViewOptimizations();
 
-            index_execution++;
-            if(first_execution){
-                navigator.notification.vibrate([1500, 1500]);
-                /***
-                 * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
-                 */
-                setInterval(function () {
-                    /* navigator.notification.beep(2);
-                       navigator.notification.vibrate([1500, 500, 1500]); */
-                    cordova.plugins.backgroundMode.configure({
-                        text:
-                        "ENtrada "+index_execution+"\n"+
-                        "Primer ejecución "+(first_execution?'si':'no')
-                    });
-                }, 100);
-                first_execution= false;
-            }
+
+        var index_executionBack= 0;
+        function BackgroundProcessFunction(){
+            navigator.notification.vibrate([1000]);
+            index_executionBack++;
+            cordova.plugins.backgroundMode.configure({
+                text:
+                "ENtrada "+index_executionBack+"\n"+
+                "Primer ejecución "+(first_execution?'si':'no')
+            });
+            first_execution= false;
+        }
+
+        var index_executionFor= 0;
+        function ForeGroundProcessFunction(){
+            navigator.notification.beep(2);
+            index_executionFor++;
+            ToastrUtility_.success(
+                "ENtrada "+index_executionFor+"\n"+
+                "Primer ejecución "+(first_execution?'si':'no')
+            )
+        }
+
+        var backgroundProcessTimer= undefined;
+        var foreGroundProcessTimer= undefined;
+
+        cordova.plugins.backgroundMode.on('activate', function() {
+            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+            backgroundProcessTimer= setInterval(function(){ BackgroundProcessFunction() }, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
+            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
+            foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
         });
 
         cordova.plugins.backgroundMode.on('enable', function() {
