@@ -5,9 +5,9 @@ var Permissions = cordova.plugins.permissions;
 
 
 var list = [
-    permissions.BLUETOOTH,
-    permissions.ACCESS_COARSE_LOCATION,
-    permissions.ACCESS_FINE_LOCATION
+    Permissions.BLUETOOTH,
+    Permissions.ACCESS_COARSE_LOCATION,
+    Permissions.ACCESS_FINE_LOCATION
 ];
 
 Permissions.hasPermission(list, success, error);
@@ -19,7 +19,7 @@ function error() {
 
 function success( status ) {
     if (!status.hasPermission) {
-        permissions.requestPermissions(
+        Permissions.requestPermissions(
             list,
             function (status) {
                 if (!status.hasPermission) error();
