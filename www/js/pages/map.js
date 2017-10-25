@@ -58,7 +58,6 @@ function initializePage() {
 
                 L.circle(e.latlng, radius).addTo(map);
             }
-
             map.on('locationfound', onLocationFound);
 
             /** ERROR SI NO ENCUENTRA UBICACIÓN ACTUAL **/

@@ -1,58 +1,10 @@
-var location_available= false;
-var bluetooth_available= false;
 
 
-function check_LocationAvailable(){
-    cordova.plugins.diagnostic.isLocationAvailable(function(available){
-        if(available){
-            location_available= true;
-            check_hardware();
-        }else{
-            location_available= false;
-            alert('Para continuar debes activar tu GPS.');
-            cordova.plugins.diagnostic.switchToLocationSettings();
-            window.location.reload(true);
-        }
-    }, function(error){
-        alert("The following error occurred: "+error);
-    });
-}
-
-function check_BluetoothAvailable(){
-    cordova.plugins.diagnostic.isBluetoothAvailable(function(available){
-        if(available){
-            bluetooth_available= true;
-            check_hardware();
-        }else{
-            bluetooth_available= false;
-            alert('Para continuar debes activar tu Bluetooth.');
-            cordova.plugins.diagnostic.switchToBluetoothSettings();
-            window.location.reload(true);
-        }
-    }, function(error){
-        alert("The following error occurred: "+error);
-    });
-}
-
-function check_hardware() {
-    if(!location_available){
-        check_LocationAvailable();
-        return false;
-    }
-    if(!bluetooth_available){
-        check_BluetoothAvailable();
-        return false;
-    }
-    if(location_available && bluetooth_available)
-        initializeIntranet();
-    else
-        window.location.reload();
-}
 //initializeIntranet();
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReadyIntranet, false);
 function onDeviceReadyIntranet() {
-    check_hardware();
+    Check_hardware.diagnostic_in_intranet();
 }
 
 function initializeIntranet(){
@@ -79,6 +31,7 @@ function initializeIntranet(){
 
         /** BACKGROUND PROCESS**/
         var index_execution= 0;
+        var first_execution= true;
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
         cordova.plugins.backgroundMode.overrideBackButton();
@@ -95,21 +48,25 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function () {
             index_execution++;
-            /***
-             * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
-             */
-            setInterval(function () {
-                /*          if(index_execution % 100 == 0) {
-                              navigator.notification.beep(2);
-                              navigator.notification.vibrate([1500, 500, 1500]);
-                          }
-              */
-                cordova.plugins.backgroundMode.configure({
-                    text:
-                    "ENtrada "+index_execution
-                });
-            }, 100);
+            if(first_execution){
+                /***
+                 * @Notificaciones cada 100 segundos, cambio en la barra de mensaje
+                 */
+                setInterval(function () {
+                    /*          if(index_execution % 100 == 0) {
+                                  navigator.notification.beep(2);
+                                  navigator.notification.vibrate([1500, 500, 1500]);
+                              }
+                  */
+                    cordova.plugins.backgroundMode.configure({
+                        text:
+                        "ENtrada "+index_execution+"\n"+
+                        "Primer ejecución "+first_execution?'si':'no'
+                    });
+                }, 100);
 
+                first_execution= false;
+            }
 
         });
 
