@@ -42,13 +42,28 @@ function initializePage(){
                         element.unloading();
                         ToastrUtility_.success('Cola vacía');
                     },
-                    fail: function(){
+                    fail: function(properties, jqXHR, textStatus){
                         App_.ajax_queue_count= Ajax_queueModel.get().length;
                         element.unloading();
-                        ToastrUtility_.error('Fallo transmisión');
+                        ToastrUtility_.error('Fallo transmisión'+ JSON.stringify({
+                            jqXHR: jqXHR, textStatus: textStatus
+                        }));
+                        LogModel.store({
+                            message: 'Error al transmitir al servidor petición online, procesamiento de cola.',
+                            status: 'danger',
+                            data:  JSON.stringify({
+                                jqXHR: jqXHR, textStatus: textStatus, properties: properties
+                            })
+                        });
                     },
-                    success: function(){
+                    success: function(properties, response){
                         App_.ajax_queue_count= Ajax_queueModel.get().length;
+
+                        LogModel.store({
+                            message: 'Transmisión de petición online a servidor exitosa, procesamiento de cola.',
+                            status: 'success',
+                            data: {properties: properties, response: response}
+                        });
                     }
                 });
             }

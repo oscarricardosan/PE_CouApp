@@ -23,9 +23,20 @@ var PolishedUtility_= (function () {
                 ToastrUtility_.success(response.message);
             else
                 ToastrUtility_.error(response.message);
+
+            LogModel.store({
+                message: 'Transmisión de petición online a servidor exitosa.',
+                status: 'success',
+                data: properties
+            });
         });
         properties.failed_online= eval(properties, 'failed_online', function(jqXHR, textStatus){
             ToastrUtility_.warning(jqXHR.responseJSON.message+" \nSin conexion a servidor, se transmitira más tarde.");
+            LogModel.store({
+                message: 'Error al transmitir al servidor petición online.',
+                status: 'danger',
+                data: properties
+            });
         });
 
 

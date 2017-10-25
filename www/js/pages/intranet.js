@@ -48,7 +48,7 @@ function check_hardware() {
     else
         window.location.reload();
 }
-
+initializeIntranet();
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReadyIntranet, false);
 function onDeviceReadyIntranet() {

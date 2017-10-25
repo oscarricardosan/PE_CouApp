@@ -54,9 +54,9 @@ var AjaxQueue= (function () {
                 Ajax_queueModel.remove({_id: properties._id}, function(){
                     AjaxQueue.check_queue(callbacks);
                 });
-                callbacks.success();
+                callbacks.success(properties, response);
             }else{
-                callbacks.fail();
+                callbacks.fail(properties, jqXHR, textStatus);
                 properties.failed_offline(jqXHR, textStatus);
             }
         });
@@ -74,7 +74,7 @@ var AjaxQueue= (function () {
                 alert('Transmisión en cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
                 return false;
             }
-            callbacks.fail();
+            callbacks.fail(properties, jqXHR, textStatus);
             properties.failed_offline(jqXHR, textStatus);
         });
     };
