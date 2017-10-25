@@ -1,6 +1,7 @@
 var location_available= false;
 var bluetooth_available= false;
 
+
 function check_LocationAvailable(){
     cordova.plugins.diagnostic.isLocationAvailable(function(available){
         if(available){

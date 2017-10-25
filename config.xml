@@ -30,4 +30,9 @@
     <plugin name="cordova-plugin-inappbrowser" spec="~1.7.1" />
     <plugin name="cordova-plugin-vibration" spec="~2.1.5" />
     <plugin name="cordova.plugins.diagnostic" spec="^3.7.1" />
+
+    <gap:config-file platform="android" parent="/manifest" mode="delete">
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    </gap:config-file>
 </widget>
