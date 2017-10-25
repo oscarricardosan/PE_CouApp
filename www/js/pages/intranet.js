@@ -108,7 +108,7 @@ function initializeIntranet(){
                     text:
                     "ENtrada "+index_execution
                 });
-            }, 5000);
+            }, 100);
 
 
         });
