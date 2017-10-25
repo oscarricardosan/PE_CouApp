@@ -98,6 +98,14 @@ module.exports = [
       "navigator.notification",
       "navigator"
     ]
+  },
+  {
+    "id": "cordova.plugins.diagnostic.Diagnostic",
+    "file": "plugins/cordova.plugins.diagnostic/www/android/diagnostic.js",
+    "pluginId": "cordova.plugins.diagnostic",
+    "clobbers": [
+      "cordova.plugins.diagnostic"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -111,7 +119,8 @@ module.exports.metadata =
   "cordova-plugin-dialogs": "1.3.3",
   "cordova-plugin-inappbrowser": "1.7.1",
   "cordova-plugin-vibration": "2.1.5",
-  "cordova-plugin-whitelist": "1.3.2"
+  "cordova-plugin-whitelist": "1.3.2",
+  "cordova.plugins.diagnostic": "3.7.1"
 };
 // BOTTOM OF METADATA
 });

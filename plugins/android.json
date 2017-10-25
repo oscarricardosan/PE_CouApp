@@ -30,6 +30,9 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova.plugins.diagnostic": {
+      "PACKAGE_NAME": "savne.courier_app"
     }
   },
   "dependent_plugins": {
