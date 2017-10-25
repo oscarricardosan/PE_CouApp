@@ -46,8 +46,8 @@ function initializeIntranet(){
             hidden: false,
             bigText: false
         });
-        cordova.plugins.backgroundMode.enableWebViewOptimizations();
 
+        cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         var index_executionBack= 0;
         function BackgroundProcessFunction(){
@@ -82,9 +82,6 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 5000);
-        });
-
-        cordova.plugins.backgroundMode.on('enable', function() {
         });
 
         cordova.plugins.backgroundMode.enable();
