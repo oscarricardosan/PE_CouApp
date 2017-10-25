@@ -32,9 +32,12 @@ function initializeIntranet(){
         /** BACKGROUND PROCESS**/
         var index_execution= 0;
         var first_execution= true;
-        cordova.plugins.backgroundMode.enable();
-        cordova.plugins.backgroundMode.disableWebViewOptimizations();
+        //disable most optimizations done by Android/CrossWalk.
+        //cordova.plugins.backgroundMode.disableWebViewOptimizations();
+        //Override the back button on Android to go to background instead of closing the app.
         cordova.plugins.backgroundMode.overrideBackButton();
+        //active background process
+        cordova.plugins.backgroundMode.enable();
 
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
