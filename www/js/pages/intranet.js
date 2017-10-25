@@ -1,14 +1,17 @@
 try{
+    alert(1);
     function check_hardware(){
+        alert(3);
         var Permissions = cordova.plugins.permissions;
+        alert(4);
         var list = [
             Permissions.BLUETOOTH,
             Permissions.ACCESS_COARSE_LOCATION,
             Permissions.ACCESS_FINE_LOCATION
         ];
-
+        alert(5);
         Permissions.hasPermission(list, success, error);
-
+        alert(6);
         function error() {
             alert('GPS y Bluetooth deben estar activados.');
             window.location.reload();
@@ -31,6 +34,7 @@ try{
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReadyIntranet, false);
     function onDeviceReadyIntranet() {
+        alert(2);
         check_hardware();
     }
 
