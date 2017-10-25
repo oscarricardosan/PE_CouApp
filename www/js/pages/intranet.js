@@ -1,32 +1,29 @@
-var location_available= false;
-var bluetooth_available= false;
+function check_hardware(){
+    var Permissions = cordova.plugins.permissions;
+    var list = [
+        Permissions.BLUETOOTH,
+        Permissions.ACCESS_COARSE_LOCATION,
+        Permissions.ACCESS_FINE_LOCATION
+    ];
 
-var Permissions = cordova.plugins.permissions;
+    Permissions.hasPermission(list, success, error);
 
+    function error() {
+        alert('GPS y Bluetooth deben estar activados.');
+        window.location.reload();
+    }
 
-var list = [
-    Permissions.BLUETOOTH,
-    Permissions.ACCESS_COARSE_LOCATION,
-    Permissions.ACCESS_FINE_LOCATION
-];
-
-Permissions.hasPermission(list, success, error);
-
-function error() {
-    alert('GPS y Bluetooth deben estar activados.');
-    window.location.reload();
-}
-
-function success( status ) {
-    if (!status.hasPermission) {
-        Permissions.requestPermissions(
-            list,
-            function (status) {
-                if (!status.hasPermission) error();
-            },
-            error);
-    }else{
-        initializeIntranet();
+    function success( status ) {
+        if (!status.hasPermission) {
+            Permissions.requestPermissions(
+                list,
+                function (status) {
+                    if (!status.hasPermission) error();
+                },
+                error);
+        }else{
+            initializeIntranet();
+        }
     }
 }
 
