@@ -126,307 +126,303 @@ function initializePage(){
     });
 
     $(document).ready(function(){
-        //$('.synchronize_data_operations').trigger("click");
-
-        $(document).ready(function(){
-            $('.takePhoto').click(function(event){
-                event.preventDefault();
-                var current_element= $(this);
-                navigator.camera.getPicture(onSuccess, onFail, {
-                    quality: 50,
-                    destinationType: Camera.DestinationType.DATA_URL,
-                    sourceType: Camera.PictureSourceType.CAMERA,
-                    encodingType: Camera.EncodingType.PNG,
-                    targetHeight: 700,
-                    targetWidth: 700,
-                });
-
-                function onSuccess(imageURI) {
-                    var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
-                    App.current_photo= imageURI;
-                }
-
-                function onFail(message) {
-                    alert('Failed because: ' + message);
-                }
+        $('.takePhoto').click(function(event){
+            event.preventDefault();
+            var current_element= $(this);
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                encodingType: Camera.EncodingType.PNG,
+                targetHeight: 700,
+                targetWidth: 700,
             });
 
-            $('.selectPhoto').click(function(event){
-                event.preventDefault();
-                var current_element= $(this);
-                navigator.camera.getPicture(onSuccess, onFail, {
-                    quality: 50,
-                    destinationType: Camera.DestinationType.DATA_URL,
-                    sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-                    encodingType: Camera.EncodingType.PNG,
-                    targetHeight: 700,
-                    targetWidth: 700,
-                });
+            function onSuccess(imageURI) {
+                var image = "data:image/png;base64," + imageURI;
+                App.current_photo= imageURI;
+            }
 
-                function onSuccess(imageURI) {
-                    var image = "data:image/png;base64," + current_element.closest('form').find('.photo_of_camera');
-                    App.current_photo= imageURI;
-                }
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+        });
 
-                function onFail(message) {
-                    alert('Failed because: ' + message);
-                }
+        $('.selectPhoto').click(function(event){
+            event.preventDefault();
+            var current_element= $(this);
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
+                encodingType: Camera.EncodingType.PNG,
+                targetHeight: 700,
+                targetWidth: 700,
             });
 
+            function onSuccess(imageURI) {
+                var image = "data:image/png;base64," + imageURI;
+                App.current_photo= imageURI;
+            }
 
-            /** ABRE STORE DE FOTOS */
-            $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
-                App.current_photo= 'images/camera.png';
-            });
-            $('.attach_photo_to_delivery').click(function(){
-                if(App.current_photo === 'images/camera.png'){
-                    alert('Debes cargar una foto'); return false;
-                }
-                form= $(this).closest('.modal');
-                form.loading();
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'delivery/attach_photo',
-                    dataType: 'json',
-                    data: {
-                        data_uri_photo: App.current_photo,
-                        entrega_id: App.operations.current_delivery.id,
-                    },
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            ToastrUtility_.success(response.message);
-                            $('#delivery_attach_photo').modal('hide');
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+        });
+
+
+        /** ABRE STORE DE FOTOS */
+        $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
+            App.current_photo= 'images/camera.png';
+        });
+        $('.attach_photo_to_delivery').click(function(){
+            if(App.current_photo === 'images/camera.png'){
+                alert('Debes cargar una foto'); return false;
+            }
+            form= $(this).closest('.modal');
+            form.loading();
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/attach_photo',
+                dataType: 'json',
+                data: {
+                    data_uri_photo: App.current_photo,
+                    entrega_id: App.operations.current_delivery.id,
+                },
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        ToastrUtility_.success(response.message);
                         $('#delivery_attach_photo').modal('hide');
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                    },
-                });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    $('#delivery_attach_photo').modal('hide');
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                },
             });
-            $('.attach_photo_to_pickup').click(function(){
-                if(App.current_photo === 'images/camera.png'){
-                    alert('Debes cargar una foto'); return false;
-                }
-                form= $(this).closest('.modal');
-                form.loading();
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'pickup/attach_photo',
-                    dataType: 'json',
-                    data: {
-                        data_uri_photo: App.current_photo,
-                        recoleccion_id: App.operations.current_pickup.id,
-                    },
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            ToastrUtility_.success(response.message);
-                            $('#pickup_attach_photo').modal('hide');
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+        });
+        $('.attach_photo_to_pickup').click(function(){
+            if(App.current_photo === 'images/camera.png'){
+                alert('Debes cargar una foto'); return false;
+            }
+            form= $(this).closest('.modal');
+            form.loading();
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/attach_photo',
+                dataType: 'json',
+                data: {
+                    data_uri_photo: App.current_photo,
+                    recoleccion_id: App.operations.current_pickup.id,
+                },
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        ToastrUtility_.success(response.message);
                         $('#pickup_attach_photo').modal('hide');
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                    },
-                });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    $('#pickup_attach_photo').modal('hide');
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                },
             });
-            /** <!-- CIERRA STORE DE FOTOS */
+        });
+        /** <!-- CIERRA STORE DE FOTOS */
 
-            /** ABRE STORE DE EXCEPCIONES */
-            $('#pickup_exception_modal, #delivery_exception_modal').on('show.bs.modal', function () {
-                $(this).find('[name]').val('');
-                $(this).find('[current_time]').val(
-                    MomentUtility_.current_time().substr(0,5)
-                );
-                $(this).find('[current_date]').val(MomentUtility_.current_date());
-            });
-            $('#pickup_exception_modal form').submit(function (event) {
-                event.preventDefault();
-                form= $(this);
-                form.loading();
-                data= FormUtility_.serialized_data_to_json(form.serializeArray());
-                data.recoleccion_id= App.operations.current_pickup.id;
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'pickup/store_exception',
-                    dataType: 'json',
-                    data: data,
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            PickupModel.update({id: response.data.id}, response.data, {
-                                success: function(){
-                                    App.operations.current_pickup=  response.data;
-                                    ToastrUtility_.success(response.message);
-                                    $('#pickup_exception_modal').modal('hide');
-                                    App.operations.pickups= PickupModel.get();
-                                }
-                            });
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                        App.operations.current_pickup.pickup_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
-                        App.operations.current_pickup.pickup_state_id= 3;
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+        /** ABRE STORE DE EXCEPCIONES */
+        $('#pickup_exception_modal, #delivery_exception_modal').on('show.bs.modal', function () {
+            $(this).find('[name]').val('');
+            $(this).find('[current_time]').val(
+                MomentUtility_.current_time().substr(0,5)
+            );
+            $(this).find('[current_date]').val(MomentUtility_.current_date());
+        });
+        $('#pickup_exception_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.recoleccion_id= App.operations.current_pickup.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/store_exception',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        PickupModel.update({id: response.data.id}, response.data, {
                             success: function(){
+                                App.operations.current_pickup=  response.data;
+                                ToastrUtility_.success(response.message);
                                 $('#pickup_exception_modal').modal('hide');
                                 App.operations.pickups= PickupModel.get();
                             }
                         });
-                    },
-                });
-            });
-            $('#delivery_exception_modal form').submit(function (event) {
-                event.preventDefault();
-                form= $(this);
-                form.loading();
-                data= FormUtility_.serialized_data_to_json(form.serializeArray());
-                data.entrega_id= App.operations.current_delivery.id;
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'delivery/store_exception',
-                    dataType: 'json',
-                    data: data,
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            DeliveriesModel.update({id: response.data.id}, response.data, {
-                                success: function(){
-                                    App.operations.current_delivery=  response.data;
-                                    ToastrUtility_.success(response.message);
-                                    $('#delivery_exception_modal').modal('hide');
-                                    App.operations.deliveries= DeliveriesModel.get();
-                                }
-                            });
-                        }else{
-                            alert(response.message);
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_pickup.pickup_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
+                    App.operations.current_pickup.pickup_state_id= 3;
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function(){
+                            $('#pickup_exception_modal').modal('hide');
+                            App.operations.pickups= PickupModel.get();
                         }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                        App.operations.current_delivery.delivery_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
-                        App.operations.current_delivery.delivery_state_id= 3;
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                    });
+                },
+            });
+        });
+        $('#delivery_exception_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.entrega_id= App.operations.current_delivery.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/store_exception',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
                             success: function(){
+                                App.operations.current_delivery=  response.data;
+                                ToastrUtility_.success(response.message);
                                 $('#delivery_exception_modal').modal('hide');
                                 App.operations.deliveries= DeliveriesModel.get();
                             }
                         });
-                    },
-                });
-            });
-            /** <!-- CIERRA STORE DE EXCEPCIONES */
-
-            /** ABRE STORE DE EXITOSAS */
-            $('#delivery_success_modal, #pickup_success_modal').on('show.bs.modal', function () {
-                $(this).find('[name]').val('');
-                $(this).find('[current_time]').val(
-                    MomentUtility_.current_time().substr(0,5)
-                );
-                $(this).find('[current_date]').val(MomentUtility_.current_date());
-            });
-            $('#pickup_success_modal form').submit(function (event) {
-                event.preventDefault();
-                form= $(this);
-                form.loading();
-                data= FormUtility_.serialized_data_to_json(form.serializeArray());
-                data.recoleccion_id= App.operations.current_pickup.id;
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'pickup/store_successful',
-                    dataType: 'json',
-                    data: data,
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            PickupModel.update({id: response.data.id}, response.data, {
-                                success: function(){
-                                    App.operations.current_pickup=  response.data;
-                                    ToastrUtility_.success(response.message);
-                                    $('#pickup_success_modal').modal('hide');
-                                    App.operations.pickups= PickupModel.get();
-                                }
-                            });
-                        }else{
-                            alert(response.message);
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_delivery.delivery_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
+                    App.operations.current_delivery.delivery_state_id= 3;
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function(){
+                            $('#delivery_exception_modal').modal('hide');
+                            App.operations.deliveries= DeliveriesModel.get();
                         }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                        App.operations.current_pickup.pickup_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
-                        App.operations.current_pickup.pickup_state_id= 2;
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                    });
+                },
+            });
+        });
+        /** <!-- CIERRA STORE DE EXCEPCIONES */
+
+        /** ABRE STORE DE EXITOSAS */
+        $('#delivery_success_modal, #pickup_success_modal').on('show.bs.modal', function () {
+            $(this).find('[name]').val('');
+            $(this).find('[current_time]').val(
+                MomentUtility_.current_time().substr(0,5)
+            );
+            $(this).find('[current_date]').val(MomentUtility_.current_date());
+        });
+        $('#pickup_success_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.recoleccion_id= App.operations.current_pickup.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/store_successful',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        PickupModel.update({id: response.data.id}, response.data, {
                             success: function(){
+                                App.operations.current_pickup=  response.data;
+                                ToastrUtility_.success(response.message);
                                 $('#pickup_success_modal').modal('hide');
                                 App.operations.pickups= PickupModel.get();
                             }
                         });
-                    },
-                });
-            });
-            $('#delivery_success_modal form').submit(function (event) {
-                event.preventDefault();
-                form= $(this);
-                form.loading();
-                data= FormUtility_.serialized_data_to_json(form.serializeArray());
-                data.entrega_id= App.operations.current_delivery.id;
-                AjaxQueue.add({
-                    type: 'post',
-                    url: 'delivery/store_successful',
-                    dataType: 'json',
-                    data: data,
-                    successful_online: function(response){
-                        form.unloading();
-                        if(response.success){
-                            DeliveriesModel.update({id: response.data.id}, response.data, {
-                                success: function(){
-                                    App.operations.current_delivery=  response.data;
-                                    ToastrUtility_.success(response.message);
-                                    $('#delivery_success_modal').modal('hide');
-                                    App.operations.deliveries= DeliveriesModel.get();
-                                }
-                            });
-                        }else{
-                            alert(response.message);
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_pickup.pickup_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
+                    App.operations.current_pickup.pickup_state_id= 2;
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function(){
+                            $('#pickup_success_modal').modal('hide');
+                            App.operations.pickups= PickupModel.get();
                         }
-                    },
-                    failed_online: function(jqXHR, textStatus){
-                        form.unloading();
-                        ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
-                        App.operations.current_delivery.delivery_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
-                        App.operations.current_delivery.delivery_state_id= 2;
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                    });
+                },
+            });
+        });
+        $('#delivery_success_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.entrega_id= App.operations.current_delivery.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/store_successful',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
                             success: function(){
+                                App.operations.current_delivery=  response.data;
+                                ToastrUtility_.success(response.message);
                                 $('#delivery_success_modal').modal('hide');
                                 App.operations.deliveries= DeliveriesModel.get();
                             }
                         });
-                    },
-                });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_delivery.delivery_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
+                    App.operations.current_delivery.delivery_state_id= 2;
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function(){
+                            $('#delivery_success_modal').modal('hide');
+                            App.operations.deliveries= DeliveriesModel.get();
+                        }
+                    });
+                },
             });
-            /** <!-- CIERRA STORE DE EXITOSAS */
-
         });
+        /** <!-- CIERRA STORE DE EXITOSAS */
+
     });
 
 
