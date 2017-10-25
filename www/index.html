@@ -393,22 +393,25 @@
     <!-- MODAL SUCCESS PICKUP -->
     <div class="modal fade" id="pickup_success_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
-                            <button class="btn btn-block btn-flat btn-warning" data-toggle="modal" data-target="#pickup_success_modal">
-                                {{ operations.current_pickup.value | formatMoney }}
-                            </button>
+                            <div class="callout callout-warning" style="text-align: center;">
+                                <p>
+                                    VALOR: {{ operations.current_pickup.value | formatMoney }}
+                                </p>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}<br>
+                                    <b>Contenido: </b> {{ operations.current_pickup.content }}
                                 </p>
                             </div>
                         </div>
@@ -417,7 +420,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="date" class="form-control" current_date>
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -426,21 +429,25 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker" current_time>
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en recolección:</label>
-                            <textarea class="form-control"></textarea>
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
-                    </form>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Registrar recolección</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success">Registrar recolección</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <!-- MODAL ATTACH PHOTO PICKUP-->
@@ -528,7 +535,7 @@
                             <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en recolección:</label>
+                            <label class="control-label">Observaciones:</label>
                             <textarea class="form-control" name="observaciones"></textarea>
                         </div>
                     </div>
@@ -585,22 +592,25 @@
     <!-- MODAL SUCCESS DELIVERY -->
     <div class="modal fade" id="delivery_success_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
-                            <button class="btn btn-block btn-flat btn-warning" data-toggle="modal" data-target="#pickup_success_modal">
-                                {{ operations.current_delivery.value | formatMoney }}
-                            </button>
+                            <div class="callout callout-warning" style="text-align: center;">
+                                <p>
+                                    VALOR: {{ operations.current_delivery.value | formatMoney }}
+                                </p>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery}}
+                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}<br>
+                                    <b>Contenido: </b> {{ operations.current_delivery.content }}
                                 </p>
                             </div>
                         </div>
@@ -609,7 +619,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar-o"></i>
                                 </div>
-                                <input type="date" class="form-control" current_date>
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
                             </div>
                         </div>
                         <div class="form-group">
@@ -618,21 +628,25 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control timepicker" current_time>
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en entrega:</label>
-                            <textarea class="form-control"></textarea>
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
-                    </form>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Registrar entrega</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success">Registrar entrega</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <!-- MODAL ATTACH PHOTO DELIVERY-->
@@ -720,7 +734,7 @@
                             <input type="text" class="form-control" name="persona_que_atendio">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Observaciones en recolección:</label>
+                            <label class="control-label">Observaciones:</label>
                             <textarea class="form-control" name="observaciones"></textarea>
                         </div>
                     </div>

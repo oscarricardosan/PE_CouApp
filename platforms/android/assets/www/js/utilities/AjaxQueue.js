@@ -49,11 +49,16 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
-            properties.successful_offline(response);
-            Ajax_queueModel.remove({_id: properties._id}, function(){
-                AjaxQueue.check_queue(callbacks);
-            });
-            callbacks.success();
+            if(response.success){
+                properties.successful_offline(response);
+                Ajax_queueModel.remove({_id: properties._id}, function(){
+                    AjaxQueue.check_queue(callbacks);
+                });
+                callbacks.success();
+            }else{
+                callbacks.fail();
+                properties.failed_offline(jqXHR, textStatus);
+            }
         });
         request.fail(function(jqXHR, textStatus) {
             if(jqXHR.status===422){

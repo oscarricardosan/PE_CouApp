@@ -317,6 +317,98 @@ $(document).ready(function(){
         });
         /** <!-- CIERRA STORE DE EXCEPCIONES */
 
+        /** ABRE STORE DE EXITOSAS */
+        $('#delivery_success_modal, #pickup_success_modal').on('show.bs.modal', function () {
+            $(this).find('[name]').val('');
+            $(this).find('[current_time]').val(
+                MomentUtility_.current_time().substr(0,5)
+            );
+            $(this).find('[current_date]').val(MomentUtility_.current_date());
+        });
+        $('#pickup_success_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.recoleccion_id= App.operations.current_pickup.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'pickup/store_successful',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function(){
+                                App.operations.current_pickup=  response.data;
+                                ToastrUtility_.success(response.message);
+                                $('#pickup_success_modal').modal('hide');
+                                App.operations.pickups= PickupModel.get();
+                            }
+                        });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_pickup.pickup_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
+                    App.operations.current_pickup.pickup_state_id= 2;
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function(){
+                            $('#pickup_success_modal').modal('hide');
+                            App.operations.pickups= PickupModel.get();
+                        }
+                    });
+                },
+            });
+        });
+        $('#delivery_success_modal form').submit(function (event) {
+            event.preventDefault();
+            form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.entrega_id= App.operations.current_delivery.id;
+            AjaxQueue.add({
+                type: 'post',
+                url: 'delivery/store_successful',
+                dataType: 'json',
+                data: data,
+                successful_online: function(response){
+                    form.unloading();
+                    if(response.success){
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function(){
+                                App.operations.current_delivery=  response.data;
+                                ToastrUtility_.success(response.message);
+                                $('#delivery_success_modal').modal('hide');
+                                App.operations.deliveries= DeliveriesModel.get();
+                            }
+                        });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                failed_online: function(jqXHR, textStatus){
+                    form.unloading();
+                    ToastrUtility_.warning(jqXHR.status+'=>'+jqXHR.responseJSON.message+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                    App.operations.current_delivery.delivery_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
+                    App.operations.current_delivery.delivery_state_id= 2;
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function(){
+                            $('#delivery_success_modal').modal('hide');
+                            App.operations.deliveries= DeliveriesModel.get();
+                        }
+                    });
+                },
+            });
+        });
+        /** <!-- CIERRA STORE DE EXITOSAS */
+
     });
 });
 
