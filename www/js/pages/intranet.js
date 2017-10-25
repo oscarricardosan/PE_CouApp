@@ -36,7 +36,11 @@ function check_hardware() {
         initializeIntranet();
 }
 
-
+/** Ready on mobiles **/
+document.addEventListener("deviceready", onDeviceReadyIntranet, false);
+function onDeviceReadyIntranet() {
+    check_hardware();
+};
 
 function initializeIntranet(){
     $(document).ready(function(){
