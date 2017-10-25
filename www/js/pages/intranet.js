@@ -36,6 +36,8 @@ function check_hardware() {
     if(!bluetooth_available)check_BluetoothAvailable();
     if(location_available && bluetooth_available)
         initializeIntranet();
+    else
+        window.location.reload();
 }
 
 /** Ready on mobiles **/
