@@ -2,7 +2,7 @@ var location_available= false;
 var bluetooth_available= false;
 
 function check_LocationAvailable(){
-    cordova.plugins.diagnostic.isLocationAvailable(function(available){
+    cordova.plugins.diagnostic.isGpsLocationAvailable(function(available){
         if(available){
             location_available= true;
         }else{
@@ -21,7 +21,7 @@ function check_BluetoothAvailable(){
             bluetooth_available= true;
         }else{
             bluetooth_available= false;
-            alert('Para continuar debes activar el Bluetooth.');
+            cordova.plugins.diagnostic.switchToBluetoothSettings();
         }
         check_hardware();
     }, function(error){
@@ -40,7 +40,7 @@ function check_hardware() {
 document.addEventListener("deviceready", onDeviceReadyIntranet, false);
 function onDeviceReadyIntranet() {
     check_hardware();
-};
+}
 
 function initializeIntranet(){
     $(document).ready(function(){
