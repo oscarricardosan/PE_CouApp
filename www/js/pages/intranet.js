@@ -47,7 +47,7 @@ function initializeIntranet(){
             bigText: false
         });
 
-        cordova.plugins.backgroundMode.disableWebViewOptimizations();
+        //cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         var index_executionBack= 0;
         function BackgroundProcessFunction(){

@@ -1,7 +1,7 @@
 $(document).ready(function(){
     Login.is_logged_in(function(success, user){
         if(success){
-            alert("Bienvenido "+user.user_data.name)
+            ToastrUtility_.success("Bienvenido "+user.user_data.name)
             window.location.href= 'index.html';
         }
     });
