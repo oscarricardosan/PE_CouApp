@@ -11,6 +11,7 @@ function initializePage() {
                 deliveries: [],
                 pickups: [],
             },
+            ajax_queue_count: 0,
         },
         methods: {
             synchronize_data_operations: function (e) {
@@ -24,6 +25,10 @@ function initializePage() {
                         element.unloading();
                     }
                 });
+            },
+            check_ajax_queue: function(e) {
+                var element= $(e.target);
+                AjaxQueue.check_queue_from_element(element);
             }
         },
         filters: {},
@@ -37,6 +42,10 @@ function initializePage() {
                     App_.user.email = user.user_data.email;
                     App_.user.name = user.user_data.name;
                 }
+            });
+
+            Ajax_queueModel.loaded(function(){
+                App_.ajax_queue_count= Ajax_queueModel.get().length;
             });
 
             /**

@@ -79,10 +79,45 @@ var AjaxQueue= (function () {
         });
     };
 
+    var check_queue_from_element= function(element){
+        element.loading();
+        AjaxQueue.check_queue({
+            empty:function(){
+                App_.ajax_queue_count= Ajax_queueModel.get().length;
+                element.unloading();
+                ToastrUtility_.success('Cola vacía');
+            },
+            fail: function(properties, jqXHR, textStatus){
+                App_.ajax_queue_count= Ajax_queueModel.get().length;
+                element.unloading();
+                ToastrUtility_.error('Fallo transmisión'+ JSON.stringify({
+                    jqXHR: jqXHR, textStatus: textStatus
+                }));
+                LogModel.store({
+                    message: 'Error al transmitir al servidor petición online, procesamiento de cola.',
+                    status: 'danger',
+                    data:  JSON.stringify({
+                        jqXHR: jqXHR, textStatus: textStatus, properties: properties
+                    })
+                });
+            },
+            success: function(properties, response){
+                App_.ajax_queue_count= Ajax_queueModel.get().length;
+
+                LogModel.store({
+                    message: 'Transmisión de petición online a servidor exitosa, procesamiento de cola.',
+                    status: 'success',
+                    data: {properties: properties, response: response}
+                });
+            }
+        });
+    }
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            add            : add,
-            check_queue    : check_queue
+            add                         : add,
+            check_queue                 : check_queue,
+            check_queue_from_element    : check_queue_from_element,
         }
     };
     return {construct:construct};//retorna los metodos publicos
