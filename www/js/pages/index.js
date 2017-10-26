@@ -48,11 +48,11 @@ function initializePage(){
             }
         },
         watch: {
-            settings_current_printer: function(device){
+            settings_current_printer: function(device_address){
                 if(typeof device === 'object'){
-                    window.DatecsPrinter.connect(device.address,
+                    window.DatecsPrinter.connect(device_address,
                         function() {
-                            PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
+                            PrinterModel.store(device_address, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
                         },
                         function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
                     );
