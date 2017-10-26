@@ -79,10 +79,13 @@ function initializePage(){
         },
         watch: {
             settings_current_printer: function(device){
+                alert('impresora seleccionada: '+JSON.stringify(device));
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device.address,
                         function() {
-                            PrinterModel.store(device)
+                            PrinterModel.store(device, {
+                                success: function(){ alert('impresora guardada.');},
+                            })
                         },
                         function() {
                             alert(JSON.stringify(error));

@@ -1,6 +1,6 @@
 var PrinterModel= (function () {
 
-    var collection_name= 'setting_print';
+    var collection_name= 'setting_printer';
 
     var loaded_Callback= [];
     var isLoaded= false;
