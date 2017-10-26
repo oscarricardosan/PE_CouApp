@@ -58,7 +58,7 @@ var ProcessBackground= (function () {
 
         }catch (error){
             alert(JSON.stringify(error));
-            setTimeout(function(){ initialize(); }, 1000);
+            //setTimeout(function(){ initialize(); }, 1000);
         }
     }
 
