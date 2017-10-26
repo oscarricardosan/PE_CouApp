@@ -398,10 +398,23 @@ function initializePage(){
 
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
-            PrinterFormat.pickup_label();
+            event.preventDefault();
+            try{
+                PrinterFormat.pickup_label();
+            }catch (error){
+                alert(JSON.stringify(error));
+            }
+
         });
         $('#print_delivery_label form').submit(function (event) {
-            PrinterFormat.pickup_delivery();
+            event.preventDefault();
+            event.preventDefault();
+            try{
+                PrinterFormat.pickup_delivery();
+            }catch (error){
+                alert(JSON.stringify(error));
+            }
+
         });
         /** <!-- CIERRA STORE DE FOTOS */
 
