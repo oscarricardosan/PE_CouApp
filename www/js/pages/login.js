@@ -1,9 +1,11 @@
 $(document).ready(function(){
     Login.is_logged_in(function(success, user){
+        try{
         if(success){
             ToastrUtility_.success("Bienvenido "+user.user_data.name);
             window.location.href= 'index.html';
         }
+        }catch (e){ alert(JSON.stringify(e));}
     });
 
 
