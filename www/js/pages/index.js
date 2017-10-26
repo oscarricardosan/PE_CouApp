@@ -36,37 +36,7 @@ function initializePage(){
             },
             check_ajax_queue: function(e) {
                 var element= $(e.target);
-                element.loading();
-                AjaxQueue.check_queue({
-                    empty:function(){
-                        App_.ajax_queue_count= Ajax_queueModel.get().length;
-                        element.unloading();
-                        ToastrUtility_.success('Cola vacía');
-                    },
-                    fail: function(properties, jqXHR, textStatus){
-                        App_.ajax_queue_count= Ajax_queueModel.get().length;
-                        element.unloading();
-                        ToastrUtility_.error('Fallo transmisión'+ JSON.stringify({
-                            jqXHR: jqXHR, textStatus: textStatus
-                        }));
-                        LogModel.store({
-                            message: 'Error al transmitir al servidor petición online, procesamiento de cola.',
-                            status: 'danger',
-                            data:  JSON.stringify({
-                                jqXHR: jqXHR, textStatus: textStatus, properties: properties
-                            })
-                        });
-                    },
-                    success: function(properties, response){
-                        App_.ajax_queue_count= Ajax_queueModel.get().length;
-
-                        LogModel.store({
-                            message: 'Transmisión de petición online a servidor exitosa, procesamiento de cola.',
-                            status: 'success',
-                            data: {properties: properties, response: response}
-                        });
-                    }
-                });
+                AjaxQueue.check_queue_from_element(element);
             }
         },
         filters: {
@@ -79,23 +49,12 @@ function initializePage(){
         },
         watch: {
             settings_current_printer: function(device){
-                alert('Impresora seleccionada');
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device.address,
                         function() {
-                            alert('Impresora conectada');
-                            PrinterModel.store(device, {
-                                success: function(){
-                                    alert('Impresora guardada');
-                                    ToastrUtility_.success('Impresora guardada.');
-                                },
-                            })
+                            PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
                         },
-                        function(error) {
-                            alert('Impresora error al conectar');
-                            alert(error);
-                            alert('Error: '+JSON.stringify(error));
-                        }
+                        function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
                     );
                 }
             }
@@ -139,7 +98,6 @@ function initializePage(){
 
             PrinterModel.loaded(function(){
                 App_.settings_current_printer= PrinterModel.get();
-                alert(JSON.stringify(App_.settings_current_printer));
             });
         }
     });
@@ -147,7 +105,6 @@ function initializePage(){
     $(document).ready(function(){
         $('.takePhoto').click(function(event){
             event.preventDefault();
-            var current_element= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
@@ -168,7 +125,6 @@ function initializePage(){
 
         $('.selectPhoto').click(function(event){
             event.preventDefault();
-            var current_element= $(this);
             navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
@@ -442,51 +398,10 @@ function initializePage(){
 
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
-            window.DatecsPrinter.feedPaper(3);
-            window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(2);
-            window.DatecsPrinter.printText(' Recolección número: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_pickup.value), 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(3);
-            window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
-            window.DatecsPrinter.printText('  ', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printBarcode(
-                69, //here goes the barcode type code
-                App.operations.current_pickup.pickup_number, //your barcode data
-                function() {},
-                function() {alert('Error: '+JSON.stringify(error));}
-            );
-            window.DatecsPrinter.feedPaper(3);
-
+            PrinterFormat.pickup_label();
         });
         $('#print_delivery_label form').submit(function (event) {
-            window.DatecsPrinter.feedPaper(3);
-            window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(2);
-            window.DatecsPrinter.printText(' Entrega número: '+App.operations.current_delivery.delivery_number, 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_delivery.value), 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(3);
-            window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
-            window.DatecsPrinter.printText('  ', 'ISO-8859-1');
-            window.DatecsPrinter.feedPaper(1);
-            window.DatecsPrinter.printBarcode(
-                69, //here goes the barcode type code
-                App.operations.current_delivery.delivery_number, //your barcode data
-                function() {},
-                function() {alert('Error: '+JSON.stringify(error));}
-            );
-            window.DatecsPrinter.feedPaper(3);
+            PrinterFormat.pickup_delivery();
         });
         /** <!-- CIERRA STORE DE FOTOS */
 
@@ -506,8 +421,5 @@ function initializePage(){
                 alert('Error: '+JSON.stringify(error));
             }
         );
-
-    };
-
-
+    }
 }
