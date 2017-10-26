@@ -27,15 +27,17 @@ function initializeIntranet(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
+        var backgroundProcessTimer= undefined;
+        var foreGroundProcessTimer= undefined;
+
         window.open = cordova.InAppBrowser.open;
 
         /** BACKGROUND PROCESS**/
-        var first_execution= true;
-
         //Override the back button on Android to go to background instead of closing the app.
         cordova.plugins.backgroundMode.overrideBackButton();
         //active background process
         cordova.plugins.backgroundMode.enable();
+        //cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
@@ -47,43 +49,16 @@ function initializeIntranet(){
             bigText: false
         });
 
-        //cordova.plugins.backgroundMode.disableWebViewOptimizations();
-
-        var index_executionBack= 0;
-        function BackgroundProcessFunction(){
-            //navigator.notification.vibrate([1000]);
-            index_executionBack++;
-            cordova.plugins.backgroundMode.configure({
-                text:
-                "ENtrada "+index_executionBack+"\n"+
-                "Primer ejecución "+(first_execution?'si':'no')
-            });
-            first_execution= false;
-        }
-
-        var index_executionFor= 0;
-        function ForeGroundProcessFunction(){
-            //navigator.notification.beep(1);
-            index_executionFor++;
-            ToastrUtility_.success(
-                "ENtrada "+index_executionFor+"\n"+
-                "Primer ejecución "+(first_execution?'si':'no')
-            )
-        }
-
-        var backgroundProcessTimer= undefined;
-        var foreGroundProcessTimer= undefined;
-
         cordova.plugins.backgroundMode.on('activate', function() {
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ BackgroundProcessFunction() }, 300000);
+            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 300000);
+            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ForeGroundProcessFunction() }, 300000);
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
 
         cordova.plugins.backgroundMode.enable();
 
