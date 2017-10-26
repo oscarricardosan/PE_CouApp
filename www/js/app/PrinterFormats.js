@@ -87,7 +87,7 @@ var PrinterFormat= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             pickup_label            : pickup_label,
-            pickup_delivery         : pickup_delivery
+            delivery_label         : delivery_label
         }
     };
     return {construct:construct};//retorna los metodos publicos
