@@ -4,7 +4,7 @@
 /** Ready on mobiles **/
 document.addEventListener("deviceready", onDeviceReadyIntranet, false);
 function onDeviceReadyIntranet() {
-    Check_hardware.diagnostic_in_intranet();
+   // Check_hardware.diagnostic_in_intranet();
 }
 
 function initializeIntranet(){
