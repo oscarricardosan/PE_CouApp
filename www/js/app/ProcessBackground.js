@@ -56,7 +56,8 @@ var ProcessBackground= (function () {
                 notify_message.pickups = 'Todo ha sido recgido';
             }
 
-        }catch (e){
+        }catch (error){
+            alert(JSON.stringify(error));
             setTimeout(function(){ initialize(); }, 1000);
         }
     }
