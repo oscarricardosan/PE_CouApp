@@ -52,7 +52,7 @@ function initializePage(){
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device.address,
                         function() {
-                            PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
+                            //PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
                         },
                         function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
                     );
@@ -435,4 +435,20 @@ function initializePage(){
             }
         );
     }
+}
+
+function printText() {
+
+    window.DatecsPrinter.feedPaper(1);
+    var text= prompt('Texto a imprimir');
+    window.DatecsPrinter.printText(text, 'ISO-8859-1');
+    window.DatecsPrinter.feedPaper(1);
+
+    /*window.DatecsPrinter.printBarcode(
+        69, //here goes the barcode type code
+        text, //your barcode data
+        function() {},
+        function() {alert(JSON.stringify(error));}
+    );
+    window.DatecsPrinter.feedPaper(1);*/
 }
