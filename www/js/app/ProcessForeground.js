@@ -5,11 +5,10 @@ var ProcessForeground= (function () {
 
     var run= function(){
         //navigator.notification.beep(1);
+        if($('.check_ajax_queue').length > 0)
+            $('.check_ajax_queue').click();
         index_executionFor++;
-        ToastrUtility_.success(
-            "ENtrada "+index_executionFor+"\n"+
-            "Primer ejecución "+(first_execution?'si':'no')
-        )
+        first_execution= false;
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos

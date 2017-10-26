@@ -1,6 +1,8 @@
 var ProcessBackground= (function () {
 
     var index_executionBack= 0;
+    var first_execution= true;
+
     var run= function (){
         //navigator.notification.vibrate([1000]);
         index_executionBack++;
