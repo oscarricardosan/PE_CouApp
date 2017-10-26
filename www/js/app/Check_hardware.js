@@ -13,6 +13,7 @@ var Check_hardware= (function () {
                 location_available= false;
                 alert('Para continuar debes activar tu GPS.');
                 cordova.plugins.diagnostic.switchToLocationSettings();
+                alert('La aplicación se actualizara para verificar que tu GPS esta activado.');
                 window.location.reload(true);
             }
         }, function(error){
@@ -29,6 +30,7 @@ var Check_hardware= (function () {
                 bluetooth_available= false;
                 alert('Para continuar debes activar tu Bluetooth.');
                 cordova.plugins.diagnostic.switchToBluetoothSettings();
+                alert('La aplicación se actualizara para verificar que el Bluetooth esta activado.');
                 window.location.reload(true);
             }
         }, function(error){
