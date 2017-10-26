@@ -130,6 +130,7 @@ function initializePage(){
 
             PrinterModel.loaded(function(){
                 App_.settings_current_printer= PrinterModel.get();
+                alert(JSON.stringify(App_.settings_current_printer));
             });
         }
     });
