@@ -3,7 +3,8 @@ var ProcessBackground= (function () {
     var notify_message= {
         pickups: '',
         deliveries: '',
-        main_message: ''
+        main_message: '',
+        complete: ''
     };
 
     var index_executionBack= 0;
@@ -14,19 +15,17 @@ var ProcessBackground= (function () {
         //navigator.notification.vibrate([1000]);
         index_executionBack++;
         cordova.plugins.backgroundMode.configure({
-            text:
-            "ENtrada "+index_executionBack+"\n"+
-            "Primer ejecución "+(first_execution?'si':'no')
+            text: get_message_to_notification_bar()
         });
         first_execution= false;
     };
 
 
     function initialize(){
-
+        reload_message_to_notification_bar();
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
-            text: load_message_to_notification_bar(),
+            text: get_message_to_notification_bar(),
             //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
             color: '#b3b3ff', // hex format like 'F14F4D'
             resume: true,
@@ -35,14 +34,28 @@ var ProcessBackground= (function () {
         });
     }
     
-    function load_message_to_notification_bar() {
+    function get_message_to_notification_bar() {
+        var main_message = (notify_message.main_message !== '') ? notify_message.main_message + "\n" : '';
+        return main_message + notify_message.deliveries + "\n" + notify_message.pickups;
+    }
+
+    function reload_message_to_notification_bar() {
         try {
-            notify_message.deliveries = 'Sin Entregar ' + DeliveriesModel.find({delivery_state_id: 1}).length;
-            notify_message.pickups = 'Sin Recoger ' + PickupModel.find({pickup_state_id: 1}).length;
+            var sin_entregar= DeliveriesModel.find({delivery_state_id: 1}).length;
+            var sin_recoger= PickupModel.find({pickup_state_id: 1}).length;
 
-            var main_message = (notify_message.main_message !== '') ? notify_message.main_message + "\n" : '';
+            if(sin_entregar>0){
+                notify_message.deliveries = 'Sin Entregar ' + sin_entregar;
+            }else{
+                notify_message.deliveries = 'Todo ha sido entregado';
+            }
 
-            return main_message + notify_message.deliveries + "\n" + notify_message.pickups;
+            if(sin_entregar>0){
+                notify_message.pickups = 'Sin Recoger ' + sin_recoger;
+            }else{
+                notify_message.pickups = 'Todo ha sido recgido';
+            }
+
         }catch (e){
             setTimeout(function(){ initialize(); }, 1000);
         }
@@ -51,7 +64,7 @@ var ProcessBackground= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             run                                     : run,
-            load_message_to_notification_bar        : load_message_to_notification_bar,
+            reload_message_to_notification_bar      : reload_message_to_notification_bar,
         }
     }
     return {construct:construct};//retorna los metodos publicos
