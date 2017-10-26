@@ -5,6 +5,7 @@ var ProcessForeground= (function () {
 
     var run= function(){
         //navigator.notification.beep(1);
+        alert($('.check_ajax_queue').length);
         if($('.check_ajax_queue').length > 0)
             $('.check_ajax_queue').click();
         index_executionFor++;
