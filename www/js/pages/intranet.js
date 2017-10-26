@@ -42,7 +42,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.run();
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
+            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 50000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
