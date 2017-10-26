@@ -29,30 +29,30 @@ var ToastrUtility_= (function () {
     var success= function(message, title)
     {
         configToastr();
-        title= title==undefined?'Exitoso':title;
+        title= title===undefined?'Exitoso':title;
         toastr['success'](message, title);
-    }
+    };
 
     var info= function(message, title)
     {
         configToastr();
-        title= title==undefined?'Información':title;
+        title= title===undefined?'Información':title;
         toastr['info'](message, title);
-    }
+    };
 
     var warning= function(message, title)
     {
         configToastr();
-        title= title==undefined?'Cuidado':title;
+        title= title===undefined?'Cuidado':title;
         toastr['warning'](message, title);
-    }
+    };
 
     var error= function(message, title)
     {
         configToastr();
-        title= title==undefined?'Error':title;
+        title= title===undefined?'Error':title;
         toastr['error'](message, title);
-    }
+    };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {

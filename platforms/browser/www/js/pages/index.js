@@ -16,7 +16,8 @@ function initializePage(){
             bluetooth_devices: [],
             printer_device: null,
             current_photo: 'images/camera.png',
-            ajax_queue_count: 0
+            ajax_queue_count: 0,
+            settings_current_printer: null
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -77,13 +78,17 @@ function initializePage(){
             }
         },
         watch: {
-            printer_device: function(device){
-                window.DatecsPrinter.connect(device.address,
-                    function() {},
-                    function() {
-                        alert(JSON.stringify(error));
-                    }
-                );
+            settings_current_printer: function(device){
+                if(typeof device === 'object'){
+                    window.DatecsPrinter.connect(device.address,
+                        function() {
+                            PrinterModel.store(device)
+                        },
+                        function() {
+                            alert(JSON.stringify(error));
+                        }
+                    );
+                }
             }
         },
         mounted: function(){
@@ -121,6 +126,11 @@ function initializePage(){
 
             Ajax_queueModel.loaded(function(){
                 App_.ajax_queue_count= Ajax_queueModel.get().length;
+            });
+
+            PrinterModel.loaded(function(){
+                App_.settings_current_printer= PrinterModel.get();
+                alert(JSON.stringify(App_.settings_current_printer));
             });
         }
     });
@@ -421,6 +431,56 @@ function initializePage(){
         });
         /** <!-- CIERRA STORE DE EXITOSAS */
 
+        /** ABRE IMPRESION DE LABELS */
+        $('#print_pickup_label form').submit(function (event) {
+            window.DatecsPrinter.feedPaper(3);
+            window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(2);
+            window.DatecsPrinter.printText(' Recolección número: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_pickup.value), 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(3);
+            window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
+            window.DatecsPrinter.printText('  ', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printBarcode(
+                69, //here goes the barcode type code
+                App.operations.current_pickup.pickup_number, //your barcode data
+                function() {},
+                function() {alert(JSON.stringify(error));}
+            );
+            window.DatecsPrinter.feedPaper(3);
+
+        });
+        $('#print_delivery_label form').submit(function (event) {
+            window.DatecsPrinter.feedPaper(3);
+            window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(2);
+            window.DatecsPrinter.printText(' Entrega número: '+App.operations.current_delivery.delivery_number, 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_delivery.value), 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(3);
+            window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
+            window.DatecsPrinter.printText('  ', 'ISO-8859-1');
+            window.DatecsPrinter.feedPaper(1);
+            window.DatecsPrinter.printBarcode(
+                69, //here goes the barcode type code
+                App.operations.current_delivery.delivery_number, //your barcode data
+                function() {},
+                function() {alert(JSON.stringify(error));}
+            );
+            window.DatecsPrinter.feedPaper(3);
+        });
+        /** <!-- CIERRA STORE DE FOTOS */
+
     });
 
 
@@ -441,20 +501,4 @@ function initializePage(){
     };
 
 
-
-    function printText() {
-
-        window.DatecsPrinter.feedPaper(1);
-        var text= prompt('Texto a imprimir');
-        window.DatecsPrinter.printText(text, 'ISO-8859-1');
-        window.DatecsPrinter.feedPaper(1);
-
-        /*window.DatecsPrinter.printBarcode(
-            69, //here goes the barcode type code
-            text, //your barcode data
-            function() {},
-            function() {alert(JSON.stringify(error));}
-        );
-        window.DatecsPrinter.feedPaper(1);*/
-    }
 }
