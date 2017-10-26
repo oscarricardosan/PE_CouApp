@@ -5,9 +5,8 @@ var ProcessForeground= (function () {
 
     var run= function(){
         //navigator.notification.beep(1);
-        alert($('.check_ajax_queue').length);
-        if($('.check_ajax_queue').length > 0)
-            $('.check_ajax_queue').click();
+        if($('#check_ajax_queue').length > 0)
+            document.getElementById('check_ajax_queue').dispatchEvent(new Event("click"));
         index_executionFor++;
         first_execution= false;
     };

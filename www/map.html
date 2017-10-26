@@ -130,7 +130,7 @@
                     <ul class="nav navbar-nav">
                         <!-- Notifications: style can be found in dropdown.less -->
                         <li class="dropdown notifications-menu" :style="ajax_queue_count>0?'background: darkred;':''">
-                            <a href="#" class="check_ajax_queue" @click.prevent="check_ajax_queue">
+                            <a href="#" id="check_ajax_queue" @click.prevent="check_ajax_queue">
                                 <i class="fa fa-history"></i>
                                 <span class="label label-warning">{{ ajax_queue_count }}</span>
                             </a>

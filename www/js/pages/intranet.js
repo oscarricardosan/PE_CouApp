@@ -72,3 +72,4 @@ function initializeIntranet(){
 
     initializePage();
 }
+initializePage();
