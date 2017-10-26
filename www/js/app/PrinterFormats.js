@@ -31,7 +31,7 @@ var PrinterFormat= (function () {
         format+= "^FO0,73^FD Valor: "+accounting.formatMoney(App.operations.current_pickup.value)+"^FS";
         format+= "^FO0,100^FD Firma cliente:  ^FS";
         format+= "^FO0,150^FD ____________________________________________ ^FS";
-        format+= "^BY3,1,40";
+        format+= "^BY2,1,40";
         format+= "^FO0,180^BC^FD"+App.operations.current_pickup.pickup_number+"^FS";
 
         format+= "^CF0,18";
@@ -74,7 +74,7 @@ var PrinterFormat= (function () {
         format+= "^FO0,73^FD Valor: "+accounting.formatMoney(App.operations.current_delivery.value)+"^FS";
         format+= "^FO0,100^FD Firma cliente:  ^FS";
         format+= "^FO0,150^FD____________________________________________^FS";
-        format+= "^BY3,1,40";
+        format+= "^BY2,1,40";
         format+= "^FO0,180^BC^FD"+App.operations.current_delivery.delivery_number+"^FS";
 
         format+= "^CF0,18";
