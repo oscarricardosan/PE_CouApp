@@ -41,7 +41,7 @@ var PrinterFormat= (function () {
 
     };
 
-    var pickup_delivery= function() {
+    var delivery_label= function() {
         /*
         window.DatecsPrinter.feedPaper(3);
         window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
@@ -75,7 +75,7 @@ var PrinterFormat= (function () {
         format+= "FO0,100^FD Firma cliente:  ^FS";
         format+= "FO0,150^FD____________________________________________^FS";
         format+= "BY3,1,40";
-        format+= "FO0,180^BC^FD"+App.operations.current_delivery.delivery_numbe+"^FS";
+        format+= "FO0,180^BC^FD"+App.operations.current_delivery.delivery_number+"^FS";
 
         format+= "^CF0,18";
         format+= "^FO200,255^FD"+MomentUtility_.now()+"^FS";

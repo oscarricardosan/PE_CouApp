@@ -411,7 +411,7 @@ function initializePage(){
         $('#print_delivery_label form').submit(function (event) {
             event.preventDefault();
             try{
-                PrinterFormat.pickup_delivery();
+                PrinterFormat.delivery_label();
             }catch (error){
                 alert(JSON.stringify(error));
             }

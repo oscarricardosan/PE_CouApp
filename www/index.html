@@ -457,32 +457,6 @@
             </form>
         </div>
     </div>
-    <!-- MODAL PRINT DELIVERY LABEL -->
-    <div class="modal fade" id="print_delivery_label" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <form>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Label para recolección {{ operations.current_pickup.pickup_number }}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label">Impresora:</label>
-                            <select class="form-control" v-model="settings_current_printer">
-                                <option :value="null">Selecciona tu impresora Bluetooth</option>
-                                <option v-for="device in bluetooth_devices" :value="device">{{ device.name }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Imprimir label</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
     <!-- MODAL ATTACH PHOTO PICKUP-->
     <div class="modal fade" id="pickup_attach_photo" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -619,6 +593,32 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- MODAL PRINT DELIVERY LABEL -->
+    <div class="modal fade" id="print_delivery_label" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Label para recolección {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label">Impresora:</label>
+                            <select class="form-control" v-model="settings_current_printer">
+                                <option :value="null">Selecciona tu impresora Bluetooth</option>
+                                <option v-for="device in bluetooth_devices" :value="device">{{ device.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Imprimir label</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <!-- MODAL SUCCESS DELIVERY -->
