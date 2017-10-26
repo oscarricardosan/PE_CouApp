@@ -47,9 +47,9 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 50000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 50000);
 
         cordova.plugins.backgroundMode.enable();
 
