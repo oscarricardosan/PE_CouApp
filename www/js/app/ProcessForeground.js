@@ -1,5 +1,7 @@
 var ProcessForeground= (function () {
+
     var index_executionFor= 0;
+    var first_execution= true;
 
     var run= function(){
         //navigator.notification.beep(1);
