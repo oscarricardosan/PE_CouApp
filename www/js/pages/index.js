@@ -79,16 +79,15 @@ function initializePage(){
         },
         watch: {
             settings_current_printer: function(device){
-                alert('impresora seleccionada: '+JSON.stringify(device));
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device.address,
                         function() {
                             PrinterModel.store(device, {
-                                success: function(){ alert('impresora guardada.');},
+                                success: function(){ ToastrUtility_.success('Impresora guardada.');},
                             })
                         },
-                        function() {
-                            alert(JSON.stringify(error));
+                        function(error) {
+                            alert('Error: '+JSON.stringify(error));
                         }
                     );
                 }
@@ -454,7 +453,7 @@ function initializePage(){
                 69, //here goes the barcode type code
                 App.operations.current_pickup.pickup_number, //your barcode data
                 function() {},
-                function() {alert(JSON.stringify(error));}
+                function() {alert('Error: '+JSON.stringify(error));}
             );
             window.DatecsPrinter.feedPaper(3);
 
@@ -478,7 +477,7 @@ function initializePage(){
                 69, //here goes the barcode type code
                 App.operations.current_delivery.delivery_number, //your barcode data
                 function() {},
-                function() {alert(JSON.stringify(error));}
+                function() {alert('Error: '+JSON.stringify(error));}
             );
             window.DatecsPrinter.feedPaper(3);
         });
@@ -497,7 +496,7 @@ function initializePage(){
                 App.bluetooth_devices= devices;
             },
             function (error) {
-                alert(JSON.stringify(error));
+                alert('Error: '+JSON.stringify(error));
             }
         );
 
