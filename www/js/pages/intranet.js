@@ -42,14 +42,14 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.run();
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 50000);
+            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 50000);
+            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 50000);
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
 
         cordova.plugins.backgroundMode.enable();
 

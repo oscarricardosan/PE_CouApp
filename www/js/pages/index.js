@@ -52,7 +52,7 @@ function initializePage(){
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device.address,
                         function() {
-                            //PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
+                            PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
                         },
                         function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
                     );
@@ -97,7 +97,9 @@ function initializePage(){
             });
 
             PrinterModel.loaded(function(){
-                App_.settings_current_printer= PrinterModel.get();
+                var printer= PrinterModel.get();
+                if(printer !== null)
+                    App_.settings_current_printer= printer;
             });
         }
     });
@@ -407,7 +409,6 @@ function initializePage(){
 
         });
         $('#print_delivery_label form').submit(function (event) {
-            event.preventDefault();
             event.preventDefault();
             try{
                 PrinterFormat.pickup_delivery();
