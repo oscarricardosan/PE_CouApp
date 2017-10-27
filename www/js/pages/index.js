@@ -390,8 +390,8 @@ function initializePage(){
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();
-            var type_print= $(this).find('[name="type_print"]:checked').val();
             try{
+                var type_print= $(this).find('.type_print').val();
                 connectPrinter(App.settings_current_printer.address, {
                     success: function(){
                         PrinterFormat.pickup_label(type_print);
@@ -405,7 +405,7 @@ function initializePage(){
         $('#print_delivery_label form').submit(function (event) {
             event.preventDefault();
             try{
-                var type_print= $(this).find('[name="type_print"]:checked').val();
+                var type_print= $(this).find('.type_print').val();
                 connectPrinter(App.settings_current_printer.address, {
                     success: function(){
                         PrinterFormat.delivery_label(type_print);

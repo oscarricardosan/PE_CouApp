@@ -448,15 +448,12 @@
                                 <option v-for="device in bluetooth_devices" :value="device.address">{{ device.name }}</option>
                             </select>
                         </div>
-                        <div class="radio" style="text-align: center;">
-                            <label>
-                                <input type="radio" value="ZPL" name="type_print">
-                                Código ZPL
-                            </label>
-                            <label style="margin-left: 2em;">
-                                <input type="radio" value="TXT" name="type_print">
-                                Texto
-                            </label>
+                        <div class="form-group">
+                            <label class="control-label">Tipo:</label>
+                            <select class="form-control type_print" required>
+                                <option value="ZPL">Código ZPL</option>
+                                <option value="TXT">Texto</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -622,15 +619,12 @@
                                 <option v-for="device in bluetooth_devices" :value="device.address">{{ device.name }}</option>
                             </select>
                         </div>
-                        <div class="radio" style="text-align: center;">
-                            <label>
-                                <input type="radio" value="ZPL" name="type_print">
-                                Código ZPL
-                            </label>
-                            <label style="margin-left: 2em;">
-                                <input type="radio" value="TXT" name="type_print">
-                                Texto
-                            </label>
+                        <div class="form-group">
+                            <label class="control-label">Tipo:</label>
+                            <select class="form-control type_print" required>
+                                <option value="ZPL">Código ZPL</option>
+                                <option value="TXT">Texto</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
