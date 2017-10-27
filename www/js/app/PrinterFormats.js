@@ -48,7 +48,8 @@ var PrinterFormat= (function () {
 
     var pickup_label_TXT= function() {
         window.DatecsPrinter.feedPaper(3);
-        printImage('/images/savne_net.png');
+        //printImage('/images/savne_net.png');
+        window.DatecsPrinter.printText('{reset}', 'ISO-8859-1');
         window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Recoleccion numero: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
