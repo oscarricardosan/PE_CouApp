@@ -390,10 +390,8 @@ function initializePage(){
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();
-            alert(1);
             try{
                 var type_print= $(this).find('.type_print').val();
-                alert(type_print);
                 connectPrinter(App.settings_current_printer, {
                     success: function(){
                         PrinterFormat.pickup_label(type_print);
@@ -401,7 +399,7 @@ function initializePage(){
                     }
                 });
             }catch (error){
-                alert(JSON.stringify(error));
+                alert('Error al imprimir '+JSON.stringify(error));
             }
         });
         $('#print_delivery_label form').submit(function (event) {
@@ -415,13 +413,12 @@ function initializePage(){
                     }
                 });
             }catch (error){
-                alert(JSON.stringify(error));
+                alert('Error al imprimir '+JSON.stringify(error));
             }
         });
         /** <!-- CIERRA IMPRESION DE LABELS */
 
         function connectPrinter(printer_address ,callbacks){
-            alert('printer_address '+printer_address );
             try{
                 callbacks= PolishedUtility_.callback(callbacks);
                 window.DatecsPrinter.connect(printer_address,
@@ -432,7 +429,7 @@ function initializePage(){
                     function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
                 );
             }catch (error){
-                alert(JSON.stringify(error));
+                alert('Error al conectar con impresora_: '+JSON.stringify(error));
             }
         }
 
