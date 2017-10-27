@@ -49,12 +49,9 @@ var PrinterFormat= (function () {
     var pickup_label_TXT= function() {
 
         window.DatecsPrinter.write('Hola');
-        window.DatecsPrinter.writeHex("" +
-            "00000000  1b 40 48 65 6c 6c 6f 20  77 6f 72 6c 64 0a 1d 56  |.@Hello world..V|\n" +
-            "00000010  41 03                                             |A.|\n" +
-            "00000012"
-        );
-        window.DatecsPrinter.writeHex("00000000  1b 40 48 65 6c 6c 6f 20  77 6f 72 6c 64 0a 1d 56  |.@Hello world..V|00000010  41 03                                             |A.|00000012");
+        window.DatecsPrinter.writeHex("00000000  1b 40 48 65 6c 6c 6f 20  77 6f 72 6c 64 0a 1d 56  |.@Hello world..V|");
+        window.DatecsPrinter.writeHex("00000010  41 03                                             |A.|");
+        window.DatecsPrinter.writeHex("00000012");
         window.DatecsPrinter.printPage();
         return false;
 
