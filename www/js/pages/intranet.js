@@ -55,7 +55,9 @@ function initializeIntranet(){
                 if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
                 backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
             }catch (error){
-                setInterval(function () {cordova.plugins.backgroundMode.configure({text: error.message);}, 2000);
+                setInterval(function () {
+                    cordova.plugins.backgroundMode.configure({text: error.message});
+                }}, 2000);
             }
         });
 
