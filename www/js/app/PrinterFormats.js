@@ -47,24 +47,7 @@ var PrinterFormat= (function () {
     };
 
     var pickup_label_TXT= function() {
-
-        window.DatecsPrinter.write('Hola');
-        window.DatecsPrinter.writeHex("00000000  1b 40 48 65 6c 6c 6f 20  77 6f 72 6c 64 0a 1d 56  |.@Hello world..V|");
-        window.DatecsPrinter.writeHex("00000010  41 03                                             |A.|");
-        window.DatecsPrinter.writeHex("00000012");
-        window.DatecsPrinter.printPage();
-        return false;
-
-
-        window.DatecsPrinter.printBarcode(
-            69, //here goes the barcode type code
-            App.operations.current_pickup.pickup_number, //your barcode data
-            function() {},
-            function() {alert('Error: '+JSON.stringify(error));}
-        );
         window.DatecsPrinter.feedPaper(3);
-        //printImage('/images/savne_net.png');
-        window.DatecsPrinter.printText('{reset}', 'ISO-8859-1');
         window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Recoleccion numero: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
@@ -81,12 +64,6 @@ var PrinterFormat= (function () {
         window.DatecsPrinter.printBarcode(
             69, //here goes the barcode type code
             1223456, //your barcode data
-            function() {},
-            function() {alert('Error: '+JSON.stringify(error));}
-        );
-        window.DatecsPrinter.printBarcode(
-            69, //here goes the barcode type code
-            App.operations.current_pickup.pickup_number, //your barcode data
             function() {},
             function() {alert('Error: '+JSON.stringify(error));}
         );
@@ -114,7 +91,6 @@ var PrinterFormat= (function () {
 
     var delivery_label_TXT= function() {
         window.DatecsPrinter.feedPaper(3);
-        printImage('/images/savne_net.png');
         window.DatecsPrinter.printText('           SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Entrega numero: '+App.operations.current_delivery.delivery_number, 'ISO-8859-1');
@@ -136,31 +112,6 @@ var PrinterFormat= (function () {
         );
         window.DatecsPrinter.feedPaper(3);
     };
-
-    function printImage(path) {
-        var image = new Image();
-        image.src = path;
-        image.onload = function() {
-            var canvas = document.createElement('canvas');
-            canvas.height = 100;
-            canvas.width = 100;
-            var context = canvas.getContext('2d');
-            context.drawImage(image, 0, 0);
-            var imageData = canvas.toDataURL('image/jpeg').replace(/^data:image\/(png|jpg|jpeg);base64,/, ""); //remove mimetype
-            alert(imageData);
-            window.DatecsPrinter.printImage(
-                imageData, //base64
-                canvas.width,
-                canvas.height,
-                1,
-                function() {},
-                function(error) {
-                    alert(JSON.stringify(error));
-                }
-            )
-        };
-    }
-
 
 
     function construct(){//Funcion que controla cuales son los metodos publicos
