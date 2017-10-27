@@ -394,7 +394,7 @@ function initializePage(){
             try{
                 var type_print= $(this).find('.type_print').val();
                 alert(type_print);
-                connectPrinter(App.settings_current_printer.address, {
+                connectPrinter(App.settings_current_printer, {
                     success: function(){
                         PrinterFormat.pickup_label(type_print);
                         $('#print_pickup_label').modal('hide');
@@ -408,7 +408,7 @@ function initializePage(){
             event.preventDefault();
             try{
                 var type_print= $(this).find('.type_print').val();
-                connectPrinter(App.settings_current_printer.address, {
+                connectPrinter(App.settings_current_printer, {
                     success: function(){
                         PrinterFormat.delivery_label(type_print);
                         $('#print_delivery_label').modal('hide');
