@@ -391,28 +391,36 @@ function initializePage(){
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();
             var type_print= $(this).find('[name="type_print"]:checked').val();
-            connectPrinter(App.settings_current_printer.address, {
-                success: function(){
-                    PrinterFormat.pickup_label(type_print);
-                    $('#print_pickup_label').modal('hide');
-                }
-            });
+            try{
+                connectPrinter(App.settings_current_printer.address, {
+                    success: function(){
+                        PrinterFormat.pickup_label(type_print);
+                        $('#print_pickup_label').modal('hide');
+                    }
+                });
+            }catch (error){
+                alert(JSON.stringify(error));
+            }
         });
         $('#print_delivery_label form').submit(function (event) {
             event.preventDefault();
-            var type_print= $(this).find('[name="type_print"]:checked').val();
-            connectPrinter(App.settings_current_printer.address, {
-                success: function(){
-                    PrinterFormat.delivery_label(type_print);
-                    $('#print_delivery_label').modal('hide');
-                }
-            });
+            try{
+                var type_print= $(this).find('[name="type_print"]:checked').val();
+                connectPrinter(App.settings_current_printer.address, {
+                    success: function(){
+                        PrinterFormat.delivery_label(type_print);
+                        $('#print_delivery_label').modal('hide');
+                    }
+                });
+            }catch (error){
+                alert(JSON.stringify(error));
+            }
         });
         /** <!-- CIERRA IMPRESION DE LABELS */
 
         function connectPrinter(printer_address ,callbacks){
             callbacks= PolishedUtility_.callback(callbacks);
-            window.DatecsPrinter.connect(App.settings_current_printer.address,
+            window.DatecsPrinter.connect(printer_address,
                 function() {
                     callbacks.success();
                     PrinterModel.store({address:device_address});
