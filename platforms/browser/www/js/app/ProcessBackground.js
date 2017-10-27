@@ -9,16 +9,25 @@ var ProcessBackground= (function () {
     };
 
     var reload_bar_message= function(callback){
+        cordova.plugins.backgroundMode.configure({
+            text: 'reload bar message'
+        });
         DeliveriesModel.loaded(function(){
+
+cordova.plugins.backgroundMode.configure({text: 'Deliveries loaded 1'});
             var sin_entregar= DeliveriesModel.find({delivery_state_id: 1}).length;
+cordova.plugins.backgroundMode.configure({text: 'Deliveries loaded 2'});
             message.delivery_message=
                 (sin_entregar>0)?'Sin entregar '+sin_entregar: 'Entregas al dia :D ';
-
+cordova.plugins.backgroundMode.configure({text: 'Deliveries loaded 3'});
             PickupModel.loaded(function(){
+cordova.plugins.backgroundMode.configure({text: 'Pickups loaded 1'});
                 var sin_recoger= PickupModel.find({pickup_state_id: 1}).length;
+cordova.plugins.backgroundMode.configure({text: 'Pickups loaded 2'});
                 message.pickup_message=
                     (sin_recoger>0)?'Sin recoger '+sin_recoger: 'Recolecciones al dia :D ';
                 callback();
+cordova.plugins.backgroundMode.configure({text: 'Pickups loaded 3'});
             });
         });
     };
@@ -33,6 +42,7 @@ var ProcessBackground= (function () {
 
 
     var run= function (){
+cordova.plugins.backgroundMode.configure({text: 'Run'});
         cordova.plugins.backgroundMode.configure({
             text: get_bar_message()+"\n Intento: "+index_executionBack
         });
