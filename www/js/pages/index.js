@@ -403,8 +403,9 @@ function initializePage(){
             event.preventDefault();
             try{
                 PrinterFormat.pickup_label();
+                $('#print_pickup_label').modal('hide');
             }catch (error){
-                alert(JSON.stringify(error));
+                alert('Error al imprimir '+JSON.stringify(error));
             }
 
         });
@@ -412,8 +413,9 @@ function initializePage(){
             event.preventDefault();
             try{
                 PrinterFormat.delivery_label();
+                $('#print_delivery_label').modal('hide');
             }catch (error){
-                alert(JSON.stringify(error));
+                alert('Error al imprimir '+JSON.stringify(error));
             }
 
         });

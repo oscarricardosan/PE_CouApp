@@ -40,16 +40,26 @@ function initializeIntranet(){
         //cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            ProcessBackground.run();
+            /*ProcessBackground.run();
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 50000);
-        });
+            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 50000);*/
 
+            cordova.plugins.backgroundMode.setDefaults({
+                title: 'Courier App',
+                text: "Sin entregar NN\nSin recoger NN",
+                //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
+                color: '#b3b3ff', // hex format like 'F14F4D'
+                resume: true,
+                hidden: false,
+                bigText: false
+            });
+        });
+/*
         cordova.plugins.backgroundMode.on('deactivate', function() {
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 6000000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 6000000);
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 6000000);*/
 
         cordova.plugins.backgroundMode.enable();
 
