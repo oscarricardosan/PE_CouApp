@@ -609,7 +609,7 @@
                             <label class="control-label">Impresora:</label>
                             <select class="form-control" v-model="settings_current_printer">
                                 <option :value="null">Selecciona tu impresora Bluetooth</option>
-                                <option v-for="device.address in bluetooth_devices" :value="device">{{ device.name }}</option>
+                                <option v-for="device in bluetooth_devices" :value="device.address">{{ device.name }}</option>
                             </select>
                         </div>
                     </div>
