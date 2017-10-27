@@ -56,8 +56,8 @@ function initializeIntranet(){
                 backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
             }catch (error){
                 setInterval(function () {
-                    cordova.plugins.backgroundMode.configure({text: error.message});
-                }}, 2000);
+                    cordova.plugins.backgroundMode.configure({text: JSON.stringify(error)});
+                }, 2000);
             }
         });
 
