@@ -45,7 +45,7 @@ var ProcessBackground= (function () {
     function initialize() {
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
-            text: get_bar_message(),
+            text: 'entre',
             //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
             color: '#b3b3ff', // hex format like 'F14F4D'
             resume: true,
@@ -54,7 +54,13 @@ var ProcessBackground= (function () {
         });
         reload_bar_message(function(){
             cordova.plugins.backgroundMode.configure({
+                text: 'paso 2'
+            });
+            cordova.plugins.backgroundMode.configure({
                 text: get_bar_message()
+            });
+            cordova.plugins.backgroundMode.configure({
+                text: 'paso 3'
             });
         });
     }
