@@ -23,8 +23,12 @@ var ProcessBackground= (function () {
         });
     };
 
+    function set_main_bar_message(message) {
+        message.main= message;
+    }
+
     function get_bar_message() {
-        return (main!== ''?main+"\n":'')+message.delivery_message+"\n"+message.pickup_message;
+        return (message.main!== ''?message.main+"\n":'')+message.delivery_message+"\n"+message.pickup_message;
     }
 
 
@@ -59,6 +63,7 @@ var ProcessBackground= (function () {
         return {
             run                        : run,
             reload_bar_message         : reload_bar_message,
+            set_main_bar_message       : set_main_bar_message,
         }
     }
     return {construct:construct};//retorna los metodos publicos
