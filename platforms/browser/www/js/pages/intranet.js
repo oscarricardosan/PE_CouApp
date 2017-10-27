@@ -50,9 +50,10 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            setInterval(function () {
+            cordova.plugins.backgroundMode.configure({text: "Recolecciones 1"});
+            /*setInterval(function () {
                 cordova.plugins.backgroundMode.configure({text: "Recolecciones 0"});
-            }, 5000);
+            }, 5000);*/
             /*ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
             backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);*/
