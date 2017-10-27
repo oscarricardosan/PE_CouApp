@@ -52,6 +52,17 @@ var ProcessBackground= (function () {
             hidden: false,
             bigText: false
         });
+        reload_bar_message(function(){
+            cordova.plugins.backgroundMode.configure({
+                text: 'paso 2'
+            });
+            cordova.plugins.backgroundMode.configure({
+                text: get_bar_message()
+            });
+            cordova.plugins.backgroundMode.configure({
+                text: 'paso 3'
+            });
+        });
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos

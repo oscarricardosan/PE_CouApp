@@ -40,8 +40,18 @@ function initializeIntranet(){
         //cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
-            /*if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+
+            cordova.plugins.backgroundMode.setDefaults({
+                title: 'Courier App',
+                text: 'entre',
+                //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
+                color: '#b3b3ff', // hex format like 'F14F4D'
+                resume: true,
+                hidden: false,
+                bigText: false
+            });
+            /*ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
+            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
             backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);*/
         });
 
