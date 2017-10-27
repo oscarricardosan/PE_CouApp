@@ -13,10 +13,10 @@ var ProcessBackground= (function () {
     var run= function (){
         if(first_execution)initialize();
         //navigator.notification.vibrate([1000]);
-        index_executionBack++;
         cordova.plugins.backgroundMode.configure({
-            text: get_message_to_notification_bar()
+            text: get_message_to_notification_bar()+' Intento '+index_executionBack
         });
+        index_executionBack++;
         first_execution= false;
     };
 
