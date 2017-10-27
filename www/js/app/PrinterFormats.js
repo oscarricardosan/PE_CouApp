@@ -48,7 +48,7 @@ var PrinterFormat= (function () {
 
     var pickup_label_TXT= function() {
         window.DatecsPrinter.feedPaper(3);
-        printImage('images/savne_net.png');
+        printImage('/images/savne_net.png');
         window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Recoleccion numero: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
@@ -98,7 +98,7 @@ var PrinterFormat= (function () {
 
     var delivery_label_TXT= function() {
         window.DatecsPrinter.feedPaper(3);
-        printImage('images/savne_net.png');
+        printImage('/images/savne_net.png');
         window.DatecsPrinter.printText('           SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Entrega numero: '+App.operations.current_delivery.delivery_number, 'ISO-8859-1');
