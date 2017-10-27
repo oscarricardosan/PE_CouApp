@@ -55,6 +55,10 @@ var PickupModel= (function () {
         return records;
     };
 
+    var find = function(where){
+        return db.collection(collection_name).find(where);
+    };
+
     var isEmpty = function(){
         return get() === null;
     };

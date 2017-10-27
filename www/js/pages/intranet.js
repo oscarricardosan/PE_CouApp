@@ -50,17 +50,20 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            cordova.plugins.backgroundMode.configure({text: 'Background activado'});
+            setInterval(function () {
+                cordova.plugins.backgroundMode.configure({text: "Recolecciones 0"});
+            }, 5000);
             /*ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
             backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);*/
         });
-/*
+
         cordova.plugins.backgroundMode.on('deactivate', function() {
+            alert('Desactivado');
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);*/
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
 
         /** CLOSE BACKGROUND PROCESS**/
     }

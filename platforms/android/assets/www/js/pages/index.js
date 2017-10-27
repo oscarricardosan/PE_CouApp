@@ -47,18 +47,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             }
         },
-        watch: {
-            settings_current_printer: function(device){
-                if(typeof device === 'object'){
-                    window.DatecsPrinter.connect(device.address,
-                        function() {
-                            PrinterModel.store(device, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
-                        },
-                        function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
-                    );
-                }
-            }
-        },
+        watch: {},
         mounted: function(){
             accounting.settings = {
                 currency: {
@@ -97,7 +86,9 @@ function initializePage(){
             });
 
             PrinterModel.loaded(function(){
-                App_.settings_current_printer= PrinterModel.get();
+                var printer= PrinterModel.get();
+                if(printer !== null)
+                    App_.settings_current_printer= printer.address;
             });
         }
     });
@@ -398,12 +389,49 @@ function initializePage(){
 
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
-            PrinterFormat.pickup_label();
+            event.preventDefault();
+            try{
+                var type_print= $(this).find('.type_print').val();
+                connectPrinter(App.settings_current_printer, {
+                    success: function(){
+                        PrinterFormat.pickup_label(type_print);
+                        $('#print_pickup_label').modal('hide');
+                    }
+                });
+            }catch (error){
+                alert('Error al imprimir '+JSON.stringify(error));
+            }
         });
         $('#print_delivery_label form').submit(function (event) {
-            PrinterFormat.pickup_delivery();
+            event.preventDefault();
+            try{
+                var type_print= $(this).find('.type_print').val();
+                connectPrinter(App.settings_current_printer, {
+                    success: function(){
+                        PrinterFormat.delivery_label(type_print);
+                        $('#print_delivery_label').modal('hide');
+                    }
+                });
+            }catch (error){
+                alert('Error al imprimir '+JSON.stringify(error));
+            }
         });
-        /** <!-- CIERRA STORE DE FOTOS */
+        /** <!-- CIERRA IMPRESION DE LABELS */
+
+        function connectPrinter(printer_address ,callbacks){
+            try{
+                callbacks= PolishedUtility_.callback(callbacks);
+                window.DatecsPrinter.connect(printer_address,
+                    function() {
+                        callbacks.success();
+                        PrinterModel.store({address:device_address});
+                    },
+                    function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
+                );
+            }catch (error){
+                alert('Error al conectar con impresora_: '+JSON.stringify(error));
+            }
+        }
 
     });
 
@@ -422,4 +450,20 @@ function initializePage(){
             }
         );
     }
+}
+
+function printText() {
+
+    window.DatecsPrinter.feedPaper(1);
+    var text= prompt('Texto a imprimir');
+    window.DatecsPrinter.printText(text, 'ISO-8859-1');
+    window.DatecsPrinter.feedPaper(1);
+
+    /*window.DatecsPrinter.printBarcode(
+        69, //here goes the barcode type code
+        text, //your barcode data
+        function() {},
+        function() {alert(JSON.stringify(error));}
+    );
+    window.DatecsPrinter.feedPaper(1);*/
 }

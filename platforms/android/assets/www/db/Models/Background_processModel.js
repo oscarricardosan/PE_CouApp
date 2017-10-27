@@ -1,6 +1,6 @@
-var DeliveriesModel= (function () {
+var Background_processModel= (function () {
 
-    var collection_name= 'deliveries';
+    var collection_name= 'background_processes';
 
     var loaded_Callback= [];
     var isLoaded= false;
@@ -8,7 +8,7 @@ var DeliveriesModel= (function () {
     /**
      * Carga los datos si ya estan en localstorage
      */
-    db.collection(collection_name, {capped: true, size: 500}).load(function (err, tableStats, metaStats) {
+    db.collection(collection_name, {capped: true, size: 1}).load(function (err, tableStats, metaStats) {
         if (!err) {
             $.each(loaded_Callback, function(){
                 this();
@@ -52,11 +52,10 @@ var DeliveriesModel= (function () {
 
     var get = function(){
         var records= db.collection(collection_name).find();
-        return records;
-    };
-
-    var find = function(where){
-        return db.collection(collection_name).find(where);
+        if(records.length===0)
+            return null;
+        else
+            return records[0];
     };
 
     var isEmpty = function(){
@@ -66,22 +65,6 @@ var DeliveriesModel= (function () {
     var drop= function(callback){
         var coll = db.collection(collection_name);
         coll.drop(callback());
-    };
-
-    var remove= function(where, callback){
-        var where= where===undefined?{}:where;
-        db.collection(collection_name).remove(
-            where,
-            function(){
-                db.collection(collection_name).save(function (err) {
-                    if (!err){
-                        if(typeof(callback) === 'function'){callback();}
-                    }else{
-                        alert('Error al borrar en colección '+collection_name);
-                    }
-                });
-            }
-        );
     };
 
     var loaded= function(callback){
@@ -95,11 +78,9 @@ var DeliveriesModel= (function () {
         return {
             get               : get,
             store             : store,
-            update            : update,
             loaded            : loaded,
             isEmpty           : isEmpty,
-            drop              : drop,
-            remove            : remove
+            drop              : drop
         }
     };
     return {construct:construct};//retorna los metodos publicos
