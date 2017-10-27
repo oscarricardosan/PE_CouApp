@@ -57,7 +57,7 @@ function initializeIntranet(){
             }catch (error){
                 setInterval(function () {
                     cordova.plugins.backgroundMode.configure({text: error.message});
-                }}, 2000);
+                }, 2000);
             }
         });
 
