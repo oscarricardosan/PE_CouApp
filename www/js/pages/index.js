@@ -47,18 +47,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             }
         },
-        watch: {
-            settings_current_printer: function(device_address){
-                if(typeof device === 'object'){
-                    window.DatecsPrinter.connect(device_address,
-                        function() {
-                            PrinterModel.store({address:device_address}, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
-                        },
-                        function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
-                    );
-                }
-            }
-        },
+        watch: {},
         mounted: function(){
             accounting.settings = {
                 currency: {
@@ -401,25 +390,37 @@ function initializePage(){
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();
-            try{
-                PrinterFormat.pickup_label();
-                $('#print_pickup_label').modal('hide');
-            }catch (error){
-                alert('Error al imprimir '+JSON.stringify(error));
-            }
-
+            var type_print= $(this).find('[name="type_print"]:checked').val();
+            connectPrinter(App.settings_current_printer.address, {
+                success: function(){
+                    PrinterFormat.pickup_label(type_print);
+                    $('#print_pickup_label').modal('hide');
+                }
+            });
         });
         $('#print_delivery_label form').submit(function (event) {
             event.preventDefault();
-            try{
-                PrinterFormat.delivery_label();
-                $('#print_delivery_label').modal('hide');
-            }catch (error){
-                alert('Error al imprimir '+JSON.stringify(error));
-            }
-
+            var type_print= $(this).find('[name="type_print"]:checked').val();
+            connectPrinter(App.settings_current_printer.address, {
+                success: function(){
+                    PrinterFormat.delivery_label(type_print);
+                    $('#print_delivery_label').modal('hide');
+                }
+            });
         });
-        /** <!-- CIERRA STORE DE FOTOS */
+        /** <!-- CIERRA IMPRESION DE LABELS */
+
+        function connectPrinter(printer_address ,callbacks){
+            callbacks= PolishedUtility_.callback(callbacks);
+            window.DatecsPrinter.connect(App.settings_current_printer.address,
+                function() {
+                    callbacks.success();
+                    PrinterModel.store({address:device_address});
+                },
+                function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
+            );
+
+        }
 
     });
 
