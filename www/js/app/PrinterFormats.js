@@ -47,6 +47,17 @@ var PrinterFormat= (function () {
     };
 
     var pickup_label_TXT= function() {
+
+
+        for(i=65; i<= 76; i++){
+            window.DatecsPrinter.printBarcode(
+                i, //here goes the barcode type code
+                App.operations.current_pickup.pickup_number, //your barcode data
+                function() {},
+                function() {alert('Error: '+JSON.stringify(error));}
+            );
+        }
+        return false;
         window.DatecsPrinter.feedPaper(3);
         //printImage('/images/savne_net.png');
         window.DatecsPrinter.printText('{reset}', 'ISO-8859-1');
@@ -132,6 +143,7 @@ var PrinterFormat= (function () {
             var context = canvas.getContext('2d');
             context.drawImage(image, 0, 0);
             var imageData = canvas.toDataURL('image/jpeg').replace(/^data:image\/(png|jpg|jpeg);base64,/, ""); //remove mimetype
+            alert(imageData);
             window.DatecsPrinter.printImage(
                 imageData, //base64
                 canvas.width,
