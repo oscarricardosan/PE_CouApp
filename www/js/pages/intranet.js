@@ -50,6 +50,7 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
+            cordova.plugins.backgroundMode.configure({text: 'Background activado'});
             ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
             backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
