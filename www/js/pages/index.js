@@ -52,7 +52,7 @@ function initializePage(){
                 if(typeof device === 'object'){
                     window.DatecsPrinter.connect(device_address,
                         function() {
-                            PrinterModel.store(device_address, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
+                            PrinterModel.store({address:device_address}, {success: function(){ToastrUtility_.success('Impresora guardada.');}})
                         },
                         function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error));}
                     );
@@ -99,7 +99,7 @@ function initializePage(){
             PrinterModel.loaded(function(){
                 var printer= PrinterModel.get();
                 if(printer !== null)
-                    App_.settings_current_printer= printer;
+                    App_.settings_current_printer= printer.address;
             });
         }
     });
