@@ -52,7 +52,7 @@ var PrinterFormat= (function () {
         for(i=65; i<= 76; i++){
             window.DatecsPrinter.printBarcode(
                 i, //here goes the barcode type code
-                App.operations.current_pickup.pickup_number, //your barcode data
+                123456789, //your barcode data
                 function() {},
                 function() {alert('Error: '+JSON.stringify(error));}
             );
