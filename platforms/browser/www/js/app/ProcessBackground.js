@@ -33,7 +33,6 @@ var ProcessBackground= (function () {
 
 
     var run= function (){
-        if(first_execution) initialize();
         cordova.plugins.backgroundMode.configure({
             text: get_bar_message()+"\n Intento: "+index_executionBack
         });
@@ -41,29 +40,6 @@ var ProcessBackground= (function () {
         index_executionBack++;
         first_execution= false;
     };
-
-    function initialize() {
-        cordova.plugins.backgroundMode.setDefaults({
-            title: 'Courier App',
-            text: 'entre',
-            //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
-            color: '#b3b3ff', // hex format like 'F14F4D'
-            resume: true,
-            hidden: false,
-            bigText: false
-        });
-        reload_bar_message(function(){
-            cordova.plugins.backgroundMode.configure({
-                text: 'paso 2'
-            });
-            cordova.plugins.backgroundMode.configure({
-                text: get_bar_message()
-            });
-            cordova.plugins.backgroundMode.configure({
-                text: 'paso 3'
-            });
-        });
-    }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
