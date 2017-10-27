@@ -4,7 +4,7 @@ var ProcessForeground= (function () {
     var first_execution= true;
 
     var run= function(){
-        if(Background_process.it_can_be_executed('check_ajax_queue', 10)){
+        if(Background_process.it_can_be_executed('check_ajax_queue', 1)){
             check_ajax_queue();
             Background_process.store_last_attempt('check_ajax_queue');
         }
