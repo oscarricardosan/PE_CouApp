@@ -62,13 +62,8 @@ var ProcessBackground= (function () {
         }
     }
 
-    var hello= function(){
-        cordova.plugins.backgroundMode.configure({text: "Recolecciones 0"});
-    };
-
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            hello                                   : hello,
             run                                     : run,
             reload_message_to_notification_bar      : reload_message_to_notification_bar,
         }
