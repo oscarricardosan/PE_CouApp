@@ -41,8 +41,8 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
-            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
+            /*if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+            backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);*/
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
