@@ -40,7 +40,7 @@ function initializeIntranet(){
         //cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
         cordova.plugins.backgroundMode.on('activate', function() {
-
+            cordova.plugins.backgroundMode.disableWebViewOptimizations();
             cordova.plugins.backgroundMode.setDefaults({
                 title: 'Courier App',
                 text: 'entre',
@@ -61,7 +61,6 @@ function initializeIntranet(){
         });
         foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
 
-        cordova.plugins.backgroundMode.enable();
         /** CLOSE BACKGROUND PROCESS**/
     }
 
