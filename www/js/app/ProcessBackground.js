@@ -53,7 +53,7 @@ var ProcessBackground= (function () {
             if(sin_entregar>0){
                 notify_message.pickups = 'Sin Recoger ' + sin_recoger;
             }else{
-                notify_message.pickups = 'Todo ha sido recgido';
+                notify_message.pickups = 'Todo ha sido recogido';
             }
 
         }catch (error){

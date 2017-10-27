@@ -50,9 +50,18 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            setInterval(function () {
-                ProcessBackground.hello();
-            }, 5000);
+            try{
+                setInterval(function () {
+                    ProcessBackground.hello();
+                }, 2000);
+
+            }catch (error){
+                setInterval(function () {
+                    cordova.plugins.backgroundMode.configure({
+                        text: JSON.stringify(error)
+                    });
+                }, 2000);
+            }
             /*ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
             if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
             backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);*/

@@ -53,7 +53,7 @@ var ProcessBackground= (function () {
             if(sin_entregar>0){
                 notify_message.pickups = 'Sin Recoger ' + sin_recoger;
             }else{
-                notify_message.pickups = 'Todo ha sido recgido';
+                notify_message.pickups = 'Todo ha sido recogido';
             }
 
         }catch (error){
@@ -62,8 +62,13 @@ var ProcessBackground= (function () {
         }
     }
 
+    var hello= function(){
+        cordova.plugins.backgroundMode.configure({text: "Recolecciones 0"});
+    };
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
+            hello                                   : hello,
             run                                     : run,
             reload_message_to_notification_bar      : reload_message_to_notification_bar,
         }

@@ -57,7 +57,9 @@ function initializeIntranet(){
 
             }catch (error){
                 setInterval(function () {
-                    cordova.plugins.backgroundMode.configure({text: JSON.stringify(error);});
+                    cordova.plugins.backgroundMode.configure({
+                        text: JSON.stringify(error)
+                    });
                 }, 2000);
             }
             /*ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
