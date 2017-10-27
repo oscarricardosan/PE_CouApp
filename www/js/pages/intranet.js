@@ -51,11 +51,11 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             try{
-                ProcessBackground.reload_bar_message(function () {ProcessBackground.run();});
+                ProcessBackground.reload_message_to_notification_bar(function () {ProcessBackground.run();});
                 if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
                 backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
             }catch (error){
-                setInterval(function () {cordova.plugins.backgroundMode.configure({text: JSON.stringify(error)});}, 2000);
+                setInterval(function () {cordova.plugins.backgroundMode.configure({text: error.message);}, 2000);
             }
         });
 
