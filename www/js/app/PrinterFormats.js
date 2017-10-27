@@ -49,15 +49,13 @@ var PrinterFormat= (function () {
     var pickup_label_TXT= function() {
 
 
-        for(i=65; i<= 76; i++){
-            window.DatecsPrinter.printBarcode(
-                i, //here goes the barcode type code
-                123456789, //your barcode data
-                function() {},
-                function() {alert('Error: '+JSON.stringify(error));}
-            );
-        }
-        return false;
+
+        window.DatecsPrinter.printBarcode(
+            69, //here goes the barcode type code
+            App.operations.current_pickup.pickup_number, //your barcode data
+            function() {},
+            function() {alert('Error: '+JSON.stringify(error));}
+        );
         window.DatecsPrinter.feedPaper(3);
         //printImage('/images/savne_net.png');
         window.DatecsPrinter.printText('{reset}', 'ISO-8859-1');
