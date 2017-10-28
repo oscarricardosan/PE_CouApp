@@ -51,8 +51,7 @@ var PickupModel= (function () {
     };
 
     var get = function(){
-        var records= db.collection(collection_name).find();
-        return records;
+        return db.collection(collection_name).find();
     };
 
     var find = function(where){
@@ -94,6 +93,7 @@ var PickupModel= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get               : get,
+            find              : find,
             store             : store,
             loaded            : loaded,
             isEmpty           : isEmpty,
