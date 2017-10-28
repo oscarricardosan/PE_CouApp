@@ -49,7 +49,7 @@ var ProcessBackground= (function () {
     }
 
     var hello= function(){
-        cordova.plugins.backgroundMode.configure({text: 'entre'});
+        cordova.plugins.backgroundMode.configure({text: 'Hola'});
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
