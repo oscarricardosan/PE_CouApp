@@ -40,8 +40,8 @@ var ProcessBackground= (function () {
                     }else{
                         notify_message.pickups = 'Todo ha sido recogido :D';
                     }
+                    callback();
                 });
-                callback();
             });
         }catch (error){
             alert(JSON.stringify(error));
