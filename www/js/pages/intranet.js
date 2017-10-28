@@ -51,7 +51,9 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
 
-            ProcessBackground.reload_message_to_notification_bar(function(){});
+            ProcessBackground.reload_message_to_notification_bar(function(){
+                cordova.plugins.backgroundMode.configure({text: 'Recargado'});
+            });
             /*try{
 cordova.plugins.backgroundMode.configure({text: 'entre'});
                 ProcessBackground.reload_message_to_notification_bar(function () {ProcessBackground.run();});
