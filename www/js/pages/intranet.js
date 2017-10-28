@@ -51,9 +51,7 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
 
-            setInterval(function () {
-                ProcessBackground.hello();
-            }, 2000);
+            ProcessBackground.reload_message_to_notification_bar(function(){});
             /*try{
 cordova.plugins.backgroundMode.configure({text: 'entre'});
                 ProcessBackground.reload_message_to_notification_bar(function () {ProcessBackground.run();});
