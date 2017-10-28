@@ -52,7 +52,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.on('activate', function() {
 
             setInterval(function () {
-                cordova.plugins.backgroundMode.configure({text: 'entre'});
+                ProcessBackground.hello();
             }, 2000);
             /*try{
 cordova.plugins.backgroundMode.configure({text: 'entre'});
