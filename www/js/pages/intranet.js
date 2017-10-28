@@ -50,7 +50,11 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            try{
+
+            setInterval(function () {
+                cordova.plugins.backgroundMode.configure({text: 'entre'});
+            }, 2000);
+            /*try{
 cordova.plugins.backgroundMode.configure({text: 'entre'});
                 ProcessBackground.reload_message_to_notification_bar(function () {ProcessBackground.run();});
                 if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
@@ -60,7 +64,7 @@ cordova.plugins.backgroundMode.configure({text: 'entre'});
                     cordova.plugins.backgroundMode.configure({text: 'error'});
                 }, 2000);
 
-            }
+            }*/
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
