@@ -27,19 +27,13 @@ var ProcessBackground= (function () {
         try {
             DeliveriesModel.loaded(function(){
                 var sin_entregar= DeliveriesModel.find({delivery_state_id: 1}).length;
-                if(sin_entregar>0){
-                    notify_message.deliveries = 'Sin Entregar ' + sin_entregar;
-                }else{
-                    notify_message.deliveries = 'Todo ha sido entregado :D';
-                }
+                notify_message.deliveries =
+                    (sin_entregar>0)?'Sin Entregar ' + sin_entregar:'Todo ha sido entregado :D';
 
                 PickupModel.loaded(function(){
                     var sin_recoger= PickupModel.find({pickup_state_id: 1}).length;
-                    if(sin_recoger>0){
-                        notify_message.pickups = 'Sin Recoger ' + sin_recoger;
-                    }else{
-                        notify_message.pickups = 'Todo ha sido recogido :D';
-                    }
+                    notify_message.pickups=
+                        (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo ha sido recogido :D';
                     callback();
                 });
             });
@@ -50,7 +44,7 @@ var ProcessBackground= (function () {
 
     var hello= function(){
         cordova.plugins.backgroundMode.configure({text: 'Hola'});
-    }
+    };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
