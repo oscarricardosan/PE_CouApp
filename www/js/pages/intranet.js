@@ -51,7 +51,7 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.reload_message_to_notification_bar(function(){
-                ProcessBackground.run();
+                setTimeout(function(){ProcessBackground.run();}, 500);
             });
             setInterval(function () {ProcessBackground.run();}, 5000);
             /*try{
