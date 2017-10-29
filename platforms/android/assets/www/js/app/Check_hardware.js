@@ -39,6 +39,7 @@ var Check_hardware= (function () {
     };
 
     var diagnostic_in_intranet= function() {
+        return true;
         if(!location_available){
             locationAvailable();
             return false;

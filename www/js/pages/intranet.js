@@ -27,6 +27,7 @@ function initializeIntranet(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
+
         var backgroundProcessTimer= undefined;
         var foreGroundProcessTimer= undefined;
 
@@ -51,28 +52,16 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.reload_message_to_notification_bar(function(){
-                setTimeout(function(){ProcessBackground.run();}, 500);
+                setTimeout(function(){ProcessBackground.run();}, 300);
             });
             setInterval(function () {ProcessBackground.run();}, 5000);
-            /*try{
-cordova.plugins.backgroundMode.configure({text: 'entre'});
-                ProcessBackground.reload_message_to_notification_bar(function () {ProcessBackground.run();});
-                if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
-                backgroundProcessTimer= setInterval(function(){ ProcessBackground.run() }, 5000);
-            }catch (error){
-                setInterval(function () {
-                    cordova.plugins.backgroundMode.configure({text: 'error'});
-                }, 2000);
-
-            }*/
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            alert('Desactivado');
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 300);
 
         /** CLOSE BACKGROUND PROCESS**/
     }

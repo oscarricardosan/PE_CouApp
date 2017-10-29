@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-android-permissions": {
+            "PACKAGE_NAME": "savne.courier_app"
+        },
         "cordova-plugin-background-mode": {
             "PACKAGE_NAME": "savne.courier_app"
         },
@@ -22,6 +25,9 @@
         "cordova-plugin-dialogs": {
             "PACKAGE_NAME": "savne.courier_app"
         },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "savne.courier_app"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "savne.courier_app"
         },
@@ -33,16 +39,13 @@
         },
         "cordova.plugins.diagnostic": {
             "PACKAGE_NAME": "savne.courier_app"
-        },
-        "cordova-plugin-android-permissions": {
-            "PACKAGE_NAME": "savne.courier_app"
-        },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "savne.courier_app"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "savne.courier_app"
+        },
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "savne.courier_app"
         }
     }
