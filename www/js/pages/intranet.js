@@ -69,7 +69,9 @@ function initializeIntranet(){
             }, 5000);
         });
         foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
-        Gps.start_tracking();
+        //Gps.start_tracking();
+
+        Gps.start_tracking_current();
 
 
         function clearProcesses(){

@@ -51,7 +51,6 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            Gps.start_tracking_current();
             //Mostrar el estado inicial de la barra
             ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
             //Limpiar timers
@@ -70,7 +69,9 @@ function initializeIntranet(){
             }, 5000);
         });
         foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
-        Gps.start_tracking();
+        //Gps.start_tracking();
+
+        Gps.start_tracking_current();
 
 
         function clearProcesses(){

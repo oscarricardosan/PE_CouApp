@@ -16,7 +16,7 @@ var ProcessBackground= (function () {
         }
 
         if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps)) {
-            Gps.store_current_position();
+            Gps.start_tracking_current();
             Process.store_last_attempt('gps_tracking');
         }
 
