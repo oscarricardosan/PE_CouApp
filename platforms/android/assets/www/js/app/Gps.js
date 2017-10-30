@@ -12,11 +12,20 @@ var Gps= (function () {
         watches_id.push(watchId);
     };
 
+    var store_current_position= function(){
+        clear_watches();
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                if(Process.it_can_be_executed('gps_tracking', 5))
+                    store_position(position);
+                Process.store_last_attempt('gps_tracking');
+            },
+            function () {},
+            {maximumAge: 5000, timeout: 7000, enableHighAccuracy: true}
+        );
+    };
+
     function store_position(position) {
-        // if(!Process.it_can_be_executed('gps_tracking', 5)){
-        //     Process.store_last_attempt('gps_tracking');
-        //     return false;
-        // }
         ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
         ToastrUtility_.warning(
             'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
@@ -59,8 +68,6 @@ var Gps= (function () {
                 });
             }
         });
-        Process.store_last_attempt('gps_tracking');
-
     }
 
     var clear_watches= function(){
@@ -71,8 +78,9 @@ var Gps= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            start_tracking        : start_tracking,
-            clear_watches         : clear_watches,
+            start_tracking                : start_tracking,
+            store_current_position        : store_current_position,
+            clear_watches                 : clear_watches,
         }
     }
     return {construct:construct};//retorna los metodos publicos
