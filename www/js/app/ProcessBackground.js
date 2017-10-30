@@ -37,6 +37,7 @@ var ProcessBackground= (function () {
                             jqXHR: jqXHR, textStatus: textStatus, properties: properties
                         })
                     });
+                    set_main_message_notification_bar('Fallo al transmitir peticiones en cola');
                 },
                 success: function (properties, response) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -45,6 +46,7 @@ var ProcessBackground= (function () {
                         status: 'success',
                         data: {properties: properties, response: response}
                     });
+                    set_main_message_notification_bar('Transmision de peticiones en cola exitosa');
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
@@ -85,10 +87,20 @@ var ProcessBackground= (function () {
         }
     }
 
+    var set_main_message_notification_bar= function(main_message){
+        notify_message.main_message= main_message;
+        setTimeout(function(){
+            if(notify_message.main_message= main_message)
+                notify_message.main_message= '';
+            reload_message_to_notification_bar();
+        }, 60000);
+    };
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             run                                     : run,
             reload_message_to_notification_bar      : reload_message_to_notification_bar,
+            set_main_message_notification_bar       : set_main_message_notification_bar,
         }
     }
     return {construct:construct};//retorna los metodos publicos
