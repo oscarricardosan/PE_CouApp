@@ -55,6 +55,7 @@ var ProcessBackground= (function () {
     }
 
     function reload_message_to_notification_bar(callback) {
+        if(callback === undefined)callback= function(){};
         var sin_entregar= 0;
         var sin_recoger= 0;
         try {
@@ -87,13 +88,11 @@ var ProcessBackground= (function () {
         timeout= timeout===undefined?60000:timeout;
         notify_message.main_message= main_message;
         reload_message_to_notification_bar();
-        cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         setTimeout(function(){
             if(notify_message.main_message= main_message){
                 notify_message.main_message= '';
             }
             reload_message_to_notification_bar();
-            cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         }, timeout);
     };
 
