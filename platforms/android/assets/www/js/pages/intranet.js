@@ -28,12 +28,6 @@ function initializeIntranet(){
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
 
-        setInterval(function(){
-            console.log('aca');
-            console.error('No aca');
-        }, 500);
-
-
         var backgroundProcessTimer= undefined;
         var foreGroundProcessTimer= undefined;
 
@@ -58,12 +52,13 @@ function initializeIntranet(){
 
         cordova.plugins.backgroundMode.on('activate', function() {
             ProcessBackground.reload_message_to_notification_bar(function(){
-                setTimeout(function(){ProcessBackground.run();}, 500);
+                setTimeout(function(){ProcessBackground.run();}, 300);
             });
-            setInterval(function () {ProcessBackground.run();}, 5000);
+            backgroundProcessTimer= setInterval(function () {ProcessBackground.run(); ToastrUtility_.error('Primer ejecución');}, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
+            alert('deactive');
             if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
             foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
         });

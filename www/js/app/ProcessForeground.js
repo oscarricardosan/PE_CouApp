@@ -6,7 +6,7 @@ var ProcessForeground= (function () {
     var run= function(){
         //navigator.notification.beep(1);
         ToastrUtility_.warning('Ejecución');
-        if(Background_process.it_can_be_executed('check_ajax_queue', 5)){
+        if(Background_process.it_can_be_executed('check_ajax_queue', 2)){
             ToastrUtility_.success('5 minutos o ninguna');
             check_ajax_queue();
         }

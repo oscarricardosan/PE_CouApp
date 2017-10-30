@@ -43,7 +43,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
             text: 'Bienvenido',
-            icon: 'success',//  this will look for icon.png in platforms/android/res/drawable|mipmap
+            //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
             color: '#b3b3ff', // hex format like 'F14F4D'
             resume: true,
             hidden: false,
@@ -51,18 +51,30 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            ProcessBackground.reload_message_to_notification_bar(function(){
-                setTimeout(function(){ProcessBackground.run();}, 300);
-            });
-            setInterval(function () {ProcessBackground.run(); ToastrUtility_.error('Primer ejecución');}, 5000);
+            alert('activate');
+            ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
+            clearProcesses();
+            backgroundProcessTimer= setInterval(function () {ProcessBackground.run(); ToastrUtility_.error('Primer ejecución');}, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+            alert('deactivate');
+            clearProcesses();
+            foreGroundProcessTimer = setInterval(function(){
+                ProcessForeground.run();
+                ToastrUtility_.error('Deactive');
+            }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+        foreGroundProcessTimer = setInterval(function(){
+            ToastrUtility_.error('INitial');
+            ProcessForeground.run()
+        }, 5000);
 
+
+        function clearProcesses(){
+            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
+            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+        }
         /** CLOSE BACKGROUND PROCESS**/
     }
 

@@ -39,19 +39,18 @@ var Check_hardware= (function () {
     };
 
     var diagnostic_in_intranet= function() {
-        return true;
-        if(!location_available){
-            locationAvailable();
-            return false;
-        }
-        if(!bluetooth_available){
-            bluetoothAvailable();
-            return false;
-        }
-        if(location_available && bluetooth_available)
+        // if(!location_available){
+        //     locationAvailable();
+        //     return false;
+        // }
+        // if(!bluetooth_available){
+        //     bluetoothAvailable();
+        //     return false;
+        // }
+        // if(location_available && bluetooth_available)
             initializeIntranet();
-        else
-            window.location.reload();
+        // else
+        //     window.location.reload();
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
