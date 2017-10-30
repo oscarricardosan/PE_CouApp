@@ -93,6 +93,7 @@ var ProcessBackground= (function () {
                 notify_message.main_message= '';
             }
             reload_message_to_notification_bar();
+            cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         }, timeout);
     };
 

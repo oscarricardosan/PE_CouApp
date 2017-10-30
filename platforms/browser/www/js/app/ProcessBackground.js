@@ -4,7 +4,6 @@ var ProcessBackground= (function () {
         pickups: '',
         deliveries: '',
         main_message: '',
-        background_color: '',
     };
 
     var index_executionBack= 0;
@@ -16,10 +15,7 @@ var ProcessBackground= (function () {
             check_ajax_queue();
         }
 
-        cordova.plugins.backgroundMode.configure({
-            text: get_message_to_notification_bar(),
-            icon: notify_message.icon
-        });
+        cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         index_executionBack++;
         first_execution= false;
     };
@@ -91,11 +87,13 @@ var ProcessBackground= (function () {
         timeout= timeout===undefined?60000:timeout;
         notify_message.main_message= main_message;
         reload_message_to_notification_bar();
+        cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         setTimeout(function(){
             if(notify_message.main_message= main_message){
                 notify_message.main_message= '';
             }
             reload_message_to_notification_bar();
+            cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
         }, timeout);
     };
 
