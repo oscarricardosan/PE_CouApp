@@ -12,7 +12,9 @@ var Gps= (function () {
     };
 
     function store_position(position) {
-        ToastrUtility_.warning(JSON.stringify(position));
+        ToastrUtility_.warning(
+            'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
+        );
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
@@ -20,7 +22,7 @@ var Gps= (function () {
             data: {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
-                registered_at: App.operations.current_delivery.id,
+                registered_at: MomentUtility_.now()
             },
             successful_online: function(response){
                 LogModel.store({
