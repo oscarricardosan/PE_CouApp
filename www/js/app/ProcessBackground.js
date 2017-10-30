@@ -26,7 +26,7 @@ var ProcessBackground= (function () {
 
     function check_ajax_queue() {
         if(App.ajax_queue_count>0) {
-            //navigator.vibrate(1000);
+            navigator.vibrate(1000);
             AjaxQueue.check_queue({
                 fail: function (properties, jqXHR, textStatus) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -87,14 +87,16 @@ var ProcessBackground= (function () {
         }
     }
 
-    var set_main_message_notification_bar= function(main_message){
+    var set_main_message_notification_bar= function(main_message, timeout){
+        timeout= timeout===undefined?60000:timeout;
         notify_message.main_message= main_message;
+        reload_message_to_notification_bar();
         setTimeout(function(){
             if(notify_message.main_message= main_message){
                 notify_message.main_message= '';
             }
             reload_message_to_notification_bar();
-        }, 60000);
+        }, timeout);
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
