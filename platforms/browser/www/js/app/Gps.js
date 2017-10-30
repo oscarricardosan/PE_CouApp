@@ -3,6 +3,7 @@ var Gps= (function () {
         var watches_id= [];
 
     var start_tracking= function(){
+        clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             store_position,
             function(){},
@@ -12,6 +13,11 @@ var Gps= (function () {
     };
 
     function store_position(position) {
+        // if(!Process.it_can_be_executed('gps_tracking', 5)){
+        //     Process.store_last_attempt('gps_tracking');
+        //     return false;
+        // }
+        ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
         ToastrUtility_.warning(
             'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
         );
@@ -53,6 +59,7 @@ var Gps= (function () {
                 });
             }
         });
+        Process.store_last_attempt('gps_tracking');
 
     }
 

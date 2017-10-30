@@ -59,6 +59,7 @@ var AjaxQueue= (function () {
                 callbacks.fail(properties, jqXHR, textStatus);
                 properties.failed_offline(jqXHR, textStatus);
             }
+            App.ajax_queue_count= Ajax_queueModel.get().length;
         });
         request.fail(function(jqXHR, textStatus) {
             if(jqXHR.status===422){
@@ -76,6 +77,7 @@ var AjaxQueue= (function () {
             }
             callbacks.fail(properties, jqXHR, textStatus);
             properties.failed_offline(jqXHR, textStatus);
+            App.ajax_queue_count= Ajax_queueModel.get().length;
         });
     };
 
@@ -83,12 +85,12 @@ var AjaxQueue= (function () {
         element.loading();
         AjaxQueue.check_queue({
             empty:function(){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
+                App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
                 ToastrUtility_.success('Cola vacía');
             },
             fail: function(properties, jqXHR, textStatus){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
+                App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
                 ToastrUtility_.error('Fallo transmisión'+ JSON.stringify({
                     jqXHR: jqXHR, textStatus: textStatus
@@ -102,7 +104,7 @@ var AjaxQueue= (function () {
                 });
             },
             success: function(properties, response){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
+                App.ajax_queue_count= Ajax_queueModel.get().length;
 
                 LogModel.store({
                     message: 'Transmisión de petición online a servidor exitosa, procesamiento de cola.',
