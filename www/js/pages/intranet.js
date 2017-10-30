@@ -51,24 +51,23 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            alert('activate');
+            //Mostrar el estado inicial de la barra
             ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
+            //Limpiar timers
             clearProcesses();
-            backgroundProcessTimer= setInterval(function () {ProcessBackground.run(); ToastrUtility_.error('Primer ejecución');}, 5000);
+            //Ejecuta proceso de fondo cada 5 segundos
+            backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            alert('deactivate');
+            //Limpiar timers
             clearProcesses();
+            //Ejecuta proceso de frente cada 5 segundos
             foreGroundProcessTimer = setInterval(function(){
                 ProcessForeground.run();
-                ToastrUtility_.error('Deactive');
             }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){
-            ToastrUtility_.error('INitial');
-            ProcessForeground.run()
-        }, 5000);
+        foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
 
 
         function clearProcesses(){

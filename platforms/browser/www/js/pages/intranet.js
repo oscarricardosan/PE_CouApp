@@ -51,19 +51,29 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            ProcessBackground.reload_message_to_notification_bar(function(){
-                setTimeout(function(){ProcessBackground.run();}, 300);
-            });
-            backgroundProcessTimer= setInterval(function () {ProcessBackground.run(); ToastrUtility_.error('Primer ejecución');}, 5000);
+            //Mostrar el estado inicial de la barra
+            ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
+            //Limpiar timers
+            clearProcesses();
+            //Ejecuta proceso de fondo cada 5 segundos
+            backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            alert('deactive');
-            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
-            foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+            //Limpiar timers
+            clearProcesses();
+            //Ejecuta proceso de frente cada 5 segundos
+            foreGroundProcessTimer = setInterval(function(){
+                ProcessForeground.run();
+            }, 5000);
         });
-        foreGroundProcessTimer = setInterval(function(){ ProcessForeground.run() }, 5000);
+        foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
 
+
+        function clearProcesses(){
+            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
+            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+        }
         /** CLOSE BACKGROUND PROCESS**/
     }
 

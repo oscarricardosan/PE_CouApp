@@ -1,8 +1,9 @@
-var Background_process= (function () {
+var Process= (function () {
 
     var seconds_since_last_execution = function(process){
         var background_processes= polish_property(process);
         if(background_processes[process] === undefined) return undefined;
+        else if(background_processes[process].last_attempt === undefined) return undefined;
         else
             return moment().unix() - background_processes[process].last_attempt;
     };
@@ -22,15 +23,16 @@ var Background_process= (function () {
         var background_processes= polish_property(process);
         background_processes[process].last_attempt= moment().unix();
 
-        if(background_processes.id_ === undefined){
-            Background_processModel.store(background_processes, callback);
+        console.log(background_processes);
+        if(background_processes._id === undefined){
+            ProcessModel.store(background_processes, callback);
         }else{
-            Background_processModel.update({id_: background_processes.id_}, background_processes, callback);
+            ProcessModel.update({_id: background_processes._id}, background_processes, callback);
         }
     };
 
     function polish_property(process) {
-        var background_processes= Background_processModel.get();
+        var background_processes= ProcessModel.get();
         if(background_processes === null)background_processes= {};
         if(background_processes[process] === undefined)background_processes[process]= {};
         return background_processes;
@@ -38,8 +40,8 @@ var Background_process= (function () {
 
 
     function it_can_be_executed(process, minutes) {
-        var last_execution= Background_process.minutes_since_last_execution('check_ajax_queue');
-        return last_execution>5 || last_execution === undefined;
+        var last_execution= minutes_since_last_execution('check_ajax_queue');
+        return last_execution>=minutes || last_execution === undefined;
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos

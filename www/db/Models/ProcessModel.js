@@ -1,6 +1,6 @@
-var Background_processModel= (function () {
+var ProcessModel= (function () {
 
-    var collection_name= 'background_processes';
+    var collection_name= 'processes';
 
     var loaded_Callback= [];
     var isLoaded= false;
@@ -78,6 +78,7 @@ var Background_processModel= (function () {
         return {
             get               : get,
             store             : store,
+            update            : update,
             loaded            : loaded,
             isEmpty           : isEmpty,
             drop              : drop

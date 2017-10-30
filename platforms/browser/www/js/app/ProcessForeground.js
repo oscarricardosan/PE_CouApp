@@ -5,9 +5,7 @@ var ProcessForeground= (function () {
 
     var run= function(){
         //navigator.notification.beep(1);
-        ToastrUtility_.warning('Ejecución');
-        if(Background_process.it_can_be_executed('check_ajax_queue', 5)){
-            ToastrUtility_.success('5 minutos o ninguna');
+        if(Process.it_can_be_executed('check_ajax_queue', 5)){
             check_ajax_queue();
         }
 
@@ -16,9 +14,10 @@ var ProcessForeground= (function () {
     };
 
     function check_ajax_queue(){
-        if($('#check_ajax_queue').length > 0 && App.ajax_queue_count>0){
+        //if($('#check_ajax_queue').length > 0 && App.ajax_queue_count>0){
             document.getElementById('check_ajax_queue').dispatchEvent(new Event("click"));
-        }
+            Process.store_last_attempt('check_ajax_queue');
+        //}
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
