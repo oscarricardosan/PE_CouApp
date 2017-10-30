@@ -40,11 +40,11 @@ var ProcessBackground= (function () {
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 
                     if(sin_recoger === 0 && sin_entregar === 0)
-                        notify_message.icon= '/images/success';
+                        notify_message.icon= 'success';
                     else if(sin_recoger > 0 && sin_entregar > 0)
-                        notify_message.icon= '/images/danger';
+                        notify_message.icon= 'danger';
                     else
-                        notify_message.icon= '/images/warning';
+                        notify_message.icon= 'warning';
 
                     callback();
                 });
