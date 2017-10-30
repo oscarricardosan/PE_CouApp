@@ -51,8 +51,6 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            cordova.plugins.backgroundMode.disable();
-            cordova.plugins.backgroundMode.enable();
             //Mostrar el estado inicial de la barra
             ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
             //Limpiar timers
