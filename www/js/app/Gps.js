@@ -12,6 +12,7 @@ var Gps= (function () {
     };
 
     function store_position(position) {
+        ToastrUtility_.warning(JSON.stringify(position));
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
