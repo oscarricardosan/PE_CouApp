@@ -277,7 +277,8 @@
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
                                     >
                                         <span class="text-muted pull-right">
-                                            <i class="fa fa-clock-o"></i> {{ pickup.pickup_start_time }} - {{ pickup.pickup_end_time }}
+                                            <i class="fa fa-clock-o"></i>
+                                            <b>{{ pickup.pickup_date }}</b> {{ pickup.pickup_start_time.substr(0, 5) }} - {{ pickup.pickup_end_time.substr(0, 5) }}
                                         </span>
                                         <span :class="['label bg-'+pickup.pickup_state.class]">
                                             {{ index+1 }}) {{ pickup.pickup_state.name }} - {{ pickup.pickup_number }}

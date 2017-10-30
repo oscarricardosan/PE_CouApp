@@ -25,8 +25,8 @@ var ProcessBackground= (function () {
     };
 
     function check_ajax_queue() {
-        navigator.vibrate(1000);
         if(App.ajax_queue_count>0) {
+            navigator.vibrate(1000);
             AjaxQueue.check_queue({
                 fail: function (properties, jqXHR, textStatus) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;

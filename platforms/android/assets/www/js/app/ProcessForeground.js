@@ -12,8 +12,8 @@ var ProcessForeground= (function () {
     };
 
     function check_ajax_queue(){
-        navigator.vibrate(1000);
         if($('#check_ajax_queue').length > 0 && App.ajax_queue_count>0){
+            navigator.vibrate(1000);
             document.getElementById('check_ajax_queue').dispatchEvent(new Event("click"));
             Process.store_last_attempt('check_ajax_queue');
         }
