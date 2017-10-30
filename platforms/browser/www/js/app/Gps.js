@@ -18,7 +18,7 @@ var Gps= (function () {
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
-            dataType: 'json',
+            dataType: 'text',
             data: {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
