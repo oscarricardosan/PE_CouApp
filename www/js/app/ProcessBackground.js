@@ -90,8 +90,9 @@ var ProcessBackground= (function () {
     var set_main_message_notification_bar= function(main_message){
         notify_message.main_message= main_message;
         setTimeout(function(){
-            if(notify_message.main_message= main_message)
+            if(notify_message.main_message= main_message){
                 notify_message.main_message= '';
+            }
             reload_message_to_notification_bar();
         }, 60000);
     };
