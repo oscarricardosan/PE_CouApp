@@ -27,10 +27,13 @@ var Gps= (function () {
     };
 
     function store_position(position) {
+        ProcessBackground.set_main_message_notification_bar('1');
         ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
+        ProcessBackground.set_main_message_notification_bar('2');
         ToastrUtility_.warning(
             'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
         );
+        ProcessBackground.set_main_message_notification_bar('3');
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
