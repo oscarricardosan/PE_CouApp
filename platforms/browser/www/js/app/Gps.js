@@ -18,7 +18,6 @@ var Gps= (function () {
 
     var start_tracking_current= function(){
         clear_watches();
-        navigator.vibrate(500);
         navigator.geolocation.getCurrentPosition(
             store_position,
             function () {},
@@ -27,10 +26,13 @@ var Gps= (function () {
     };
 
     function store_position(position) {
+        navigator.vibrate(500);
         ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
+        navigator.notification.beep(1);
         ToastrUtility_.warning(
             'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
         );
+        navigator.vibrate(500);
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
