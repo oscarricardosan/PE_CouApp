@@ -16,7 +16,7 @@ var Gps= (function () {
         watches_id.push(watchId);
     };
 
-    var store_current_position= function(){
+    var start_tracking_current= function(){
         clear_watches();
         navigator.vibrate(500);
         navigator.geolocation.getCurrentPosition(
@@ -80,7 +80,7 @@ var Gps= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             start_tracking                : start_tracking,
-            store_current_position        : store_current_position,
+            start_tracking_current        : start_tracking_current,
             clear_watches                 : clear_watches,
         }
     }

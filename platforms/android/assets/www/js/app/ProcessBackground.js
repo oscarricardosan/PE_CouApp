@@ -15,7 +15,12 @@ var ProcessBackground= (function () {
             check_ajax_queue();
         }
 
-        cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar(),});
+        if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps)) {
+            Gps.store_current_position();
+            Process.store_last_attempt('gps_tracking');
+        }
+
+        cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;
     };

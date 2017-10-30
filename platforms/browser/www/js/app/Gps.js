@@ -5,21 +5,22 @@ var Gps= (function () {
     var start_tracking= function(){
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
-            store_position,
+            function(position) {
+                if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps))
+                    store_position(position);
+                Process.store_last_attempt('gps_tracking');
+            },
             function(){},
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);
     };
 
-    var store_current_position= function(){
+    var start_tracking_current= function(){
         clear_watches();
+        navigator.vibrate(500);
         navigator.geolocation.getCurrentPosition(
-            function(position) {
-                if(Process.it_can_be_executed('gps_tracking', 2))
-                    store_position(position);
-                Process.store_last_attempt('gps_tracking');
-            },
+            store_position,
             function () {},
             {maximumAge: 5000, timeout: 7000, enableHighAccuracy: true}
         );
@@ -79,7 +80,7 @@ var Gps= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             start_tracking                : start_tracking,
-            store_current_position        : store_current_position,
+            start_tracking_current        : start_tracking_current,
             clear_watches                 : clear_watches,
         }
     }
