@@ -47,6 +47,7 @@ var ProcessBackground= (function () {
                     });
                 }
             });
+            Process.store_last_attempt('check_ajax_queue');
         }
     }
 
