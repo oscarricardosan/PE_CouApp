@@ -5,7 +5,11 @@ var Gps= (function () {
     var start_tracking= function(){
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
-            store_position,
+            function(position) {
+                if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps))
+                    store_position(position);
+                Process.store_last_attempt('gps_tracking');
+            },
             function(){},
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
@@ -14,12 +18,9 @@ var Gps= (function () {
 
     var store_current_position= function(){
         clear_watches();
+        navigator.vibrate(500);
         navigator.geolocation.getCurrentPosition(
-            function(position) {
-                if(Process.it_can_be_executed('gps_tracking', 5))
-                    store_position(position);
-                Process.store_last_attempt('gps_tracking');
-            },
+            store_position,
             function () {},
             {maximumAge: 5000, timeout: 7000, enableHighAccuracy: true}
         );
