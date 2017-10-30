@@ -10,7 +10,7 @@ var Gps= (function () {
                     store_position(position);
                 Process.store_last_attempt('gps_tracking');
             },
-            function(){},
+            function (error) {ProcessBackground.set_main_message_notification_bar('Error '+error.message); },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);
@@ -20,7 +20,7 @@ var Gps= (function () {
         clear_watches();
         navigator.geolocation.getCurrentPosition(
             store_position,
-            function () {},
+            function (error) {ProcessBackground.set_main_message_notification_bar('Error '+error.message); },
             {maximumAge: 5000, timeout: 7000, enableHighAccuracy: true}
         );
     };
