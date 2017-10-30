@@ -273,7 +273,11 @@
                         <div class="tab-content no-padding">
                             <div class="tab-pane active" id="tab_1">
                                 <div class="list-group pickups">
-                                    <a href="#" class="pickup list-group-item" v-for="(pickup, index) in _.sortBy(operations.pickups, 'pickup_start_time')"
+                                    <a href="#" class="pickup list-group-item"
+                                       v-for="
+                                           (pickup, index) in
+                                           _(operations.pickups).chain().sortBy('pickup_state_id').sortBy('pickup_date').sortBy('pickup_start_time').value()
+                                        "
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
                                     >
                                         <span class="text-muted pull-right">
@@ -295,7 +299,9 @@
                             </div>
                             <div class="tab-pane" id="tab_2">
                                 <div class="list-group deliveries">
-                                    <a href="#" class="delivery list-group-item" v-for="(delivery, index) in _.sortBy(operations.deliveries, 'delivery_start_time')"
+                                    <a href="#" class="delivery list-group-item"
+                                       v-for="(delivery, index) in
+                                       _(operations.deliveries).chain().sortBy('delivery_state_id').sortBy('delivery_date').sortBy('delivery_start_time').value()"
                                        @click.prevent="showDeliveryModal(delivery)" data-picked="1"
                                     >
                                         <span class="text-muted pull-right">
