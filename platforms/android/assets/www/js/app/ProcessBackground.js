@@ -4,14 +4,18 @@ var ProcessBackground= (function () {
         pickups: '',
         deliveries: '',
         main_message: '',
-        icon: '',
+        background_color: '',
     };
 
     var index_executionBack= 0;
     var first_execution= true;
 
     var run= function (){
-        //navigator.notification.vibrate([1000]);
+
+        if(Process.it_can_be_executed('check_ajax_queue', 5)){
+            check_ajax_queue();
+        }
+
         cordova.plugins.backgroundMode.configure({
             text: get_message_to_notification_bar(),
             icon: notify_message.icon
@@ -19,6 +23,32 @@ var ProcessBackground= (function () {
         index_executionBack++;
         first_execution= false;
     };
+
+    function check_ajax_queue() {
+        navigator.vibrate(1000);
+        if(App.ajax_queue_count>0) {
+            AjaxQueue.check_queue({
+                fail: function (properties, jqXHR, textStatus) {
+                    App_.ajax_queue_count = Ajax_queueModel.get().length;
+                    LogModel.store({
+                        message: 'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
+                        status: 'danger',
+                        data: JSON.stringify({
+                            jqXHR: jqXHR, textStatus: textStatus, properties: properties
+                        })
+                    });
+                },
+                success: function (properties, response) {
+                    App_.ajax_queue_count = Ajax_queueModel.get().length;
+                    LogModel.store({
+                        message: 'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
+                        status: 'success',
+                        data: {properties: properties, response: response}
+                    });
+                }
+            });
+        }
+    }
 
     function get_message_to_notification_bar() {
         var main_message = (notify_message.main_message !== '') ? notify_message.main_message + "\n" : '';
