@@ -306,7 +306,7 @@
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
-                                            {{ delivery.delivery_start_time }} - {{ delivery.delivery_end_time }}
+                                            <b>{{ delivery.delivery_date }}</b> {{ delivery.delivery_start_time.substr(0, 5) }} - {{ delivery.delivery_end_time.substr(0, 5) }}
                                         </span>
                                         <span :class="['label bg-'+delivery.delivery_state.class]">
                                             {{ index+1 }}) {{ delivery.delivery_state.name }}- {{ delivery.delivery_number }}
