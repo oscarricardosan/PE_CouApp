@@ -97,7 +97,7 @@ function initializeIntranet(){
                 title: 'Courier App',
                 text: 'Bienvenido',
                 icon: 'danger', // this will look for icon.png in platforms/android/res/drawable|mipmap
-                color: 'ff0000', // hex format like 'F14F4D'
+                color: '#ff0000', // hex format like 'F14F4D'
                 resume: true,
                 hidden: false,
                 bigText: false
