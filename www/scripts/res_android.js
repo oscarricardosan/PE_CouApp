@@ -9,7 +9,7 @@
 var filestocopy = [
 // android
 { "images/warning.png": "res/drawable/warning.png" },
-{ "images/danger.png": "es/drawable/danger.png" },
+{ "images/danger.png": "res/drawable/danger.png" },
 { "images/success.png": "res/drawable/success.png" },
 { "images/message.png": "res/drawable/message.png" },
 ];
