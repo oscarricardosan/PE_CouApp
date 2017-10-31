@@ -44,7 +44,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
             text: 'Bienvenido',
-            icon: 'danger', // this will look for icon.png in platforms/android/res/drawable|mipmap
+            icon: 'res://warning', // this will look for icon.png in platforms/android/res/drawable|mipmap
             color: 'ff0000', // hex format like 'F14F4D'
             resume: true,
             hidden: false,
@@ -62,7 +62,7 @@ function initializeIntranet(){
             // notificationIconColor: '#4CAF50',
             notificationTitle: 'Courier App G',
             notificationText: '. . .',
-            notificationIcon: 'warning'
+            notificationIcon: 'res://warning'
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {

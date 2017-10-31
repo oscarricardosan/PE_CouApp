@@ -18,6 +18,11 @@
     <allow-intent href="geo:*" />
     <allow-navigation href="*" subdomains="true" />
     <hook src="scripts/res_android.js" type="after_prepare" />
+    <resource-file src="www/images/warning.png" target="res/drawable-mdpi/warning.png" />
+    <resource-file src="www/images/warning.png" target="res/drawable-hdpi/warning.png" />
+    <resource-file src="www/images/warning.png" target="res/drawable-xhdpi/warning.png" />
+    <resource-file src="www/images/warning.png" target="res/drawable-xxhdpi/warning.png" />
+    <resource-file src="www/images/warning.png" target="res/drawable-xxxhdpi/warning.png" />
     <engine name="android" spec="^6.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
