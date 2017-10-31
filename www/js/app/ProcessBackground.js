@@ -16,6 +16,11 @@ var ProcessBackground= (function () {
         }
 
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
+        cordova.plugins.notification.local.schedule({
+            title: 'Sync in progress',
+            text: 'Copied 2 of 10 files',
+            progressBar: { value: 20 }
+        });
         index_executionBack++;
         first_execution= false;
     };

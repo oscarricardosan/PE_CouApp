@@ -87,7 +87,7 @@ function initializeIntranet(){
                 // notificationIconColor: '#4CAF50',
                 notificationTitle: 'Courier App G',
                 notificationText: '. . .',
-                //notificationIcon: 'warning'
+                //  notificationIcon: '/images/danger.png'
             });
         }
 
@@ -96,8 +96,8 @@ function initializeIntranet(){
             cordova.plugins.backgroundMode.setDefaults({
                 title: 'Courier App',
                 text: 'Bienvenido',
-                icon: 'danger', // this will look for icon.png in platforms/android/res/drawable|mipmap
-                color: 'ff0000', // hex format like 'F14F4D'
+                //icon: '/images/danger.png', // this will look for icon.png in platforms/android/res/drawable|mipmap
+                //color: '#ff0000', // hex format like 'F14F4D'
                 resume: true,
                 hidden: false,
                 bigText: false

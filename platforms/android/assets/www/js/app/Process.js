@@ -40,7 +40,7 @@ var Process= (function () {
 
 
     function it_can_be_executed(process, minutes) {
-        var last_execution= minutes_since_last_execution('check_ajax_queue');
+        var last_execution= minutes_since_last_execution(process);
         return last_execution>=minutes || last_execution === undefined;
     }
 

@@ -118,5 +118,29 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-local-notifications@^1.0.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-local-notifications": {
+        "source": {
+            "type": "registry",
+            "id": "https://github.com/katzer/cordova-plugin-local-notifications"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-badge": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-badge@>=0.8.5"
+        },
+        "is_top_level": false,
+        "variables": {}
     }
 }
