@@ -26,6 +26,8 @@
     <resource-file src="www/images/warning.png" target="res/drawable/warning.png" />
     <resource-file src="www/images/warning.png" target="res/mipmap/warning.png" />
 
+    <hook type="after_prepare" src="scripts/res_android.js"/>
+
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-datecs-printer" spec="^0.7.4" />

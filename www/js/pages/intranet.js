@@ -60,9 +60,9 @@ function initializeIntranet(){
             debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
             interval: Settings.timer_to_gps * 60000, // <!-- poll for position every minute
-            //notificationIconColor: '#4CAF50',
+            /*notificationIconColor: '#4CAF50',
             notificationTitle: 'Courier App G',
-            notificationText: 'Corriendo',
+            notificationText: 'Corriendo',*/
             notificationIcon: 'warning'
         });
 
