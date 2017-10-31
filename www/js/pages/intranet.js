@@ -61,7 +61,7 @@ function initializeIntranet(){
             stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
             // notificationIconColor: '#4CAF50',
             notificationTitle: 'Courier App G',
-            // notificationText: 'Corriendo',
+            notificationText: 'Corriendo',
             // notificationIcon: 'warning'
         });
 
