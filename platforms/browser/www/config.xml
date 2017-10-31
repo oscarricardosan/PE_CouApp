@@ -15,6 +15,7 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-navigation href="*" subdomains="true" />
+    <hook src="scripts/res_android.js" type="after_prepare" />
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
 </widget>

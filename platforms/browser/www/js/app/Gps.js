@@ -25,6 +25,16 @@ var Gps= (function () {
         );
     };
 
+    function store_position_from_background(location) {
+        store_position({
+            coords: {
+                latitude: location.latitude,
+                longitude: location.longitude
+            }
+        });
+        backgroundGeoLocation.finish();
+    }
+
     function store_position(position) {
         navigator.vibrate(500);
         ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
@@ -81,9 +91,10 @@ var Gps= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            start_tracking                : start_tracking,
-            start_tracking_current        : start_tracking_current,
-            clear_watches                 : clear_watches,
+            start_tracking                  : start_tracking,
+            start_tracking_current          : start_tracking_current,
+            clear_watches                   : clear_watches,
+            store_position_from_background  : store_position_from_background,
         }
     }
     return {construct:construct};//retorna los metodos publicos

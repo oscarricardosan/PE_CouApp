@@ -17,10 +17,8 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-navigation href="*" subdomains="true" />
+    <hook src="scripts/res_android.js" type="after_prepare" />
     <engine name="android" spec="^6.2.3" />
-
-    <hook type="after_prepare" src="scripts/res_android.js"/>
-
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-datecs-printer" spec="^0.7.4" />

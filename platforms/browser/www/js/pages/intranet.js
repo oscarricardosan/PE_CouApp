@@ -40,17 +40,34 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
+        //Configuracion status bar
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
             text: 'Bienvenido',
-            //icon: 'icon',  this will look for icon.png in platforms/android/res/drawable|mipmap
+            icon: 'danger', // this will look for icon.png in platforms/android/res/drawable|mipmap
             color: 'ff0000', // hex format like 'F14F4D'
             resume: true,
             hidden: false,
             bigText: false
         });
+        //Configuracion GPS Background
+        backgroundGeoLocation.configure(Gps.store_position_from_background, function(error){
+            ProcessBackground.set_main_message_notification_bar('Error '+error.message);
+        }, {
+            desiredAccuracy: 10,
+            stationaryRadius: 20,
+            distanceFilter: 30,
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
+            // notificationIconColor: '#4CAF50',
+            notificationTitle: 'Courier App G',
+            notificationText: '. . .',
+            notificationIcon: 'warning'
+        });
 
         cordova.plugins.backgroundMode.on('activate', function() {
+            Gps.clear_watches();
+            backgroundGeoLocation.start();
             //Mostrar el estado inicial de la barra
             ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
             //Limpiar timers
@@ -60,6 +77,7 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
+            backgroundGeoLocation.stop();
             Gps.start_tracking();
             //Limpiar timers
             clearProcesses();

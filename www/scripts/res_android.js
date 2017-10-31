@@ -11,9 +11,28 @@ var filestocopy = [
     { "images/warning.png": "platforms/android/res/drawable/warning.png" },
     { "images/warning.png": "platforms/android/res/drawable/warning_small.png" },
     { "images/warning.png": "platforms/android/res/drawable/warning_large.png" },
+
+    { "images/danger.png": "platforms/android/res/drawable-mdpi/warning.png" },
+    { "images/danger.png": "platforms/android/res/drawable-mdpi/warning_small.png" },
+    { "images/danger.png": "platforms/android/res/drawable-mdpi/warning_large.png" },
+
     { "images/danger.png": "platforms/android/res/drawable-hdpi/warning.png" },
     { "images/danger.png": "platforms/android/res/drawable-hdpi/warning_small.png" },
     { "images/danger.png": "platforms/android/res/drawable-hdpi/warning_large.png" },
+
+    { "images/danger.png": "platforms/android/res/drawable-xhdpi/warning.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xhdpi/warning_small.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xhdpi/warning_large.png" },
+
+    { "images/danger.png": "platforms/android/res/drawable-xxhdpi/warning.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xxhdpi/warning_small.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xxhdpi/warning_large.png" },
+
+    { "images/danger.png": "platforms/android/res/drawable-xxxhdpi/warning.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xxxhdpi/warning_small.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xxxhdpi/warning_large.png" },
+
+
 
     { "images/danger.png": "platforms/android/res/drawable/danger.png" },
     { "images/danger.png": "platforms/android/res/drawable/danger_small.png" },
