@@ -19,7 +19,8 @@ var ProcessBackground= (function () {
         cordova.plugins.notification.local.schedule({
             title: 'Sync in progress',
             text: 'Copied 2 of 10 files',
-            progressBar: { value: 20 }
+            progressBar: { value: 20 },
+            foreground: true
         });
         index_executionBack++;
         first_execution= false;
