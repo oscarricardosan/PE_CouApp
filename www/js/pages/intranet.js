@@ -87,7 +87,7 @@ function initializeIntranet(){
                 // notificationIconColor: '#4CAF50',
                 notificationTitle: 'Courier App G',
                 notificationText: '. . .',
-                notificationIcon: 'icon'
+                notificationIcon: 'danger'
             });
         }
 
