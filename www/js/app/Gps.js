@@ -6,9 +6,10 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
-                if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps))
+                if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps)){
                     store_position(position);
-                Process.store_last_attempt('gps_tracking');
+                    Process.store_last_attempt('gps_tracking');
+                }
             },
             function (error) {ProcessBackground.set_main_message_notification_bar('Error '+error.message); },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
@@ -26,23 +27,24 @@ var Gps= (function () {
     };
 
     function store_position_from_background(location) {
-        store_position({
-            coords: {
-                latitude: location.latitude,
-                longitude: location.longitude
-            }
-        });
+        if(Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps)) {
+            store_position({
+                coords: {
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                }
+            });
+            Process.store_last_attempt('gps_tracking');
+        }
         backgroundGeoLocation.finish();
     }
 
     function store_position(position) {
         navigator.vibrate(500);
         ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
-        navigator.notification.beep(1);
         ToastrUtility_.warning(
             'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
         );
-        navigator.vibrate(500);
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',

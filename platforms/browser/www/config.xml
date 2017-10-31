@@ -15,12 +15,6 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-navigation href="*" subdomains="true" />
-    <hook src="scripts/res_android.js" type="after_prepare" />
-    <resource-file src="www/images/warning.png" target="res/drawable-mdpi/warning.png" />
-    <resource-file src="www/images/warning.png" target="res/drawable-hdpi/warning.png" />
-    <resource-file src="www/images/warning.png" target="res/drawable-xhdpi/warning.png" />
-    <resource-file src="www/images/warning.png" target="res/drawable-xxhdpi/warning.png" />
-    <resource-file src="www/images/warning.png" target="res/drawable-xxxhdpi/warning.png" />
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
 </widget>
