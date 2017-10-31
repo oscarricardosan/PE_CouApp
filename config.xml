@@ -19,13 +19,6 @@
     <allow-navigation href="*" subdomains="true" />
     <engine name="android" spec="^6.2.3" />
 
-    <resource-file src="www/images/danger.png" target="res/drawable/danger.png" />
-    <resource-file src="www/images/danger.png" target="res/mipmap/danger.png" />
-    <resource-file src="www/images/success.png" target="res/drawable/success.png" />
-    <resource-file src="www/images/success.png" target="res/mipmap/success.png" />
-    <resource-file src="www/images/warning.png" target="res/drawable/warning.png" />
-    <resource-file src="www/images/warning.png" target="res/mipmap/warning.png" />
-
     <hook type="after_prepare" src="scripts/res_android.js"/>
 
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />

@@ -9,6 +9,8 @@
 var filestocopy = [
 // android
     { "images/warning.png": "platforms/android/res/drawable/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable/warning_small.png" },
+    { "images/warning.png": "platforms/android/res/drawable/warning_large.png" },
     { "images/warning.png": "platforms/android/res/drawable-hdpi/warning.png" },
     { "images/warning.png": "platforms/android/res/drawable-ldpi/warning.png" },
     { "images/warning.png": "platforms/android/res/drawable-mdpi/warning.png" },
@@ -17,6 +19,8 @@ var filestocopy = [
     { "images/warning.png": "platforms/android/res/drawable-hdpi/warning.png" },
 
     { "images/danger.png": "platforms/android/res/drawable/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable/danger_small.png" },
+    { "images/danger.png": "platforms/android/res/drawable/danger_large.png" },
     { "images/danger.png": "platforms/android/res/drawable-hdpi/danger.png" },
     { "images/danger.png": "platforms/android/res/drawable-ldpi/danger.png" },
     { "images/danger.png": "platforms/android/res/drawable-mdpi/danger.png" },
@@ -25,6 +29,8 @@ var filestocopy = [
     { "images/danger.png": "platforms/android/res/drawable-hdpi/danger.png" },
 
     { "images/success.png": "platforms/android/res/drawable/success.png" },
+    { "images/success.png": "platforms/android/res/drawable/success_small.png" },
+    { "images/success.png": "platforms/android/res/drawable/success_large.png" },
     { "images/success.png": "platforms/android/res/drawable-hdpi/success.png" },
     { "images/success.png": "platforms/android/res/drawable-ldpi/success.png" },
     { "images/success.png": "platforms/android/res/drawable-mdpi/success.png" },
@@ -33,6 +39,8 @@ var filestocopy = [
     { "images/success.png": "platforms/android/res/drawable-hdpi/success.png" },
 
     { "images/message.png": "platforms/android/res/drawable/message.png" },
+    { "images/message.png": "platforms/android/res/drawable/message_small.png" },
+    { "images/message.png": "platforms/android/res/drawable/message_large.png" },
     { "images/message.png": "platforms/android/res/drawable-hdpi/message.png" },
     { "images/message.png": "platforms/android/res/drawable-ldpi/message.png" },
     { "images/message.png": "platforms/android/res/drawable-mdpi/message.png" },
