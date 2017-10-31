@@ -62,7 +62,7 @@ function initializeIntranet(){
             // notificationIconColor: '#4CAF50',
             notificationTitle: 'Courier App G',
             notificationText: 'Corriendo',
-            // notificationIcon: 'warning'
+            notificationIcon: 'warning'
         });
 
         cordova.plugins.backgroundMode.on('activate', function() {

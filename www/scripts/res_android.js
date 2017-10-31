@@ -8,15 +8,37 @@
 // configure all the files to copy.  Key of object is the source file, value is the destination location.  It's fine to put all platforms' icons and splash screen files here, even if we don't build for all platforms on each developer's box.
 var filestocopy = [
 // android
-{ "/images/warning.png": "res/drawable/warning.png" },
-{ "/images/danger.png": "res/drawable/danger.png" },
-{ "/images/success.png": "res/drawable/success.png" },
-{ "/images/message.png": "res/drawable/message.png" },
+    { "images/warning.png": "platforms/android/res/drawable/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-hdpi/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-ldpi/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-mdpi/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-xhdpi/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-hdpi/warning.png" },
+    { "images/warning.png": "platforms/android/res/drawable-hdpi/warning.png" },
 
-{ "/images/warning.png": "res/mipmap/warning.png" },
-{ "/images/danger.png": "res/mipmap/danger.png" },
-{ "/images/success.png": "res/mipmap/success.png" },
-{ "/images/message.png": "res/mipmap/message.png" },
+    { "images/danger.png": "platforms/android/res/drawable/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-hdpi/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-ldpi/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-mdpi/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-xhdpi/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-hdpi/danger.png" },
+    { "images/danger.png": "platforms/android/res/drawable-hdpi/danger.png" },
+
+    { "images/success.png": "platforms/android/res/drawable/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-hdpi/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-ldpi/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-mdpi/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-xhdpi/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-hdpi/success.png" },
+    { "images/success.png": "platforms/android/res/drawable-hdpi/success.png" },
+
+    { "images/message.png": "platforms/android/res/drawable/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-hdpi/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-ldpi/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-mdpi/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-xhdpi/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-hdpi/message.png" },
+    { "images/message.png": "platforms/android/res/drawable-hdpi/message.png" },
 ];
 
 var fs = require('fs');
