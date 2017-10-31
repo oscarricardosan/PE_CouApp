@@ -131,6 +131,14 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.permissions"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-navis-background-geolocation/www/backgroundGeoLocation.js",
+        "id": "cordova-plugin-navis-background-geolocation.backgroundGeoLocation",
+        "pluginId": "cordova-plugin-navis-background-geolocation",
+        "clobbers": [
+            "backgroundGeoLocation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -148,7 +156,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.2",
     "cordova.plugins.diagnostic": "3.7.1",
     "cordova-plugin-android-permissions": "1.0.0",
-    "cordova-plugin-geolocation": "2.4.3"
+    "cordova-plugin-geolocation": "2.4.3",
+    "cordova-plugin-navis-background-geolocation": "1.0.2"
 }
 // BOTTOM OF METADATA
 });

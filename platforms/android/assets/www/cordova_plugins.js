@@ -128,6 +128,14 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.diagnostic"
         ]
+    },
+    {
+        "id": "cordova-plugin-navis-background-geolocation.backgroundGeoLocation",
+        "file": "plugins/cordova-plugin-navis-background-geolocation/www/backgroundGeoLocation.js",
+        "pluginId": "cordova-plugin-navis-background-geolocation",
+        "clobbers": [
+            "backgroundGeoLocation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -145,7 +153,8 @@ module.exports.metadata =
     "cordova-plugin-inappbrowser": "1.7.1",
     "cordova-plugin-vibration": "2.1.5",
     "cordova-plugin-whitelist": "1.3.2",
-    "cordova.plugins.diagnostic": "3.7.1"
+    "cordova.plugins.diagnostic": "3.7.1",
+    "cordova-plugin-navis-background-geolocation": "1.0.2"
 };
 // BOTTOM OF METADATA
 });

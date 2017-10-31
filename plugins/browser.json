@@ -39,6 +39,9 @@
         },
         "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "savne.courier_app"
+        },
+        "cordova-plugin-navis-background-geolocation": {
+            "PACKAGE_NAME": "savne.courier_app"
         }
     },
     "dependent_plugins": {

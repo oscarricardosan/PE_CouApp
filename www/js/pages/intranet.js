@@ -40,6 +40,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
+        //Configuracion status bar
         cordova.plugins.backgroundMode.setDefaults({
             title: 'Courier App',
             text: 'Bienvenido',
@@ -49,8 +50,20 @@ function initializeIntranet(){
             hidden: false,
             bigText: false
         });
+        //Configuracion GPS Background
+        backgroundGeoLocation.configure(Gps.store_position_from_background, function(error){
+            ProcessBackground.set_main_message_notification_bar('Error '+error.message);
+        }, {
+            desiredAccuracy: 0,
+            stationaryRadius: 0,
+            distanceFilter: 0,
+            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
+        });
 
         cordova.plugins.backgroundMode.on('activate', function() {
+            Gps.clear_watches();
+            backgroundGeoLocation.start();
             //Mostrar el estado inicial de la barra
             ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
             //Limpiar timers
@@ -60,6 +73,7 @@ function initializeIntranet(){
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
+            backgroundGeoLocation.stop();
             Gps.start_tracking();
             //Limpiar timers
             clearProcesses();

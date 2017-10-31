@@ -1,38 +1,41 @@
 {
-  "name": "savne.courier_app",
-  "version": "2.1.1",
-  "displayName": "Courier APP",
-  "cordova": {
-    "platforms": [
-      "android"
-    ],
-    "plugins": {
-      "cordova-plugin-whitelist": {},
-      "cordova-plugin-background-mode": {},
-      "cordova-plugin-datecs-printer": {},
-      "cordova-plugin-cszbar": {},
-      "cordova-plugin-camera": {},
-      "cordova-plugin-dialogs": {},
-      "cordova-plugin-inappbrowser": {},
-      "cordova-plugin-vibration": {},
-      "cordova.plugins.diagnostic": {},
-      "cordova-plugin-android-permissions": {},
-      "cordova-plugin-geolocation": {}
+    "name": "savne.courier_app",
+    "version": "2.1.1",
+    "displayName": "Courier APP",
+    "cordova": {
+        "platforms": [
+            "android"
+        ],
+        "plugins": {
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-background-mode": {},
+            "cordova-plugin-datecs-printer": {},
+            "cordova-plugin-cszbar": {},
+            "cordova-plugin-camera": {},
+            "cordova-plugin-dialogs": {},
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-vibration": {},
+            "cordova.plugins.diagnostic": {},
+            "cordova-plugin-android-permissions": {},
+            "cordova-plugin-geolocation": {},
+            "cordova-plugin-navis-background-geolocation": {}
+        }
+    },
+    "dependencies": {
+        "cordova-android": "^6.2.3",
+        "cordova-background-location-services": "git+https://github.com/pmwisdom/cordova-background-geolocation-services.git",
+        "cordova-plugin-android-permissions": "^1.0.0",
+        "cordova-plugin-background-mode": "^0.7.2",
+        "cordova-plugin-camera": "~2.4.1",
+        "cordova-plugin-cszbar": "^1.3.4",
+        "cordova-plugin-datecs-printer": "^0.7.4",
+        "cordova-plugin-device": "^1.1.6",
+        "cordova-plugin-dialogs": "~1.3.3",
+        "cordova-plugin-geolocation": "^2.4.3",
+        "cordova-plugin-inappbrowser": "~1.7.1",
+        "cordova-plugin-navis-background-geolocation": "^1.0.2",
+        "cordova-plugin-vibration": "~2.1.5",
+        "cordova-plugin-whitelist": "^1.3.2",
+        "cordova.plugins.diagnostic": "^3.7.1"
     }
-  },
-  "dependencies": {
-    "cordova-android": "^6.2.3",
-    "cordova-plugin-android-permissions": "^1.0.0",
-    "cordova-plugin-background-mode": "^0.7.2",
-    "cordova-plugin-camera": "~2.4.1",
-    "cordova-plugin-cszbar": "^1.3.4",
-    "cordova-plugin-datecs-printer": "^0.7.4",
-    "cordova-plugin-device": "^1.1.6",
-    "cordova-plugin-dialogs": "~1.3.3",
-    "cordova-plugin-geolocation": "^2.4.3",
-    "cordova-plugin-inappbrowser": "~1.7.1",
-    "cordova-plugin-vibration": "~2.1.5",
-    "cordova-plugin-whitelist": "^1.3.2",
-    "cordova.plugins.diagnostic": "^3.7.1"
-  }
 }
