@@ -88,8 +88,6 @@ ext {
 }
 
 // PLUGIN GRADLE EXTENSIONS START
-apply from: "cordova-plugin-badge/courier_app-badge.gradle"
-apply from: "cordova-plugin-local-notifications/courier_app-localnotification.gradle"
 // PLUGIN GRADLE EXTENSIONS END
 
 def hasBuildExtras = file('build-extras.gradle').exists()
@@ -254,9 +252,9 @@ dependencies {
     compile "com.android.support:support-v4:24.1.1+"
     compile "com.android.support:support-v4:23.1.0"
     compile "com.android.support:support-v4:+"
-    compile "com.android.support:support-v4:26.+"
     compile "com.android.support:appcompat-v7:26.+"
     compile "com.google.android.gms:play-services-location:+"
+    compile "com.android.support:support-v4:26.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

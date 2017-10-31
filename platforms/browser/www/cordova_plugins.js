@@ -139,54 +139,6 @@ module.exports = [
         "clobbers": [
             "backgroundGeoLocation"
         ]
-    },
-    {
-        "file": "plugins/cordova-plugin-badge/www/badge.js",
-        "id": "cordova-plugin-badge.Badge",
-        "pluginId": "cordova-plugin-badge",
-        "clobbers": [
-            "cordova.plugins.notification.badge"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-badge/src/browser/favico.min.js",
-        "id": "cordova-plugin-badge.Badge.Favico",
-        "pluginId": "cordova-plugin-badge",
-        "clobbers": [
-            "cordova.plugins.notification.badge.Favico"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-badge/src/browser/BadgeProxy.js",
-        "id": "cordova-plugin-badge.Badge.Proxy",
-        "pluginId": "cordova-plugin-badge",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-local-notifications/www/local-notification.js",
-        "id": "cordova-plugin-local-notifications.LocalNotification",
-        "pluginId": "cordova-plugin-local-notifications",
-        "clobbers": [
-            "cordova.plugins.notification.local"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-local-notifications/www/local-notification-core.js",
-        "id": "cordova-plugin-local-notifications.LocalNotification.Core",
-        "pluginId": "cordova-plugin-local-notifications",
-        "clobbers": [
-            "cordova.plugins.notification.local.core",
-            "plugin.notification.local.core"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-local-notifications/www/local-notification-util.js",
-        "id": "cordova-plugin-local-notifications.LocalNotification.Util",
-        "pluginId": "cordova-plugin-local-notifications",
-        "merges": [
-            "cordova.plugins.notification.local.core",
-            "plugin.notification.local.core"
-        ]
     }
 ];
 module.exports.metadata = 
@@ -205,9 +157,7 @@ module.exports.metadata =
     "cordova.plugins.diagnostic": "3.7.1",
     "cordova-plugin-android-permissions": "1.0.0",
     "cordova-plugin-geolocation": "2.4.3",
-    "cordova-plugin-navis-background-geolocation": "1.0.2",
-    "cordova-plugin-badge": "0.8.5",
-    "cordova-plugin-local-notifications": "0.9.0-beta.0"
+    "cordova-plugin-navis-background-geolocation": "1.0.2"
 }
 // BOTTOM OF METADATA
 });
