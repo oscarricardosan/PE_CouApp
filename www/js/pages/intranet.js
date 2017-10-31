@@ -57,9 +57,8 @@ function initializeIntranet(){
             desiredAccuracy: 10,
             stationaryRadius: 20,
             distanceFilter: 30,
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             // stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
-            // interval: Settings.timer_to_gps * 60000, // <!-- poll for position every minute
             // notificationIconColor: '#4CAF50',
             // notificationTitle: 'Courier App G',
             // notificationText: 'Corriendo',

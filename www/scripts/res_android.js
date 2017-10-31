@@ -8,10 +8,10 @@
 // configure all the files to copy.  Key of object is the source file, value is the destination location.  It's fine to put all platforms' icons and splash screen files here, even if we don't build for all platforms on each developer's box.
 var filestocopy = [
 // android
-{ "images/warning.png": "platforms/android/res/drawable/warning.png" },
-{ "images/danger.png": "platforms/android/res/drawable/danger.png" },
-{ "images/success.png": "platforms/android/res/drawable/success.png" },
-{ "images/message.png": "platforms/android/res/drawable/message.png" },
+{ "images/warning.png": "res/drawable/warning.png" },
+{ "images/danger.png": "es/drawable/danger.png" },
+{ "images/success.png": "res/drawable/success.png" },
+{ "images/message.png": "res/drawable/message.png" },
 ];
 
 var fs = require('fs');
