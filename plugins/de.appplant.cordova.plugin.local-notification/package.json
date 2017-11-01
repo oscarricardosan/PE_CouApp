@@ -1,19 +1,19 @@
 {
-  "_from": "cordova-plugin-local-notifications",
+  "_from": "cordova-plugin-local-notifications@^1.0.0",
   "_id": "cordova-plugin-local-notifications@1.0.0",
   "_inBundle": false,
   "_integrity": "sha1-F/bAlKvjpf4kIOTGLrzvKLykKAE=",
   "_location": "/cordova-plugin-local-notifications",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-local-notifications",
+    "raw": "cordova-plugin-local-notifications@^1.0.0",
     "name": "cordova-plugin-local-notifications",
     "escapedName": "cordova-plugin-local-notifications",
-    "rawSpec": "",
+    "rawSpec": "^1.0.0",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^1.0.0"
   },
   "_requiredBy": [
     "#USER",
@@ -21,7 +21,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/cordova-plugin-local-notifications/-/cordova-plugin-local-notifications-1.0.0.tgz",
   "_shasum": "17f6c094abe3a5fe2420e4c62ebcef28bca42801",
-  "_spec": "cordova-plugin-local-notifications",
+  "_spec": "cordova-plugin-local-notifications@^1.0.0",
   "_where": "/home/masterdev/Code/savne/Mobile_apps/courier_app/courier_app_phonegap",
   "author": "",
   "bugs": {
