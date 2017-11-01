@@ -51,7 +51,11 @@ function initializePage(){
                 setTimeout(function(){
                     App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
                     App_.deliveries_in_list= $('.list-group.deliveries>.delivery').length;
-                }, 300);
+                }, 200);
+                setTimeout(function(){
+                    App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
+                    App_.deliveries_in_list= $('.list-group.deliveries>.delivery').length;
+                }, 500);
             },
             pickups_sorted: function(){
                 App_= this;
@@ -112,6 +116,9 @@ function initializePage(){
                 deep: true
             },
             date_to_filter: function(){
+                this.refresh_counters_in_list();
+            },
+            number_search: function(){
                 this.refresh_counters_in_list();
             }
         },
