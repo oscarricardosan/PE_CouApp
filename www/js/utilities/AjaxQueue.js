@@ -49,8 +49,8 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
-            alert(properties.type);
-            if(properties.type === 'json'){
+            alert(properties.dataType);
+            if(properties.dataType === 'json'){
                 alert("1.0");
                 if(response.success){
                     alert("1.1.0");
