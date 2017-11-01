@@ -212,8 +212,8 @@ module.exports.metadata =
     "cordova-plugin-geolocation": "2.4.3",
     "cordova-plugin-navis-background-geolocation": "1.0.2",
     "diogo.cordova.plugin.local-notification": "0.1.14",
-    "cordova-plugin-app-event": "1.2.1",
     "cordova-plugin-device": "1.1.6",
+    "cordova-plugin-app-event": "1.2.1",
     "de.appplant.cordova.plugin.local-notification": "0.8.5"
 }
 // BOTTOM OF METADATA

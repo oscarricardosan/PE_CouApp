@@ -12,10 +12,10 @@
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-app-event": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "savne.courier_app"
     },
-    "cordova-plugin-device": {
+    "cordova-plugin-app-event": {
       "PACKAGE_NAME": "savne.courier_app"
     }
   }

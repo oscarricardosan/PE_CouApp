@@ -68,10 +68,10 @@
     "diogo.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "savne.courier_app"
     },
-    "cordova-plugin-app-event": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "savne.courier_app"
     },
-    "cordova-plugin-device": {
+    "cordova-plugin-app-event": {
       "PACKAGE_NAME": "savne.courier_app"
     },
     "de.appplant.cordova.plugin.local-notification": {
@@ -290,8 +290,8 @@
     "cordova-plugin-geolocation": "2.4.3",
     "cordova-plugin-navis-background-geolocation": "1.0.2",
     "diogo.cordova.plugin.local-notification": "0.1.14",
-    "cordova-plugin-app-event": "1.2.1",
     "cordova-plugin-device": "1.1.6",
+    "cordova-plugin-app-event": "1.2.1",
     "de.appplant.cordova.plugin.local-notification": "0.8.5"
   }
 }
