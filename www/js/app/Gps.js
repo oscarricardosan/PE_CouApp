@@ -15,7 +15,9 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
+                ToastrUtility_.warning("Es optimo");
                 if(optimal_conditions_for_execution_are()) {
+                    ToastrUtility_.danger("Guardar GPS");
                     store_position(position);
                     Process.store_last_attempt('gps_tracking');
                 }
