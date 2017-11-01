@@ -45,6 +45,7 @@ var AjaxQueue= (function () {
         alert("check_queue 3");
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
         alert("check_queue 4");
+        alert("dataType " + properties.dataType);
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
