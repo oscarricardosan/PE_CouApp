@@ -1,7 +1,7 @@
 /*
- * Apache 2.0 License
+ * Copyright (c) 2013-2015 by appPlant UG. All rights reserved.
  *
- * Copyright (c) Sebastian Katzer 2017
+ * @APPPLANT_LICENSE_HEADER_START@
  *
  * This file contains Original Code and/or Modifications of Original Code
  * as defined in and that are subject to the Apache License
@@ -17,123 +17,83 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
+ *
+ * @APPPLANT_LICENSE_HEADER_END@
  */
 
 package de.appplant.cordova.plugin.notification;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.service.notification.StatusBarNotification;
-import android.support.v4.app.NotificationManagerCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import de.appplant.cordova.plugin.badge.BadgeImpl;
-
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.O;
-import static android.support.v4.app.NotificationManagerCompat.IMPORTANCE_DEFAULT;
-import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY_ID;
-import static de.appplant.cordova.plugin.notification.Notification.Type.TRIGGERED;
+import static de.appplant.cordova.plugin.notification.Notification.PREF_KEY;
 
 /**
  * Central way to access all or single local notifications set by specific
  * state like triggered or scheduled. Offers shortcut ways to schedule,
  * cancel or clear local notifications.
  */
-public final class Manager {
+public class Manager {
 
-    // TODO: temporary
-    static final String CHANNEL_ID = "default-channel-id";
-
-    // TODO: temporary
-    private static final CharSequence CHANNEL_NAME = "Default channel";
-
-    // The application context
+    // Context passed through constructor and used for notification builder.
     private Context context;
 
     /**
      * Constructor
      *
-     * @param context Application context
+     * @param context
+     *      Application context
      */
-    private Manager(Context context) {
+    private Manager(Context context){
         this.context = context;
-        createDefaultChannel();
     }
 
     /**
      * Static method to retrieve class instance.
      *
-     * @param context Application context
+     * @param context
+     *      Application context
      */
     public static Manager getInstance(Context context) {
         return new Manager(context);
     }
 
     /**
-     * Check if app has local notification permission.
-     */
-    public boolean hasPermission () {
-        return getNotCompMgr().areNotificationsEnabled();
-    }
-
-    /**
-     * Schedule local notification specified by request.
+     * Schedule local notification specified by JSON object.
      *
-     * @param request Set of notification options.
-     * @param receiver Receiver to handle the trigger event.
+     * @param options
+     *      JSON object with set of options
+     * @param receiver
+     *      Receiver to handle the trigger event
      */
-    public Notification schedule (Request request, Class<?> receiver) {
-        Options options    = request.getOptions();
-        Notification toast = new Notification(context, options);
-
-        toast.schedule(request, receiver);
-
-        return toast;
+    public Notification schedule (JSONObject options, Class<?> receiver) {
+        return schedule(new Options(context).parse(options), receiver);
     }
 
     /**
-     * TODO: temporary
-     */
-    private void createDefaultChannel() {
-        NotificationManager mgr = getNotMgr();
-
-        if (SDK_INT < O)
-            return;
-
-        NotificationChannel channel = mgr.getNotificationChannel(CHANNEL_ID);
-
-        if (channel != null)
-            return;
-
-        channel = new NotificationChannel(
-                CHANNEL_ID, CHANNEL_NAME, IMPORTANCE_DEFAULT);
-
-        mgr.createNotificationChannel(channel);
-    }
-
-    /**
-     * Update local notification specified by ID.
+     * Schedule local notification specified by options object.
      *
-     * @param id       The notification ID.
-     * @param updates  JSON object with notification options.
-     * @param receiver Receiver to handle the trigger event.
+     * @param options
+     *      Set of notification options
+     * @param receiver
+     *      Receiver to handle the trigger event
      */
-    public Notification update (int id, JSONObject updates, Class<?> receiver) {
-        Notification notification = get(id);
+    public Notification schedule (Options options, Class<?> receiver) {
+        Notification notification = new Builder(options)
+                .setTriggerReceiver(receiver)
+                .build();
 
-        if (notification == null)
-            return null;
-
-        notification.update(updates, receiver);
+        notification.schedule();
 
         return notification;
     }
@@ -141,45 +101,74 @@ public final class Manager {
     /**
      * Clear local notification specified by ID.
      *
-     * @param id The notification ID.
+     * @param id
+     *      The notification ID
+     * @param updates
+     *      JSON object with notification options
+     * @param receiver
+     *      Receiver to handle the trigger event
+     */
+    public Notification update (int id, JSONObject updates, Class<?> receiver) {
+        Notification notification = get(id);
+
+        if (notification == null)
+            return null;
+
+        notification.cancel();
+
+        JSONObject options = mergeJSONObjects(
+                notification.getOptions().getDict(), updates);
+
+        try {
+            options.put("updated", true);
+        } catch (JSONException ignore) {}
+
+        return schedule(options, receiver);
+    }
+
+    /**
+     * Clear local notification specified by ID.
+     *
+     * @param id
+     *      The notification ID
      */
     public Notification clear (int id) {
-        Notification toast = get(id);
+        Notification notification = get(id);
 
-        if (toast != null) {
-            toast.clear();
+        if (notification != null) {
+            notification.clear();
         }
 
-        return toast;
+        return notification;
+    }
+
+    /**
+     * Clear local notification specified by ID.
+     *
+     * @param id
+     *      The notification ID
+     */
+    public Notification cancel (int id) {
+        Notification notification = get(id);
+
+        if (notification != null) {
+            notification.cancel();
+        }
+
+        return notification;
     }
 
     /**
      * Clear all local notifications.
      */
     public void clearAll () {
-        List<Notification> toasts = getByType(TRIGGERED);
+        List<Notification> notifications = getAll();
 
-        for (Notification toast : toasts) {
-            toast.clear();
+        for (Notification notification : notifications) {
+            notification.clear();
         }
 
-        getNotCompMgr().cancelAll();
-        setBadge(0);
-    }
-
-    /**
-     * Clear local notification specified by ID.
-     *
-     * @param id The notification ID
-     */
-    public Notification cancel (int id) {
-        Notification toast = get(id);
-
-        if (toast != null) {
-            toast.cancel();
-        }
-
-        return toast;
+        getNotMgr().cancelAll();
     }
 
     /**
@@ -192,8 +181,7 @@ public final class Manager {
             notification.cancel();
         }
 
-        getNotCompMgr().cancelAll();
-        setBadge(0);
+        getNotMgr().cancelAll();
     }
 
     /**
@@ -201,7 +189,7 @@ public final class Manager {
      */
     public List<Integer> getIds() {
         Set<String> keys = getPrefs().getAll().keySet();
-        List<Integer> ids = new ArrayList<Integer>();
+        ArrayList<Integer> ids = new ArrayList<Integer>();
 
         for (String key : keys) {
             try {
@@ -217,25 +205,18 @@ public final class Manager {
     /**
      * All local notification IDs for given type.
      *
-     * @param type The notification life cycle type
+     * @param type
+     *      The notification life cycle type
      */
     public List<Integer> getIdsByType(Notification.Type type) {
+        List<Notification> notifications = getAll();
+        ArrayList<Integer> ids = new ArrayList<Integer>();
 
-        if (type == Notification.Type.ALL)
-            return getIds();
-
-        StatusBarNotification[] activeToasts = getNotMgr().getActiveNotifications();
-        List<Integer> activeIds = new ArrayList<Integer>();
-
-        for (StatusBarNotification toast : activeToasts) {
-            activeIds.add(toast.getId());
+        for (Notification notification : notifications) {
+            if (notification.getType() == type) {
+                ids.add(notification.getId());
+            }
         }
-
-        if (type == TRIGGERED)
-            return activeIds;
-
-        List<Integer> ids = getIds();
-        ids.removeAll(activeIds);
 
         return ids;
     }
@@ -243,20 +224,21 @@ public final class Manager {
     /**
      * List of local notifications with matching ID.
      *
-     * @param ids Set of notification IDs.
+     * @param ids
+     *      Set of notification IDs
      */
-    private List<Notification> getByIds(List<Integer> ids) {
-        List<Notification> toasts = new ArrayList<Notification>();
+    public List<Notification> getByIds(List<Integer> ids) {
+        ArrayList<Notification> notifications = new ArrayList<Notification>();
 
         for (int id : ids) {
-            Notification toast = get(id);
+            Notification notification = get(id);
 
-            if (toast != null) {
-                toasts.add(toast);
+            if (notification != null) {
+                notifications.add(notification);
             }
         }
 
-        return toasts;
+        return notifications;
     }
 
     /**
@@ -269,27 +251,70 @@ public final class Manager {
     /**
      * List of local notifications from given type.
      *
-     * @param type The notification life cycle type
+     * @param type
+     *      The notification life cycle type
      */
-    private List<Notification> getByType(Notification.Type type) {
+    public List<Notification> getByType(Notification.Type type) {
+        List<Notification> notifications = getAll();
+        ArrayList<Notification> list = new ArrayList<Notification>();
 
         if (type == Notification.Type.ALL)
-            return getAll();
+            return notifications;
 
-        List<Integer> ids = getIdsByType(type);
+        for (Notification notification : notifications) {
+            if (notification.getType() == type) {
+                list.add(notification);
+            }
+        }
 
-        return getByIds(ids);
+        return list;
+    }
+
+    /**
+     * List of local notifications with matching ID from given type.
+     *
+     * @param type
+     *      The notification life cycle type
+     * @param ids
+     *      Set of notification IDs
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public List<Notification> getBy(Notification.Type type, List<Integer> ids) {
+        ArrayList<Notification> notifications = new ArrayList<Notification>();
+
+        for (int id : ids) {
+            Notification notification = get(id);
+
+            if (notification != null && notification.isScheduled()) {
+                notifications.add(notification);
+            }
+        }
+
+        return notifications;
     }
 
     /**
      * If a notification with an ID exists.
      *
-     * @param id Notification ID
-     *
-     * @return true if found.
+     * @param id
+     *      Notification ID
      */
     public boolean exist (int id) {
         return get(id) != null;
+    }
+
+    /**
+     * If a notification with an ID and type exists.
+     *
+     * @param id
+     *      Notification ID
+     * @param type
+     *      Notification type
+     */
+    public boolean exist (int id, Notification.Type type) {
+        Notification notification = get(id);
+
+        return notification != null && notification.getType() == type;
     }
 
     /**
@@ -302,20 +327,21 @@ public final class Manager {
     /**
      * List of properties from local notifications with matching ID.
      *
-     * @param ids Set of notification IDs
+     * @param ids
+     *      Set of notification IDs
      */
     public List<JSONObject> getOptionsById(List<Integer> ids) {
-        List<JSONObject> toasts = new ArrayList<JSONObject>();
+        ArrayList<JSONObject> options = new ArrayList<JSONObject>();
 
         for (int id : ids) {
-            Options options = getOptions(id);
+            Notification notification = get(id);
 
-            if (options != null) {
-                toasts.add(options.getDict());
+            if (notification != null) {
+                options.add(notification.getOptions().getDict());
             }
         }
 
-        return toasts;
+        return options;
     }
 
     /**
@@ -336,86 +362,97 @@ public final class Manager {
     }
 
     /**
-     * Get local notification options.
+     * List of properties from local notifications with matching ID from
+     * given type.
      *
-     * @param id Notification ID.
-     *
-     * @return null if could not found.
+     * @param type
+     *      The notification life cycle type
+     * @param ids
+     *      Set of notification IDs
      */
-    public Options getOptions(int id) {
-        SharedPreferences prefs = getPrefs();
-        String toastId          = Integer.toString(id);
+    public List<JSONObject> getOptionsBy(Notification.Type type,
+                                         List<Integer> ids) {
 
-        if (!prefs.contains(toastId))
-            return null;
+        if (type == Notification.Type.ALL)
+            return getOptionsById(ids);
 
-        try {
-            String json     = prefs.getString(toastId, null);
-            JSONObject dict = new JSONObject(json);
+        ArrayList<JSONObject> options = new ArrayList<JSONObject>();
+        List<Notification> notifications = getByIds(ids);
 
-            return new Options(context, dict);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+        for (Notification notification : notifications) {
+            if (notification.getType() == type) {
+                options.add(notification.getOptions().getDict());
+            }
         }
+
+        return options;
     }
 
     /**
      * Get existent local notification.
      *
-     * @param id Notification ID.
-     *
-     * @return null if could not found.
+     * @param id
+     *      Notification ID
      */
     public Notification get(int id) {
-        Options options = getOptions(id);
+        Map<String, ?> alarms = getPrefs().getAll();
+        String notId          = Integer.toString(id);
+        JSONObject options;
 
-        if (options == null)
+        if (!alarms.containsKey(notId))
             return null;
 
-        return new Notification(context, options);
+
+        try {
+            String json = alarms.get(notId).toString();
+            options = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Builder builder = new Builder(context, options);
+
+        return builder.build();
     }
 
     /**
-     * Set the badge number of the app icon.
+     * Merge two JSON objects.
      *
-     * @param badge The badge number.
+     * @param obj1
+     *      JSON object
+     * @param obj2
+     *      JSON object with new options
      */
-    public void setBadge (int badge) {
-        if (badge == 0) {
-            new BadgeImpl(context).clearBadge();
-        } else {
-            new BadgeImpl(context).setBadge(badge);
+    private JSONObject mergeJSONObjects (JSONObject obj1, JSONObject obj2) {
+        Iterator it = obj2.keys();
+
+        while (it.hasNext()) {
+            try {
+                String key = (String)it.next();
+
+                obj1.put(key, obj2.opt(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
+        return obj1;
     }
 
     /**
      * Shared private preferences for the application.
      */
     private SharedPreferences getPrefs () {
-        return context.getSharedPreferences(PREF_KEY_ID, Context.MODE_PRIVATE);
+        return context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
     }
 
     /**
      * Notification manager for the application.
      */
-    private NotificationManager getNotMgr() {
-        return (NotificationManager) context.getSystemService(
-                Context.NOTIFICATION_SERVICE);
-    }
-
-    /**
-     * Notification compat manager for the application.
-     */
-    private NotificationManagerCompat getNotCompMgr() {
-        return NotificationManagerCompat.from(context);
-    }
-
-    /**
-     * Notification manager compat for the application.
-     */
-    private NotificationManagerCompat getNotMgrCompat () {
-        return NotificationManagerCompat.from(context);
+    private NotificationManager getNotMgr () {
+        return (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
 }

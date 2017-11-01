@@ -7,7 +7,7 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-local-notifications": {
+    "de.appplant.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "savne.courier_app"
     }
   },
@@ -15,7 +15,7 @@
     "cordova-plugin-device": {
       "PACKAGE_NAME": "savne.courier_app"
     },
-    "cordova-plugin-badge": {
+    "cordova-plugin-app-event": {
       "PACKAGE_NAME": "savne.courier_app"
     }
   }

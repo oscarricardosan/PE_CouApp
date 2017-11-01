@@ -37,9 +37,6 @@
     <feature name="BackgroundGeoLocation">
         <param name="android-package" value="com.tenforwardconsulting.cordova.bgloc.BackgroundGeolocationPlugin" />
     </feature>
-    <feature name="Badge">
-        <param name="android-package" value="de.appplant.cordova.plugin.badge.Badge" />
-    </feature>
     <feature name="LocalNotification">
         <param name="android-package" value="de.appplant.cordova.plugin.localnotification.LocalNotification" />
     </feature>
@@ -67,4 +64,7 @@
     <preference name="AndroidLaunchMode" value="singleInstance" />
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
+    <preference name="android-minSdkVersion" value="26" />
+    <preference name="android-targetSdkVersion" value="26" />
+    <preference name="android-compileSdkVersion" value="26" />
 </widget>

@@ -1,7 +1,7 @@
 /*
- * Apache 2.0 License
+ * Copyright (c) 2013-2015 by appPlant UG. All rights reserved.
  *
- * Copyright (c) Sebastian Katzer 2017
+ * @APPPLANT_LICENSE_HEADER_START@
  *
  * This file contains Original Code and/or Modifications of Original Code
  * as defined in and that are subject to the Apache License
@@ -17,16 +17,13 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
+ *
+ * @APPPLANT_LICENSE_HEADER_END@
  */
 
 package de.appplant.cordova.plugin.localnotification;
 
-import android.os.Bundle;
-
 import de.appplant.cordova.plugin.notification.Notification;
-import de.appplant.cordova.plugin.notification.receiver.AbstractClearReceiver;
-
-import static de.appplant.cordova.plugin.notification.Request.EXTRA_LAST;
 
 
 /**
@@ -34,24 +31,17 @@ import static de.appplant.cordova.plugin.notification.Request.EXTRA_LAST;
  * notification manually. It un-persists the cleared notification from the
  * shared preferences.
  */
-public class ClearReceiver extends AbstractClearReceiver {
+public class ClearReceiver extends de.appplant.cordova.plugin.notification.ClearReceiver {
 
     /**
      * Called when a local notification was cleared from outside of the app.
      *
-     * @param notification Wrapper around the local notification.
-     * @param bundle       The bundled extras.
+     * @param notification
+     *      Wrapper around the local notification
      */
     @Override
-    public void onClear (Notification notification, Bundle bundle) {
-        boolean isLast = bundle.getBoolean(EXTRA_LAST, false);
-
-        if (isLast) {
-            notification.cancel();
-        } else {
-            notification.clear();
-        }
-
+    public void onClear (Notification notification) {
+        super.onClear(notification);
         LocalNotification.fireEvent("clear", notification);
     }
 

@@ -7,11 +7,9 @@
     <gap:platform name="android" />
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
-
     <preference name="android-minSdkVersion" value="26" />
     <preference name="android-targetSdkVersion" value="26" />
     <preference name="android-compileSdkVersion" value="26" />
-
     <icon src="www/images/icon.png" />
     <allow-navigation href="*" />
     <access origin="*" />
@@ -35,7 +33,5 @@
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3" />
     <plugin name="cordova-plugin-navis-background-geolocation" spec="^1.0.2" />
-    <plugin name="cordova-plugin-local-notifications" spec="https://github.com/katzer/cordova-plugin-local-notifications.git" />
-
-
+    <plugin name="de.appplant.cordova.plugin.local-notification" spec="https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5" />
 </widget>
