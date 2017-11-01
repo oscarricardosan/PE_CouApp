@@ -40,11 +40,6 @@ var Gps= (function () {
     }
 
     function store_position(position) {
-        navigator.vibrate(500);
-        ProcessBackground.set_main_message_notification_bar('Tracking GPS' +'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude);
-        ToastrUtility_.warning(
-            'latitude: '+position.coords.latitude+' longitude: '+position.coords.longitude
-        );
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',
