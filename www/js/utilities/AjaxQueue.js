@@ -49,8 +49,8 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
-            alert(dataType);
-            if(dataType === 'json'){
+            alert(properties.type);
+            if(properties.type === 'json'){
                 alert("1.0");
                 if(response.success){
                     alert("1.1.0");
@@ -104,7 +104,6 @@ var AjaxQueue= (function () {
 
     var check_queue_from_element= function(element){
         element.loading();
-        alert('entre');
         AjaxQueue.check_queue({
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
