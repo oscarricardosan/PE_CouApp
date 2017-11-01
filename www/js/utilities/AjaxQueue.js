@@ -41,7 +41,7 @@ var AjaxQueue= (function () {
             return false;
         }
 
-        properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+        var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
