@@ -15,10 +15,7 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
-                if(
-                    Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
-                    (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.start_hour)
-                ) {
+                if(optimal_conditions_for_execution_are()) {
                     store_position(position);
                     Process.store_last_attempt('gps_tracking');
                 }
@@ -30,10 +27,7 @@ var Gps= (function () {
     };
 
     function store_position_from_background(location) {
-        if(
-            Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
-            (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.start_hour)
-        ) {
+        if(optimal_conditions_for_execution_are()) {
             store_position({
                 coords: {
                     latitude: location.latitude,
@@ -86,6 +80,11 @@ var Gps= (function () {
         });
     }
 
+    function optimal_conditions_for_execution_are() {
+        return Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
+            (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.start_hour);
+    }
+    
     var clear_watches= function(){
         $.each(watches_id, function(index, id){
             navigator.geolocation.clearWatch(id);
