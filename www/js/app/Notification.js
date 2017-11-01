@@ -1,6 +1,7 @@
 var Notification= (function () {
 
-    var ajax_queue_message= function(title, message){
+    var ajax_queue_message= function(message, title){
+        title= title===undefined?'Cola de peticiones':title;
         cordova.plugins.notification.local.schedule({
             id: Settings.notification_id.queue_ajax,
             title: title,
@@ -10,7 +11,8 @@ var Notification= (function () {
         });
     };
 
-    var ajax_queue_danger= function(title, message){
+    var ajax_queue_danger= function(message, title){
+        title= title===undefined?'Cola de peticiones':title;
         cordova.plugins.notification.local.schedule({
             id: Settings.notification_id.queue_ajax,
             title: title,
