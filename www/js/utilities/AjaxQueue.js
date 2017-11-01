@@ -101,6 +101,7 @@ var AjaxQueue= (function () {
                 alert('Transmisión en cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
                 return false;
             }
+            alert("check_queue Fail");
             callbacks.fail(properties, jqXHR, textStatus);
             properties.failed_offline(jqXHR, textStatus);
             App.ajax_queue_count= Ajax_queueModel.get().length;
