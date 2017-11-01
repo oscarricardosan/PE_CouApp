@@ -104,6 +104,7 @@ var AjaxQueue= (function () {
 
     var check_queue_from_element= function(element){
         element.loading();
+        alert('entre');
         AjaxQueue.check_queue({
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

@@ -36,6 +36,7 @@ function initializePage(){
             },
             check_ajax_queue: function(e) {
                 var element= $(e.target);
+                alert('clickeado');
                 AjaxQueue.check_queue_from_element(element);
             }
         },
