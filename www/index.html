@@ -227,8 +227,8 @@
                     <a href="map.html">
                         <i class="fa fa-globe"></i>
                         <span>
-                                Mapa
-                            </span>
+                            Mapa
+                        </span>
                     </a>
                 </li>
                 <li class="header">SISTEMA</li>
@@ -259,16 +259,36 @@
         <section class="content">
             <div class="row">
                 <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar ..." v-model="number_search">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" id="scan_barcode_to_search">
+                                <i class="fa fa-barcode" aria-hidden="true"></i>
+                            </button>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" v-model="date_to_filter">
+                            <option v-for="date in dates_to_filter" :value="date">{{ date }}</option>
+                        </select>
+                    </div>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#tab_1" data-toggle="tab">
-                                    Recolecciones <span class="label bg-green">{{ operations.pickups.length }}</span>
+                                    Recolecciones
+                                    <span class="label bg-green">
+                                        {{ pickups_in_list }} de {{ operations.pickups.length }}
+                                    </span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#tab_2" data-toggle="tab">
-                                    Entregas <span class="label bg-blue">{{ operations.deliveries.length }}</span>
+                                    Entregas <span class="label bg-blue">
+                                        {{ deliveries_in_list }} de {{ operations.deliveries.length }}
+                                    </span>
                                 </a>
                             </li>
                         </ul>
@@ -276,11 +296,9 @@
                             <div class="tab-pane active" id="tab_1">
                                 <div class="list-group pickups">
                                     <a href="#" class="pickup list-group-item"
-                                       v-for="
-                                           (pickup, index) in
-                                           _(operations.pickups).chain().sortBy('pickup_state_id').sortBy('pickup_date').sortBy('pickup_start_time').value()
-                                        "
+                                       v-for=" (pickup, index) in pickups_sorted()"
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
+                                       v-show="contains(number_search, pickup.pickup_number)"
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
@@ -302,9 +320,9 @@
                             <div class="tab-pane" id="tab_2">
                                 <div class="list-group deliveries">
                                     <a href="#" class="delivery list-group-item"
-                                       v-for="(delivery, index) in
-                                       _(operations.deliveries).chain().sortBy('delivery_state_id').sortBy('delivery_date').sortBy('delivery_start_time').value()"
+                                       v-for="(delivery, index) in deliveries_sorted()"
                                        @click.prevent="showDeliveryModal(delivery)" data-picked="1"
+                                       v-if="contains(number_search, delivery.delivery_number)"
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>

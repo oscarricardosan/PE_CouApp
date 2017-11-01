@@ -17,7 +17,12 @@ function initializePage(){
             printer_device: null,
             current_photo: 'images/camera.png',
             ajax_queue_count: 0,
-            settings_current_printer: null
+            settings_current_printer: null,
+            dates_to_filter: [],
+            date_to_filter: undefined,
+            number_search: '',
+            pickups_in_list: 0,
+            deliveries_in_list: 0,
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -37,7 +42,53 @@ function initializePage(){
             check_ajax_queue: function(e) {
                 var element= $(e.target);
                 AjaxQueue.check_queue_from_element(element);
+            },
+            contains: function(search, value) {
+                return value.toUpperCase().indexOf(search.toUpperCase()) >= 0;
+            },
+            refresh_counters_in_list: function(){
+                App_= this;
+                setTimeout(function(){
+                    App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
+                    App_.deliveries_in_list= $('.list-group.deliveries>.delivery').length;
+                }, 300);
+            },
+            pickups_sorted: function(){
+                App_= this;
+                var response= [];
+                var pickups_states_date= _(App_.operations.pickups).chain()
+                    .where({pickup_date: App_.date_to_filter})
+                    .groupBy('pickup_state_id')
+                    .keys().value();
+                $.each(pickups_states_date, function(index, pickup_state_id){
+                        var sorted_pickups= _(App_.operations.pickups).chain()
+                            .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
+                            .sortBy('pickup_start_time')
+                            .reverse()
+                            .value();
+                    response= _.union(response, sorted_pickups);
+                });
+                return response;
+            },
+            deliveries_sorted: function(){
+                App_= this;
+                var response= [];
+                var deliveries_states_date= _(App_.operations.deliveries).chain()
+                    .where({delivery_date: App_.date_to_filter})
+                    .groupBy('delivery_state_id')
+                    .keys().value();
+
+                $.each(deliveries_states_date, function(index, delivery_state_id){
+                    var sorted_deliveries= _(App_.operations.deliveries).chain()
+                        .where({delivery_state_id: delivery_state_id*1, delivery_date: App_.date_to_filter})
+                        .sortBy('delivery_start_time')
+                        .reverse()
+                        .value();
+                    response= _.union(response, sorted_deliveries);
+                });
+                return response;
             }
+
         },
         filters: {
             formatMoney: function (value) {
@@ -47,7 +98,23 @@ function initializePage(){
                 return accounting.formatNumber(value);
             }
         },
-        watch: {},
+        watch: {
+            operations: {
+                handler(val){
+                    App_= this;
+                    var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().sortBy().value();
+                    var delivery_dates= _.sortBy(_.keys(_.groupBy(App_.operations.deliveries, 'delivery_date')));
+                    this.dates_to_filter= _.union(pickup_dates, delivery_dates);
+                    if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
+                        this.date_to_filter= this.dates_to_filter[0];
+                    this.refresh_counters_in_list();
+                },
+                deep: true
+            },
+            date_to_filter: function(){
+                this.refresh_counters_in_list();
+            }
+        },
         mounted: function(){
             accounting.settings = {
                 currency: {
@@ -94,6 +161,17 @@ function initializePage(){
     });
 
     $(document).ready(function(){
+        $('#scan_barcode_to_search').click(function(){
+            cloudSky.zBar.scan({
+                text_title: "Escanear código de barras", // Android only
+                text_instructions: "Por favor apuntar tu camara al código de barras", // Android only
+            }, function(code){
+                App.number_search= code;
+            }, function(){});
+        });
+        /**
+         * OPEN PHOTOS
+         */
         $('.takePhoto').click(function(event){
             event.preventDefault();
             navigator.camera.getPicture(onSuccess, onFail, {
@@ -133,6 +211,10 @@ function initializePage(){
                 alert('Failed because: ' + message);
             }
         });
+
+        /**
+         * CLOSE PHOTOS
+         */
 
 
         /** ABRE STORE DE FOTOS */
