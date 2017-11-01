@@ -18,8 +18,7 @@
       "cordova.plugins.diagnostic": {},
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-geolocation": {},
-      "cordova-plugin-navis-background-geolocation": {},
-      "diogo.cordova.plugin.local-notification": {}
+      "cordova-plugin-navis-background-geolocation": {}
     }
   },
   "dependencies": {
@@ -34,11 +33,9 @@
     "cordova-plugin-dialogs": "~1.3.3",
     "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-inappbrowser": "~1.7.1",
-    "cordova-plugin-local-notifications": "^1.0.0",
     "cordova-plugin-navis-background-geolocation": "^1.0.2",
     "cordova-plugin-vibration": "~2.1.5",
     "cordova-plugin-whitelist": "^1.3.2",
-    "cordova.plugins.diagnostic": "^3.7.1",
-    "diogo-cordova-plugin-local-notifications": "^0.1.26"
+    "cordova.plugins.diagnostic": "^3.7.1"
   }
 }
