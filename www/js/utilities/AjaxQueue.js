@@ -35,13 +35,16 @@ var AjaxQueue= (function () {
     };
 
     var check_queue= function(callbacks){
+        alert("check_queue 1");
         var queues= Ajax_queueModel.get();
+        alert("check_queue 2 : "+queues.length);
         if(queues.length===0){
             callbacks.empty();
             return false;
         }
-
+        alert("check_queue 3");
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+        alert("check_queue 4");
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
@@ -49,7 +52,9 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
+            alert("check_queue 5");
             alert(properties.dataType);
+            alert("check_queue 6");
             if(properties.dataType === 'json'){
                 alert("1.0");
                 if(response.success){
@@ -103,7 +108,9 @@ var AjaxQueue= (function () {
     };
 
     var check_queue_from_element= function(element){
+        alert("check_queue_from_element 1");
         element.loading();
+        alert("check_queue_from_element 2");
         AjaxQueue.check_queue({
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
