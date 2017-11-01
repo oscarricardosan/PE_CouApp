@@ -1,45 +1,77 @@
 {
-  "_from": "cordova-plugin-local-notifications@^1.0.0",
-  "_id": "cordova-plugin-local-notifications@1.0.0",
+  "_from": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5",
+  "_id": "de.appplant.cordova.plugin.local-notification@0.8.5",
   "_inBundle": false,
-  "_integrity": "sha1-F/bAlKvjpf4kIOTGLrzvKLykKAE=",
-  "_location": "/cordova-plugin-local-notifications",
+  "_integrity": "sha1-SbsNOUGPvmyK8ak6y6UEnZgisfQ=",
+  "_location": "/de.appplant.cordova.plugin.local-notification",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "cordova-plugin-local-notifications@^1.0.0",
-    "name": "cordova-plugin-local-notifications",
-    "escapedName": "cordova-plugin-local-notifications",
-    "rawSpec": "^1.0.0",
-    "saveSpec": null,
-    "fetchSpec": "^1.0.0"
+    "type": "git",
+    "raw": "https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5",
+    "rawSpec": "https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5",
+    "saveSpec": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5",
+    "fetchSpec": "https://github.com/katzer/cordova-plugin-local-notifications.git",
+    "gitCommittish": "0.8.5"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-local-notifications/-/cordova-plugin-local-notifications-1.0.0.tgz",
-  "_shasum": "17f6c094abe3a5fe2420e4c62ebcef28bca42801",
-  "_spec": "cordova-plugin-local-notifications@^1.0.0",
+  "_resolved": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#53262c8242e9b932758d2086071865e27909204f",
+  "_spec": "https://github.com/katzer/cordova-plugin-local-notifications.git#0.8.5",
   "_where": "/home/masterdev/Code/savne/Mobile_apps/courier_app/courier_app_phonegap",
-  "author": "",
+  "author": {
+    "name": "Sebastián Katzer"
+  },
   "bugs": {
-    "url": "https://github.com/Salesfloor/cordova-plugin-local-notifications/issues"
+    "url": "https://github.com/katzer/cordova-plugin-local-notifications/issues"
   },
   "bundleDependencies": false,
+  "cordova_name": "Cordova LocalNotification Plugin",
+  "dependencies": {
+    "cordova-plugin-app-event": ">=1.1.0",
+    "cordova-plugin-device": "*"
+  },
   "deprecated": false,
-  "description": "[![PayPayl donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L3HKQCD9UA35A \"Donate once-off to this project using Paypal\")",
-  "homepage": "https://github.com/Salesfloor/cordova-plugin-local-notifications",
-  "license": "ISC",
-  "main": "index.js",
-  "name": "cordova-plugin-local-notifications",
+  "description": "Schedules and queries for local notifications",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.6.0"
+    },
+    {
+      "name": "cordova-plugman",
+      "version": ">=4.3.0"
+    },
+    {
+      "name": "cordova-windows",
+      "version": ">=4.2.0"
+    }
+  ],
+  "homepage": "https://github.com/katzer/cordova-plugin-local-notifications#readme",
+  "keywords": [
+    "appplant",
+    "notification",
+    "local notification",
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-windows"
+  ],
+  "license": "Apache-2.0",
+  "name": "de.appplant.cordova.plugin.local-notification",
+  "platforms": [
+    "ios",
+    "android",
+    "windows"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Salesfloor/cordova-plugin-local-notifications.git"
+    "url": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#ios10"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.0.0"
+  "version": "0.8.5"
 }
