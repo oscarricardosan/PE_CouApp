@@ -35,9 +35,7 @@ function initializePage(){
                 $('#delivery_action_modal').modal('show');
             },
             check_ajax_queue: function(e) {
-                alert('clickeado 0');
                 var element= $(e.target);
-                alert('clickeado 1');
                 AjaxQueue.check_queue_from_element(element);
             }
         },
