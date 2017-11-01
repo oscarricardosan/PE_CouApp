@@ -39,7 +39,7 @@ var ProcessBackground= (function () {
                             jqXHR: jqXHR, textStatus: textStatus, properties: properties
                         })
                     });
-                    set_main_message_notification_bar('Fallo al transmitir peticiones en cola');
+                    Notification.ajax_queue_danger('Fallo al transmitir cola de peticiones');
                 },
                 success: function (properties, response) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -48,7 +48,10 @@ var ProcessBackground= (function () {
                         status: 'success',
                         data: {properties: properties, response: response}
                     });
-                    set_main_message_notification_bar('Transmision de peticiones en cola exitosa');
+                    Notification.ajax_queue_message('Transmisión de petición', 'Transmisión de petición en cola a servidor exitosa');
+                },
+                empty: function(){
+                    Notification.ajax_queue_message('Sincroización exitosa', 'Peticiones en cola transmitidas exitosamente');
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
