@@ -49,23 +49,36 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
+            alert(dataType);
             if(dataType === 'json'){
+                alert("1.0");
                 if(response.success){
+                    alert("1.1.0");
                     properties.successful_offline(response);
+                    alert("1.1.1");
                     Ajax_queueModel.remove({_id: properties._id}, function(){
                         AjaxQueue.check_queue(callbacks);
                     });
+                    alert("1.1.2");
                     callbacks.success(properties, response);
+                    alert("1.1.3");
                 }else{
+                    alert("1.2.0");
                     callbacks.fail(properties, jqXHR, textStatus);
+                    alert("1.2.1");
                     properties.failed_offline(jqXHR, textStatus);
+                    alert("1.2.2");
                 }
             }else{
+                alert("2.0");
                 properties.successful_offline(response);
+                alert("2.1");
                 Ajax_queueModel.remove({_id: properties._id}, function(){
                     AjaxQueue.check_queue(callbacks);
                 });
+                alert("2.2");
                 callbacks.success(properties, response);
+                alert("2.3");
             }
             App.ajax_queue_count= Ajax_queueModel.get().length;
         });
