@@ -35,13 +35,16 @@ var AjaxQueue= (function () {
     };
 
     var check_queue= function(callbacks){
+        alert("check_queue 1");
         var queues= Ajax_queueModel.get();
+        alert("check_queue 2 : "+queues.length);
         if(queues.length===0){
             callbacks.empty();
             return false;
         }
-
-        properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+        alert("check_queue 3");
+        var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+        alert("check_queue 4");
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
@@ -49,23 +52,38 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function(response){
-            if(dataType === 'json'){
+            alert("check_queue 5");
+            alert(properties.dataType);
+            alert("check_queue 6");
+            if(properties.dataType === 'json'){
+                alert("1.0");
                 if(response.success){
+                    alert("1.1.0");
                     properties.successful_offline(response);
+                    alert("1.1.1");
                     Ajax_queueModel.remove({_id: properties._id}, function(){
                         AjaxQueue.check_queue(callbacks);
                     });
+                    alert("1.1.2");
                     callbacks.success(properties, response);
+                    alert("1.1.3");
                 }else{
+                    alert("1.2.0");
                     callbacks.fail(properties, jqXHR, textStatus);
+                    alert("1.2.1");
                     properties.failed_offline(jqXHR, textStatus);
+                    alert("1.2.2");
                 }
             }else{
+                alert("2.0");
                 properties.successful_offline(response);
+                alert("2.1");
                 Ajax_queueModel.remove({_id: properties._id}, function(){
                     AjaxQueue.check_queue(callbacks);
                 });
+                alert("2.2");
                 callbacks.success(properties, response);
+                alert("2.3");
             }
             App.ajax_queue_count= Ajax_queueModel.get().length;
         });
@@ -83,6 +101,7 @@ var AjaxQueue= (function () {
                 alert('Transmisión en cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
                 return false;
             }
+            alert("check_queue Fail");
             callbacks.fail(properties, jqXHR, textStatus);
             properties.failed_offline(jqXHR, textStatus);
             App.ajax_queue_count= Ajax_queueModel.get().length;
@@ -90,7 +109,9 @@ var AjaxQueue= (function () {
     };
 
     var check_queue_from_element= function(element){
+        alert("check_queue_from_element 1");
         element.loading();
+        alert("check_queue_from_element 2");
         AjaxQueue.check_queue({
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

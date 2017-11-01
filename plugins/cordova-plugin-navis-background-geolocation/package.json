@@ -1,0 +1,41 @@
+{
+  "name": "cordova-plugin-navis-background-geolocation",
+  "version": "1.0.2",
+  "description": "Cordova Background GeoLocation Plugin By Navis",
+  "cordova": {
+    "id": "cordova-plugin-navis-background-geolocation",
+    "platforms": [
+      "android",
+      "ios",
+      "wp8"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivent/cordova-plugin-background-geolocation.git"
+  },
+  "keywords": [
+    "gps",
+    "location",
+    "geolocation",
+    "background",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp8",
+    "cordova",
+    "phonegap"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ivent/cordova-plugin-background-geolocation/issues"
+  },
+  "homepage": "https://github.com/ivent/cordova-plugin-background-geolocation#readme"
+}

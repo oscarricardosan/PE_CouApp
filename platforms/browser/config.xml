@@ -17,7 +17,4 @@
     <allow-navigation href="*" subdomains="true" />
     <preference name="orientation" value="default" />
     <preference name="fullscreen" value="false" />
-    <preference name="android-minSdkVersion" value="26" />
-    <preference name="android-targetSdkVersion" value="26" />
-    <preference name="android-compileSdkVersion" value="26" />
 </widget>
