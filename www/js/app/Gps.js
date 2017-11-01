@@ -15,9 +15,7 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
-                ToastrUtility_.warning("Es optimo");
                 if(optimal_conditions_for_execution_are()) {
-                    ToastrUtility_.danger("Guardar GPS");
                     store_position(position);
                     Process.store_last_attempt('gps_tracking');
                 }
@@ -84,7 +82,7 @@ var Gps= (function () {
 
     function optimal_conditions_for_execution_are() {
         return Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
-            (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.start_hour);
+            (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.end_hour);
     }
     
     var clear_watches= function(){
