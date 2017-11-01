@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class Manager {
                 notification.getOptions().getDict(), updates);
 
         try {
-            options.put("updated", true);
+            options.putOpt("updatedAt", new Date().getTime());
         } catch (JSONException ignore) {}
 
         return schedule(options, receiver);
@@ -192,11 +193,7 @@ public class Manager {
         ArrayList<Integer> ids = new ArrayList<Integer>();
 
         for (String key : keys) {
-            try {
-                ids.add(Integer.parseInt(key));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            ids.add(Integer.parseInt(key));
         }
 
         return ids;

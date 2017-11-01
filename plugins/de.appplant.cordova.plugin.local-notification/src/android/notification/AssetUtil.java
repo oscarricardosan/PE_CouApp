@@ -42,7 +42,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.UUID;
 
 /**
  * Util class to map unified asset URIs to native URIs. URIs like file:///
@@ -62,15 +61,15 @@ class AssetUtil {
     // resources and app directory.
     private final Context context;
 
-    /**
-     * Constructor
-     *
-     * @param context
+	/**
+	 * Constructor
+	 *
+	 * @param context
      *      Application context
-     */
-    private AssetUtil(Context context) {
-        this.context = context;
-    }
+	 */
+	private AssetUtil(Context context) {
+		this.context = context;
+	}
 
     /**
      * Static method to retrieve class instance.
@@ -101,199 +100,223 @@ class AssetUtil {
         return parse(path);
     }
 
-    /**
-     * The URI for a path.
-     *
-     * @param path
+	/**
+	 * The URI for a path.
+	 *
+	 * @param path
      *      The given path
-     */
+	 */
     Uri parse (String path) {
 
-        if (path.startsWith("res:")) {
-            return getUriForResourcePath(path);
-        } else if (path.startsWith("file:///")) {
-            return getUriFromPath(path);
-        } else if (path.startsWith("file://")) {
-            return getUriFromAsset(path);
-        } else if (path.startsWith("http")){
-            return getUriFromRemote(path);
-        }
+		if (path.startsWith("res:")) {
+			return getUriForResourcePath(path);
+		} else if (path.startsWith("file:///")) {
+			return getUriFromPath(path);
+		} else if (path.startsWith("file://")) {
+			return getUriFromAsset(path);
+		} else if (path.startsWith("http")){
+			return getUriFromRemote(path);
+		}
 
-        return Uri.EMPTY;
-    }
+		return Uri.EMPTY;
+	}
 
-    /**
-     * URI for a file.
-     *
-     * @param path
-     *      Absolute path like file:///...
-     *
-     * @return
+	/**
+	 * URI for a file.
+	 *
+	 * @param path
+	 *      Absolute path like file:///...
+	 *
+	 * @return
      *      URI pointing to the given path
-     */
-    private Uri getUriFromPath(String path) {
-        String absPath = path.replaceFirst("file://", "");
-        File file = new File(absPath);
+	 */
+	private Uri getUriFromPath(String path) {
+		String absPath = path.replaceFirst("file://", "");
+		File file = new File(absPath);
 
-        if (!file.exists()) {
-            Log.e("Asset", "File not found: " + file.getAbsolutePath());
-            return Uri.EMPTY;
-        }
+		if (!file.exists()) {
+			Log.e("Asset", "File not found: " + file.getAbsolutePath());
+			return Uri.EMPTY;
+		}
 
-        return Uri.fromFile(file);
-    }
+		return Uri.fromFile(file);
+	}
 
-    /**
-     * URI for an asset.
-     *
-     * @param path
-     *      Asset path like file://...
-     *
-     * @return
+	/**
+	 * URI for an asset.
+	 *
+	 * @param path
+	 *      Asset path like file://...
+	 *
+	 * @return
      *      URI pointing to the given path
-     */
+	 */
     private Uri getUriFromAsset(String path) {
+		File dir = context.getExternalCacheDir();
+
+		if (dir == null) {
+			Log.e("Asset", "Missing external cache dir");
+			return Uri.EMPTY;
+		}
+
         String resPath  = path.replaceFirst("file:/", "www");
         String fileName = resPath.substring(resPath.lastIndexOf('/') + 1);
-        File file       = getTmpFile(fileName);
+		String storage  = dir.toString() + STORAGE_FOLDER;
+		File file       = new File(storage, fileName);
 
-        if (file == null) {
-            Log.e("Asset", "Missing external cache dir");
-            return Uri.EMPTY;
-        }
+        //noinspection ResultOfMethodCallIgnored
+        new File(storage).mkdir();
 
-        try {
-            AssetManager assets = context.getAssets();
-            FileOutputStream outStream = new FileOutputStream(file);
-            InputStream inputStream = assets.open(resPath);
+		try {
+			AssetManager assets = context.getAssets();
+			FileOutputStream outStream = new FileOutputStream(file);
+			InputStream inputStream = assets.open(resPath);
 
-            copyFile(inputStream, outStream);
+			copyFile(inputStream, outStream);
 
-            outStream.flush();
-            outStream.close();
+			outStream.flush();
+			outStream.close();
 
-            return Uri.fromFile(file);
+			return Uri.fromFile(file);
 
-        } catch (Exception e) {
-            Log.e("Asset", "File not found: assets/" + resPath);
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			Log.e("Asset", "File not found: assets/" + resPath);
+			e.printStackTrace();
+		}
 
-        return Uri.EMPTY;
-    }
+		return Uri.EMPTY;
+	}
 
-    /**
-     * The URI for a resource.
-     *
-     * @param path
-     *            The given relative path
-     *
-     * @return
+	/**
+	 * The URI for a resource.
+	 *
+	 * @param path
+	 *            The given relative path
+	 *
+	 * @return
      *      URI pointing to the given path
-     */
-    private Uri getUriForResourcePath(String path) {
+	 */
+	private Uri getUriForResourcePath(String path) {
+		File dir = context.getExternalCacheDir();
+
+		if (dir == null) {
+			Log.e("Asset", "Missing external cache dir");
+			return Uri.EMPTY;
+		}
+
         String resPath = path.replaceFirst("res://", "");
-        int resId      = getResIdForDrawable(resPath);
-        File file      = getTmpFile();
 
-        if (resId == 0) {
-            Log.e("Asset", "File not found: " + resPath);
-            return Uri.EMPTY;
-        }
+		int resId = getResIdForDrawable(resPath);
 
-        if (file == null) {
-            Log.e("Asset", "Missing external cache dir");
-            return Uri.EMPTY;
-        }
+		if (resId == 0) {
+			Log.e("Asset", "File not found: " + resPath);
+			return Uri.EMPTY;
+		}
 
-        try {
-            Resources res = context.getResources();
-            FileOutputStream outStream = new FileOutputStream(file);
-            InputStream inputStream = res.openRawResource(resId);
-            copyFile(inputStream, outStream);
+        String resName = extractResourceName(resPath);
+        String extName = extractResourceExtension(resPath);
+        String storage = dir.toString() + STORAGE_FOLDER;
+        File file      = new File(storage, resName + extName);
 
-            outStream.flush();
-            outStream.close();
+        //noinspection ResultOfMethodCallIgnored
+        new File(storage).mkdir();
 
-            return Uri.fromFile(file);
+		try {
+			Resources res = context.getResources();
+			FileOutputStream outStream = new FileOutputStream(file);
+			InputStream inputStream = res.openRawResource(resId);
+			copyFile(inputStream, outStream);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+			outStream.flush();
+			outStream.close();
+
+			return Uri.fromFile(file);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
         return Uri.EMPTY;
-    }
+	}
 
-    /**
-     * Uri from remote located content.
+	/**
+	 * Uri from remote located content.
      *
-     * @param path
+	 * @param path
      *      Remote address
      *
-     * @return
+	 * @return
      *      Uri of the downloaded file
-     */
-    private Uri getUriFromRemote(String path) {
-        File file = getTmpFile();
+	 */
+	private Uri getUriFromRemote(String path) {
+        File dir = context.getExternalCacheDir();
 
-        if (file == null) {
+        if (dir == null) {
             Log.e("Asset", "Missing external cache dir");
             return Uri.EMPTY;
         }
+
+        String resName  = extractResourceName(path);
+        String extName  = extractResourceExtension(path);
+        String storage  = dir.toString() + STORAGE_FOLDER;
+        File file       = new File(storage, resName + extName);
+
+        //noinspection ResultOfMethodCallIgnored
+        new File(storage).mkdir();
 
         try {
             URL url = new URL(path);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            StrictMode.ThreadPolicy policy =
-                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.ThreadPolicy policy =
+			        new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-            StrictMode.setThreadPolicy(policy);
+			StrictMode.setThreadPolicy(policy);
 
             connection.setRequestProperty("Connection", "close");
             connection.setConnectTimeout(5000);
-            connection.connect();
+			connection.connect();
 
-            InputStream input = connection.getInputStream();
-            FileOutputStream outStream = new FileOutputStream(file);
+			InputStream input = connection.getInputStream();
+			FileOutputStream outStream = new FileOutputStream(file);
 
-            copyFile(input, outStream);
+			copyFile(input, outStream);
 
-            outStream.flush();
-            outStream.close();
+			outStream.flush();
+			outStream.close();
 
-            return Uri.fromFile(file);
+			return Uri.fromFile(file);
 
-        } catch (MalformedURLException e) {
-            Log.e("Asset", "Incorrect URL");
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            Log.e("Asset", "Failed to create new File from HTTP Content");
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e("Asset", "No Input can be created from http Stream");
-            e.printStackTrace();
-        }
+		} catch (MalformedURLException e) {
+			Log.e("Asset", "Incorrect URL");
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			Log.e("Asset", "Failed to create new File from HTTP Content");
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.e("Asset", "No Input can be created from http Stream");
+			e.printStackTrace();
+		}
 
         return Uri.EMPTY;
-    }
+	}
 
-    /**
-     * Copy content from input stream into output stream.
-     *
-     * @param in
-     *      The input stream
-     * @param out
-     *      The output stream
-     */
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
+	/**
+	 * Copy content from input stream into output stream.
+	 *
+	 * @param in
+	 *      The input stream
+	 * @param out
+	 *      The output stream
+	 */
+	private void copyFile(InputStream in, OutputStream out) throws IOException {
+		byte[] buffer = new byte[1024];
+		int read;
 
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
-    }
+		while ((read = in.read(buffer)) != -1) {
+			out.write(buffer, 0, read);
+		}
+	}
 
     /**
      * Resource ID for drawable.
@@ -320,7 +343,7 @@ class AssetUtil {
      *      Resource path as string
      */
     int getResIdForDrawable(String clsName, String resPath) {
-        String drawable = getBaseName(resPath);
+        String drawable = extractResourceName(resPath);
         int resId = 0;
 
         try {
@@ -349,7 +372,7 @@ class AssetUtil {
         }
 
         if (iconId == 0) {
-            iconId = android.R.drawable.screen_background_dark_transparent;
+            iconId = android.R.drawable.ic_menu_info_details;
         }
 
         return BitmapFactory.decodeResource(res, iconId);
@@ -373,7 +396,7 @@ class AssetUtil {
      * @param resPath
      *      Resource path as string
      */
-    private String getBaseName (String resPath) {
+    private String extractResourceName (String resPath) {
         String drawable = resPath;
 
         if (drawable.contains("/")) {
@@ -388,39 +411,19 @@ class AssetUtil {
     }
 
     /**
-     * Returns a file located under the external cache dir of that app.
+     * Extract extension of drawable resource from path.
      *
-     * @return
-     *      File with a random UUID name
+     * @param resPath
+     *      Resource path as string
      */
-    private File getTmpFile () {
-        // If random UUID is not be enough see
-        // https://github.com/LukePulverenti/cordova-plugin-local-notifications/blob/267170db14044cbeff6f4c3c62d9b766b7a1dd62/src/android/notification/AssetUtil.java#L255
-        return getTmpFile(UUID.randomUUID().toString());
-    }
+    private String extractResourceExtension (String resPath) {
+        String extName = "png";
 
-    /**
-     * Returns a file located under the external cache dir of that app.
-     *
-     * @param name
-     *      The name of the file
-     * @return
-     *      File with the provided name
-     */
-    private File getTmpFile (String name) {
-        File dir = context.getExternalCacheDir();
-
-        if (dir == null) {
-            Log.e("Asset", "Missing external cache dir");
-            return null;
+        if (resPath.contains(".")) {
+            extName = resPath.substring(resPath.lastIndexOf('.'));
         }
 
-        String storage  = dir.toString() + STORAGE_FOLDER;
-
-        //noinspection ResultOfMethodCallIgnored
-        new File(storage).mkdir();
-
-        return new File(storage, name);
+        return extName;
     }
 
     /**

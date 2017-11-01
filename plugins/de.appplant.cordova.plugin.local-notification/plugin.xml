@@ -3,7 +3,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="de.appplant.cordova.plugin.local-notification"
-        version="0.8.5">
+        version="0.8.2dev">
 
     <name>LocalNotification</name>
 
@@ -11,7 +11,7 @@
 
     <repo>https://github.com/katzer/cordova-plugin-local-notifications.git</repo>
 
-    <keywords>appplant, notification, local notification, user notification</keywords>
+    <keywords>appplant, notification, local notification</keywords>
 
     <license>Apache 2.0</license>
 
@@ -20,14 +20,19 @@
     <!-- cordova -->
     <engines>
         <engine name="cordova" version=">=3.6.0" />
-        <engine name="cordova-plugman" version=">=4.3.0" />
-        <engine name="cordova-windows" version=">=4.2.0" />
-        <engine name="apple-ios" version=">=10.0.0" />
+        <engine name="cordova" version="<4.0.0" />
     </engines>
 
     <!-- dependencies -->
-    <dependency id="cordova-plugin-device" />
-    <dependency id="cordova-plugin-app-event" />
+    <dependency id="org.apache.cordova.device" />
+
+    <!-- info -->
+    <info>
+        Your support is needed. If you use the local-notification plugin please support us in order to ensure further development.
+        https://github.com/katzer/cordova-plugin-local-notifications#supporting
+
+        Thank you!
+    </info>
 
     <!-- js -->
     <js-module src="www/local-notification.js" name="LocalNotification">
@@ -48,6 +53,8 @@
     <!-- ios -->
     <platform name="ios">
 
+        <dependency id="de.appplant.cordova.common.registerusernotificationsettings" />
+
         <config-file target="config.xml" parent="/*">
             <feature name="LocalNotification">
                 <param name="ios-package" value="APPLocalNotification" onload="true" />
@@ -55,38 +62,24 @@
             </feature>
         </config-file>
 
-        <framework src="UserNotifications.framework" />
-
         <header-file src="src/ios/APPLocalNotification.h" />
         <source-file src="src/ios/APPLocalNotification.m" />
 
         <header-file src="src/ios/APPLocalNotificationOptions.h" />
         <source-file src="src/ios/APPLocalNotificationOptions.m" />
 
-        <header-file src="src/ios/UNUserNotificationCenter+APPLocalNotification.h" />
-        <source-file src="src/ios/UNUserNotificationCenter+APPLocalNotification.m" />
+        <header-file src="src/ios/UIApplication+APPLocalNotification.h" />
+        <source-file src="src/ios/UIApplication+APPLocalNotification.m" />
 
-        <header-file src="src/ios/UNMutableNotificationContent+APPLocalNotification.h" />
-        <source-file src="src/ios/UNMutableNotificationContent+APPLocalNotification.m" />
-
-        <header-file src="src/ios/UNNotificationRequest+APPLocalNotification.h" />
-        <source-file src="src/ios/UNNotificationRequest+APPLocalNotification.m" />
-
-        <header-file src="src/ios9/APPLocalNotificationOptions.ios9.h" />
-        <source-file src="src/ios9/APPLocalNotificationOptions.ios9.m" />
-
-        <header-file src="src/ios9/UIApplication+APPLocalNotification.ios9.h" />
-        <source-file src="src/ios9/UIApplication+APPLocalNotification.ios9.m" />
-
-        <header-file src="src/ios9/UILocalNotification+APPLocalNotification.ios9.h" />
-        <source-file src="src/ios9/UILocalNotification+APPLocalNotification.ios9.m" />
+        <header-file src="src/ios/UILocalNotification+APPLocalNotification.h" />
+        <source-file src="src/ios/UILocalNotification+APPLocalNotification.m" />
 
     </platform>
 
     <!-- android -->
     <platform name="android">
 
-        <framework src="com.android.support:support-v4:+" value="gradle" />
+        <dependency id="android.support.v4" />
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="LocalNotification">
@@ -210,10 +203,6 @@
     <!-- windows -->
     <platform name="windows">
 
-        <config-file target="config.xml" parent="/*" >
-            <preference name="WindowsToastCapable" value="true" />
-        </config-file>
-
         <js-module src="src/windows/LocalNotificationProxy.js" name="LocalNotification.Proxy" >
             <merges target="" />
         </js-module>
@@ -225,6 +214,14 @@
         <js-module src="src/windows/LocalNotificationUtil.js" name="LocalNotification.Proxy.Util" >
             <merges target="" />
         </js-module>
+
+        <!-- Platform Hooks -->
+        <hook type="after_platform_add" src="scripts/windows/setToastCapable.js" />
+        <hook type="after_plugin_install" src="scripts/windows/setToastCapable.js" />
+
+        <hook type="after_platform_add" src="scripts/windows/broadcastActivateEvent.js" />
+        <hook type="after_plugin_install" src="scripts/windows/broadcastActivateEvent.js" />
+        <hook type="after_prepare" src="scripts/windows/broadcastActivateEvent.js" />
 
     </platform>
 
