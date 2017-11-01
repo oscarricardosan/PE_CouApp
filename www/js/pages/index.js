@@ -164,7 +164,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     $('#delivery_attach_photo').modal('hide');
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                 },
@@ -195,7 +195,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     $('#pickup_attach_photo').modal('hide');
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                 },
@@ -239,7 +239,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                     App.operations.current_pickup.pickup_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
                     App.operations.current_pickup.pickup_state_id= 3;
@@ -280,7 +280,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                     App.operations.current_delivery.delivery_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
                     App.operations.current_delivery.delivery_state_id= 3;
@@ -331,7 +331,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                     App.operations.current_pickup.pickup_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
                     App.operations.current_pickup.pickup_state_id= 2;
@@ -372,7 +372,7 @@ function initializePage(){
                 },
                 failed_online: function(jqXHR, textStatus){
                     form.unloading();
-                    ToastrUtility_.warning(JSON.stringify({jqXHR: jqXHR, textStatus: textStatus})+" <br>Sin conexion a servidor, se transmitira más tarde.");
+                    ToastrUtility_.warning(JSON.stringify("Sin conexion a servidor, se transmitira más tarde.");
                     App.ajax_queue_count= Ajax_queueModel.get().length;
                     App.operations.current_delivery.delivery_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
                     App.operations.current_delivery.delivery_state_id= 2;
