@@ -6,6 +6,17 @@
   "config_munge": {
     "files": {}
   },
-  "installed_plugins": {},
-  "dependent_plugins": {}
+  "installed_plugins": {
+    "cordova-plugin-local-notifications": {
+      "PACKAGE_NAME": "savne.courier_app"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-badge": {
+      "PACKAGE_NAME": "savne.courier_app"
+    }
+  }
 }

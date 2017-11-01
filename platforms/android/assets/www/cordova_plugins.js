@@ -163,6 +163,40 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "id": "cordova-plugin-badge.Badge",
+        "file": "plugins/cordova-plugin-badge/www/badge.js",
+        "pluginId": "cordova-plugin-badge",
+        "clobbers": [
+            "cordova.plugins.notification.badge"
+        ]
+    },
+    {
+        "id": "cordova-plugin-local-notifications.LocalNotification",
+        "file": "plugins/cordova-plugin-local-notifications/www/local-notification.js",
+        "pluginId": "cordova-plugin-local-notifications",
+        "clobbers": [
+            "cordova.plugins.notification.local"
+        ]
+    },
+    {
+        "id": "cordova-plugin-local-notifications.LocalNotification.Core",
+        "file": "plugins/cordova-plugin-local-notifications/www/local-notification-core.js",
+        "pluginId": "cordova-plugin-local-notifications",
+        "clobbers": [
+            "cordova.plugins.notification.local.core",
+            "plugin.notification.local.core"
+        ]
+    },
+    {
+        "id": "cordova-plugin-local-notifications.LocalNotification.Util",
+        "file": "plugins/cordova-plugin-local-notifications/www/local-notification-util.js",
+        "pluginId": "cordova-plugin-local-notifications",
+        "merges": [
+            "cordova.plugins.notification.local.core",
+            "plugin.notification.local.core"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -182,7 +216,9 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.2",
     "cordova.plugins.diagnostic": "3.7.1",
     "cordova-plugin-navis-background-geolocation": "1.0.2",
-    "diogo.cordova.plugin.local-notification": "0.1.14"
+    "diogo.cordova.plugin.local-notification": "0.1.14",
+    "cordova-plugin-badge": "0.8.5",
+    "cordova-plugin-local-notifications": "0.9.0-beta.0"
 };
 // BOTTOM OF METADATA
 });
