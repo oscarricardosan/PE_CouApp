@@ -40,9 +40,9 @@ var Event_server= (function () {
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Recolección creada número '+event.data.pickup_number);
+            Notification.event_server_pickup_message('Recolección creada número '+event.data.pickup_number+' / '+event.data.pickup_date);
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message('Recolección '+event.data.pickup_number+' actualizada');
+            Notification.event_server_pickup_message('Recolección '+event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date);
     }
 
     function process_deliveries(event){
@@ -55,9 +55,9 @@ var Event_server= (function () {
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Entrega creada número '+event.data.delivery_number);
+            Notification.event_server_pickup_message('Entrega creada número '+event.data.delivery_number+' / '+event.data.delivery_date);
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message('Entrega '+event.data.delivery_number+' actualizada');
+            Notification.event_server_pickup_message('Entrega '+event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date);
     }
 
     function delete_event_in_server(id){
