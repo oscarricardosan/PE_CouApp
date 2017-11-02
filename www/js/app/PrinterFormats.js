@@ -47,7 +47,8 @@ var PrinterFormat= (function () {
     };
 
     var pickup_label_TXT= function() {
-        window.DatecsPrinter.feedPaper(3);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText('             SAVNE ', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Recoleccion numero: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
@@ -55,7 +56,8 @@ var PrinterFormat= (function () {
         window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_pickup.value), 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
-        window.DatecsPrinter.feedPaper(3);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
@@ -67,7 +69,8 @@ var PrinterFormat= (function () {
             function() {},
             function() {alert('Error: '+JSON.stringify(error));}
         );
-        window.DatecsPrinter.feedPaper(3);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
+        window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
     };
 
     var delivery_label_ZPL= function() {
