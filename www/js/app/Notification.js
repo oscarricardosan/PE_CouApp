@@ -7,7 +7,8 @@ var Notification= (function () {
             title: title,
             text: message,
             icon: Settings.icon.message,
-            foreground: true
+            foreground: true,
+            sound: "no",
         });
     };
 
@@ -18,7 +19,8 @@ var Notification= (function () {
             title: title,
             text: message,
             icon: Settings.icon.danger,
-            foreground: true
+            foreground: true,
+            sound: "no",
         });
 
     };

@@ -33,6 +33,41 @@ function initializeIntranet(){
 
         window.open = cordova.InAppBrowser.open;
 
+
+
+
+        setTimeout(function() {
+            cordova.plugins.notification.local.schedule({
+                id: 11,
+                title: '',
+                text: 'Soy 11',
+                icon: Settings.icon.danger,
+                foreground: true,
+                sound: "no"
+            });
+        }, 3000);
+        setTimeout(function() {
+            cordova.plugins.notification.local.schedule({
+                id: 12,
+                title: '',
+                text: 'Soy 12',
+                icon: Settings.icon.danger,
+                foreground: true,
+                sound: ''
+            });
+        }, 6000);
+        setTimeout(function() {
+            cordova.plugins.notification.local.schedule({
+                id: 13,
+                title: '',
+                text: 'Soy 13',
+                icon: Settings.icon.danger,
+                foreground: true,
+                sound: false
+            });
+        }, 9000);
+
+
         /** BACKGROUND PROCESS**/
         //Override the back button on Android to go to background instead of closing the app.
         cordova.plugins.backgroundMode.overrideBackButton();

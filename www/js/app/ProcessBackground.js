@@ -14,7 +14,6 @@ var ProcessBackground= (function () {
         if(Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue)){
             check_ajax_queue();
         }
-
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;
