@@ -13,7 +13,8 @@ function initializePage() {
             },
             ajax_queue_count: 0,
             Log: [],
-            current_record: {}
+            current_record: {},
+            current_position: undefined
         },
         methods: {
             synchronize_data_operations: function (e) {

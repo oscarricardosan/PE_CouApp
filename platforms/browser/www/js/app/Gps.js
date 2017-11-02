@@ -41,10 +41,11 @@ var Gps= (function () {
 
     function store_position(position) {
         GpsModel.loaded(function(){
-            GpsModel.store({
+            App.current_position= {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
-            });
+            };
+            GpsModel.store(App.current_position);
         });
         AjaxQueue.add({
             type: 'post',

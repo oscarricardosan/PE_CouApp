@@ -319,7 +319,7 @@
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ pickup | distance_to_position }}
+                                            {{ current_position | distance_to_position pickup }}
                                         </div>
                                     </a>
                                 </div>
@@ -347,7 +347,7 @@
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ delivery | distance_to_position }}
+                                            {{ current_position | distance_to_position delivery }}
                                         </div>
                                     </a>
                                 </div>
