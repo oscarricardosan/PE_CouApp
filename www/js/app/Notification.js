@@ -73,6 +73,18 @@ var Notification= (function () {
         });
     };
 
+    var alert= function(message, title){
+        title= title===undefined?'Courier App Alerta':title;
+        cordova.plugins.notification.local.schedule({
+            id: generate_random_id(),
+            title: title,
+            text: message,
+            icon: Settings.icon.message,
+            foreground: true,
+            sound: false
+        });
+    };
+
     function generate_random_id(){
         return Math.floor((Math.random() * 99) + 1)+moment().unix()+Math.floor((Math.random() * 99999) + 1);
     }
@@ -85,6 +97,7 @@ var Notification= (function () {
             event_server_pickup_danger        : event_server_pickup_danger,
             event_server_delivery_message     : event_server_delivery_message,
             event_server_delivery_danger      : event_server_delivery_danger,
+            alert                             : alert,
         }
     }
     return {construct:construct};//retorna los metodos publicos

@@ -20,9 +20,8 @@ var Event_server= (function () {
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
-        if(server_events.length>1){
-            Notification.event_server_pickup_danger ('Entre al lentg de Event_servers');
-            navigator.vibrate([3000, 1000, 2000]);
+        if(server_events.length>=1){
+            navigator.vibrate([3000, 2000, 3000]);
             navigator.notification.beep(3);
 
             DeliveriesModel.loaded(function(){App.operations.deliveries= DeliveriesModel.get();});
@@ -36,13 +35,13 @@ var Event_server= (function () {
                 delete_event_in_server(event.id);
             },
             fail: function(model){
-                Notification.event_server_pickup_danger ('Error procesando evento de recolección '+model.pickup_number);
+                Notification.event_server_pickup_danger ('Error procesando evento - '+model.pickup_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Recolección creada número '+event.data.pickup_number);
+            Notification.event_server_pickup_message('Creada número '+event.data.pickup_number+' / '+event.data.pickup_date);
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message('Recolección '+event.data.pickup_number+' actualizada');
+            Notification.event_server_pickup_message(event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date);
     }
 
     function process_deliveries(event){
@@ -51,13 +50,13 @@ var Event_server= (function () {
                 delete_event_in_server(event.id);
             },
             fail: function(model){
-                Notification.event_server_pickup_danger ('Error procesando evento de entrega '+model.delivery_number);
+                Notification.event_server_pickup_danger ('Error procesando evento de - '+model.delivery_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Entrega creada número '+event.data.delivery_number);
+            Notification.event_server_pickup_message('Creada número '+event.data.delivery_number+' / '+event.data.delivery_date);
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message('Entrega '+event.data.delivery_number+' actualizada');
+            Notification.event_server_pickup_message(event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date);
     }
 
     function delete_event_in_server(id){

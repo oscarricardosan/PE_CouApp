@@ -5,9 +5,10 @@ var Settings= {
     },
     timer_to_gps: 1,//minutes
     timer_check_ajax_queue: 5,//minutes
-    timer_get_events_from_server: 1,//minutes
+    timer_get_events_from_server: 10,//minutes
+    tmer_run_alerts: 5,//minutes
     notification_id: {
-        queue_ajax: 1,
+        queue_ajax: 1
     },
     icon:{
         message: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/chat-128.png",
@@ -16,5 +17,8 @@ var Settings= {
     gps:{
         start_hour: 7,
         end_hour: 20
+    },
+    alert: {
+        minimum_meters: 1000
     }
 };

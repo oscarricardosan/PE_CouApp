@@ -100,6 +100,17 @@ function initializePage(){
             },
             formatNumber: function (value) {
                 return accounting.formatNumber(value);
+            },
+            distance_to_position: function (position) {
+                var string='';
+                var current_position= GpsModel.get();
+                if(current_position === null)return 'Posición actual no definida';
+                if(position.longitude === undefined)return 'Sin información de longitud';
+                if(position.latitude === undefined)return 'Sin información de latitud';
+                return 'A '+Haversine.distance(
+                    {latitude: current_position.latitude, longitude: current_position.longitude},
+                    {latitude: position.latitude, longitude: position.longitude}
+                )+' mts';
             }
         },
         watch: {

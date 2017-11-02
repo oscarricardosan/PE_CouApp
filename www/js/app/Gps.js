@@ -40,6 +40,12 @@ var Gps= (function () {
     }
 
     function store_position(position) {
+        GpsModel.loaded(function(){
+            GpsModel.store({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            });
+        });
         AjaxQueue.add({
             type: 'post',
             url: 'courier/store_geo_position',

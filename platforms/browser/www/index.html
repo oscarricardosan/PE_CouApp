@@ -24,6 +24,7 @@
     <script type="application/javascript" src="db/Models/LogModel.js"></script>
     <script type="application/javascript" src="db/Models/PrinterModel.js"></script>
     <script type="application/javascript" src="db/Models/ProcessModel.js"></script>
+    <script type="application/javascript" src="db/Models/GpsModel.js"></script>
     <script type="application/javascript" src="db/run_migrations.js"></script>
 
     <!-- UNDERSCORE JS -->
@@ -104,6 +105,7 @@
     <script src="js/app/Gps.js" type="text/javascript"></script>
     <script src="js/app/Notification.js" type="text/javascript"></script>
     <script src="js/app/Event_server.js" type="text/javascript"></script>
+    <script src="js/app/Haversine.js" type="text/javascript"></script>
 
 
     <!-- VUE -->
@@ -303,7 +305,7 @@
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
-                                            <b>{{ pickup.pickup_date }}</b> {{ pickup.pickup_start_time.substr(0, 5) }} - {{ pickup.pickup_end_time.substr(0, 5) }}
+                                            {{ pickup.pickup_start_time.substr(0, 5) }} - {{ pickup.pickup_end_time.substr(0, 5) }}
                                         </span>
                                         <span :class="['label bg-'+pickup.pickup_state.class]">
                                             {{ index+1 }}) {{ pickup.pickup_state.name }} - {{ pickup.pickup_number }}
@@ -315,6 +317,10 @@
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
+                                        <div class="text-muted" style="text-align: right">
+                                            <i class="fa fa-globe"></i>
+                                            {{ pickup | distance_to_position }}
+                                        </div>
                                     </a>
                                 </div>
                             </div>
@@ -327,7 +333,7 @@
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
-                                            <b>{{ delivery.delivery_date }}</b> {{ delivery.delivery_start_time.substr(0, 5) }} - {{ delivery.delivery_end_time.substr(0, 5) }}
+                                            {{ delivery.delivery_start_time.substr(0, 5) }} - {{ delivery.delivery_end_time.substr(0, 5) }}
                                         </span>
                                         <span :class="['label bg-'+delivery.delivery_state.class]">
                                             {{ index+1 }}) {{ delivery.delivery_state.name }}- {{ delivery.delivery_number }}
@@ -339,6 +345,10 @@
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
+                                        <div class="text-muted" style="text-align: right">
+                                            <i class="fa fa-globe"></i>
+                                            {{ delivery | distance_to_position }}
+                                        </div>
                                     </a>
                                 </div>
                             </div>
