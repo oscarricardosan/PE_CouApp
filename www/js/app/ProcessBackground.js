@@ -14,6 +14,9 @@ var ProcessBackground= (function () {
         if(Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue)){
             check_ajax_queue();
         }
+        if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
+            Event_server.get_events_from_server();
+        }
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;
@@ -32,7 +35,7 @@ var ProcessBackground= (function () {
                             jqXHR: jqXHR, textStatus: textStatus, properties: properties
                         })
                     });
-                    Notification.ajax_queue_danger('Fallo transmisión');
+                    Notification.ajax_queue_danger('Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -41,10 +44,10 @@ var ProcessBackground= (function () {
                         status: 'success',
                         data: {properties: properties, response: response}
                     });
-                    Notification.ajax_queue_message('Petición transmitida.');
+                    Notification.ajax_queue_message('Petición transmitida');
                 },
                 empty: function(){
-                    Notification.ajax_queue_message('Cola vacia.');
+                    Notification.ajax_queue_message('Cola vacía');
                 }
             });
             Process.store_last_attempt('check_ajax_queue');

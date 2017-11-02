@@ -7,6 +7,9 @@ var ProcessForeground= (function () {
         if(Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue)){
             check_ajax_queue();
         }
+        if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
+            Event_server.get_events_from_server();
+        }
         index_executionFor++;
         first_execution= false;
     };

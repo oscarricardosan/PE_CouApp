@@ -29,8 +29,8 @@ var PickupModel= (function () {
         db.collection(collection_name).insert(data);
 
         db.collection(collection_name).save(function (err) {
-            if (!err) {callback.success();}
-            else{callback.fail(); alert('Error al guardar en '+collection_name);}
+            if (!err) {callback.success(data);}
+            else{callback.fail(data); alert('Error al guardar en '+collection_name);}
         });
     };
 
@@ -45,9 +45,21 @@ var PickupModel= (function () {
         db.collection(collection_name).update(where, new_values);
 
         db.collection(collection_name).save(function (err) {
-            if (!err) {callback.success();}
-            else{callback.fail(); alert('Error al guardar en '+collection_name);}
+            if (!err) {callback.success(new_values);}
+            else{callback.fail(new_values); alert('Error al guardar en '+collection_name);}
         });
+    };
+
+    /**
+     * @param data object
+     * @param callback
+     */
+    var insertOrUpdateById = function(data, callback){
+        callback= PolishedUtility_.callback(callback);
+        if(data.id !== undefined && find({id: data.id}).lengt === 1)
+            store(data, callback);
+        else
+            update({id: data.id}, data, callback);
     };
 
     var get = function(){
@@ -92,14 +104,15 @@ var PickupModel= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            get               : get,
-            find              : find,
-            store             : store,
-            loaded            : loaded,
-            isEmpty           : isEmpty,
-            drop              : drop,
-            remove            : remove,
-            update            : update
+            get                   : get,
+            find                  : find,
+            store                 : store,
+            loaded                : loaded,
+            isEmpty               : isEmpty,
+            drop                  : drop,
+            remove                : remove,
+            update                : update,
+            insertOrUpdateById    : insertOrUpdateById
         }
     };
     return {construct:construct};//retorna los metodos publicos
