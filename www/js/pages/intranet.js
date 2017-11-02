@@ -66,6 +66,15 @@ function initializeIntranet(){
                 sound: false
             });
         }, 9000);
+        setTimeout(function() {
+            cordova.plugins.notification.local.schedule({
+                id: 11,
+                title: '',
+                text: 'Soy 11 -2 ',
+                icon: Settings.icon.danger,
+                foreground: true,
+            });
+        }, 12000);
 
 
         /** BACKGROUND PROCESS**/
