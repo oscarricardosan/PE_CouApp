@@ -21,8 +21,12 @@ var Event_server= (function () {
             if(event.collection === "deliveries")process_deliveries(event);
         });
         if(server_events.length>1){
+            Notification.event_server_pickup_danger ('Entre al lentg de Event_servers');
             navigator.vibrate([3000, 1000, 2000]);
             navigator.notification.beep(3);
+
+            DeliveriesModel.loaded(function(){App.operations.deliveries= DeliveriesModel.get();});
+            PickupModel.loaded(function(){App.operations.pickups= PickupModel.get();});
         }
     }
     
