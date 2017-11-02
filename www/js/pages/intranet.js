@@ -133,7 +133,7 @@ function initializeIntranet(){
                 text: 'Bienvenido',
                 //icon: '/images/danger.png', // this will look for icon.png in platforms/android/res/drawable|mipmap
                 //color: '#ff0000', // hex format like 'F14F4D'
-                resume: true,
+                resume: false,
                 hidden: false,
                 bigText: false
             });
