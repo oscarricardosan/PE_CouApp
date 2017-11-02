@@ -64,10 +64,34 @@ var Event_server= (function () {
             data: {
                 id: model.id,
             },
-            successful_online: function(response){},
-            failed_online: function(jqXHR, textStatus){},
-            successful_offline: function(response){},
-            failed_offline: function(jqXHR, textStatus){}
+            successful_online: function(response){
+                LogModel.store({
+                    message: 'Delete event server: Transmisión de petición online a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_online: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Delete event server: Error al transmitir al servidor petición online.',
+                    status: 'danger',
+                    data: properties
+                });
+            },
+            successful_offline: function(response){
+                LogModel.store({
+                    message: 'Delete event server: Transmisión de petición offline a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_offline: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Delete event server: Error al transmitir al servidor petición offline.',
+                    status: 'danger',
+                    data: properties
+                });
+            }
         });
     }
 
