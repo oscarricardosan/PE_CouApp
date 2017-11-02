@@ -20,6 +20,10 @@ var Event_server= (function () {
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
+        if(server_events.length>1){
+            navigator.vibrate([3000, 1000, 2000]);
+            navigator.notification.beep(3);
+        }
     }
     
     function process_pickups(event) {
@@ -58,7 +62,7 @@ var Event_server= (function () {
             url: 'courier_event/delete',
             dataType: 'text',
             data: {
-                evento_id: model.id,
+                id: model.id,
             },
             successful_online: function(response){},
             failed_online: function(jqXHR, textStatus){},
