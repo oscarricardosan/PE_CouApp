@@ -58,9 +58,10 @@ var PrinterFormat= (function () {
         window.DatecsPrinter.printText(' Firma cliente', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.feedPaper(1);window.DatecsPrinter.feedPaper(1);
-        window.DatecsPrinter.printText(' ______________________', 'ISO-8859-1');
+        window.DatecsPrinter.printText(' _____________________________', 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
-        window.DatecsPrinter.printText('      '+MomentUtility_.now(), 'ISO-8859-1');
+        window.DatecsPrinter.feedPaper(1);
+        window.DatecsPrinter.printText('           '+MomentUtility_.now(), 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText('  ', 'ISO-8859-1');
         window.DatecsPrinter.printBarcode(
