@@ -54,7 +54,7 @@ var PrinterFormat= (function () {
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Recoleccion numero: '+App.operations.current_pickup.pickup_number, 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
-        window.DatecsPrinter.printText(' Contenido: '+accounting.formatMoney(App.operations.current_pickup.content), 'ISO-8859-1');
+        window.DatecsPrinter.printText(' Contenido: '+App.operations.current_pickup.content, 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_pickup.value), 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
@@ -97,7 +97,7 @@ var PrinterFormat= (function () {
         window.DatecsPrinter.feedPaper(2);
         window.DatecsPrinter.printText(' Entrega numero: '+App.operations.current_delivery.delivery_number, 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
-        window.DatecsPrinter.printText(' Contenido: '+accounting.formatMoney(App.operations.current_delivery.content), 'ISO-8859-1');
+        window.DatecsPrinter.printText(' Contenido: '+App.operations.current_pickup.content, 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
         window.DatecsPrinter.printText(' Valor: '+accounting.formatMoney(App.operations.current_delivery.value), 'ISO-8859-1');
         window.DatecsPrinter.feedPaper(1);
