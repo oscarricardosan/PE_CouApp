@@ -102,7 +102,6 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_position: function (position) {
-                var string='';
                 var current_position= GpsModel.get();
                 if(current_position === null)return 'Posición actual no definida';
                 if(position.longitude === undefined)return 'Sin información de longitud';
