@@ -41,7 +41,6 @@ var Gps= (function () {
 
     function store_position(position) {
         GpsModel.loaded(function(){
-            App.current_position_updated= position.coords.latitude+'_'+position.coords.longitude;
             App.current_position= {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude
