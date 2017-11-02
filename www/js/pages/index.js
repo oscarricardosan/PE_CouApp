@@ -106,9 +106,9 @@ function initializePage(){
             operations: {
                 handler(val){
                     App_= this;
-                    var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().sortBy().value();
-                    var delivery_dates= _.sortBy(_.keys(_.groupBy(App_.operations.deliveries, 'delivery_date')));
-                    this.dates_to_filter= _.union(pickup_dates, delivery_dates);
+                    var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
+                    var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                    this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                     if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                         this.date_to_filter= this.dates_to_filter[0];
                     this.refresh_counters_in_list();
