@@ -159,20 +159,6 @@ function initializePage() {
                 });
             });
 
-            /*new L.marker().setLatLng({
-                lng: {{ $delivery->longitude }},
-            lat: {{ $delivery->latitude }}
-        }).addTo(map).bindPopup(
-                "<i class='fa fa-user'></i>{{ $delivery->courier->email }} - <b>{{ $delivery->delivery_number }}</b><br>"+
-                "<b>Dirección: </b> {{ $delivery->address }} <br>"+
-                "<b>Observaciones dirección: </b> {{ $delivery->long_address }}<br>"+
-                "<i class='fa fa-clock-o'></i>{{ $delivery->delivery_start_time }} y {{ $delivery->delivery_end_time }} <br>"+
-                "<button class='btn btn-block btn-link markerInMap' "+
-                " target='#DeliveryMarker_{{$delivery->id}}' "+
-                ">"+
-                "   <i class='fa fa-external-link'></i> Ver detalles"+
-                "</button>"
-            );*/
         }
     });
 
