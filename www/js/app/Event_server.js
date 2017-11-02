@@ -29,14 +29,14 @@ var Event_server= (function () {
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
             success: function(model){
-                delete_event_in_server(model);
+                delete_event_in_server(event.id);
             },
             fail: function(model){
                 Notification.event_server_pickup_danger ('Error procesando evento de recolección '+model.pickup_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Recolección creada número'+event.data.pickup_number);
+            Notification.event_server_pickup_message('Recolección creada número '+event.data.pickup_number);
         if(event.event === 'actualization')
             Notification.event_server_pickup_message('Recolección '+event.data.pickup_number+' actualizada');
     }
@@ -44,25 +44,25 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(model){
-                delete_event_in_server(model);
+                delete_event_in_server(event.id);
             },
             fail: function(model){
                 Notification.event_server_pickup_danger ('Error procesando evento de entrega '+model.delivery_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Entrega creada número'+event.data.delivery_number);
+            Notification.event_server_pickup_message('Entrega creada número '+event.data.delivery_number);
         if(event.event === 'actualization')
             Notification.event_server_pickup_message('Entrega '+event.data.delivery_number+' actualizada');
     }
 
-    function delete_event_in_server(model){
+    function delete_event_in_server(id){
         AjaxQueue.add({
             type: 'post',
             url: 'courier_event/delete',
             dataType: 'text',
             data: {
-                id: model.id,
+                id: id,
             },
             successful_online: function(response){
                 LogModel.store({
