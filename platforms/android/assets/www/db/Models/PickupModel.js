@@ -56,10 +56,10 @@ var PickupModel= (function () {
      */
     var insertOrUpdateById = function(data, callback){
         callback= PolishedUtility_.callback(callback);
-        if(data.id !== undefined && find({id: data.id}).lengt === 1)
-            store(data, callback);
-        else
+        if(data.id !== undefined && find({id: data.id}).length === 1)
             update({id: data.id}, data, callback);
+        else
+            store(data, callback);
     };
 
     var get = function(){
