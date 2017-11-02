@@ -12,7 +12,8 @@ function initializePage() {
                 pickups: [],
             },
             ajax_queue_count: 0,
-            current_position: undefined
+            current_position: undefined,
+            current_position_updated: undefined
         },
         methods: {
             synchronize_data_operations: function (e) {

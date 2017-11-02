@@ -23,7 +23,8 @@ function initializePage(){
             number_search: '',
             pickups_in_list: 0,
             deliveries_in_list: 0,
-            current_position: undefined
+            current_position: undefined,
+            current_position_updated: undefined
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -103,7 +104,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_position: function (current_position, position) {
-                alert('entre');
+                var current_position= App.current_position;
                 if(current_position === null)return 'Posición actual no definida';
                 if(position.longitude === undefined)return 'Sin información de longitud';
                 if(position.latitude === undefined)return 'Sin información de latitud';
