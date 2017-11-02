@@ -103,13 +103,14 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_position: function (current_position, position) {
-                if(current_position === undefined)return 'Posición actual no definida';
+                if(current_position === undefined || current_position === null)return 'Posición actual no definida';
                 if(position.longitude === undefined)return 'Sin información de longitud';
                 if(position.latitude === undefined)return 'Sin información de latitud';
-                return 'A '+Haversine.distance(
+                var distance= Haversine.distance(
                     {latitude: current_position.latitude, longitude: current_position.longitude},
                     {latitude: position.latitude, longitude: position.longitude}
-                )+' mts';
+                );
+                return 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts';
             }
         },
         watch: {
@@ -173,6 +174,9 @@ function initializePage(){
                 var printer= PrinterModel.get();
                 if(printer !== null)
                     App_.settings_current_printer= printer.address;
+            });
+            GpsModel.loaded(function () {
+                App.current_position= GpsModel.get();
             });
         }
     });

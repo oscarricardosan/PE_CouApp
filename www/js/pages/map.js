@@ -46,10 +46,9 @@ function initializePage() {
         },
         watch: {},
         mounted: function () {
-            var current_position;
             App_ = this;
             GpsModel.loaded(function () {
-                current_position= GpsModel.get();
+                App_.current_position= GpsModel.get();
             });
             UserModel.loaded(function () {
                 var user = UserModel.get();
@@ -122,7 +121,7 @@ function initializePage() {
                         "<b>Dirección: </b> " + delivery.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+getDistance(delivery)+"  <br>"
+                        "<i class='fa fa-globe'></i> "+getDistance(App_ ,delivery)+"  <br>"
                     )
                 });
             });
@@ -154,7 +153,7 @@ function initializePage() {
                         "<b>Dirección: </b> " + pickup.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+getDistance(delivery)+"  <br>"
+                        "<i class='fa fa-globe'></i> "+getDistance(App_ ,pickup)+"  <br>"
                     )
                 });
             });
@@ -162,18 +161,17 @@ function initializePage() {
         }
     });
 
-    function getDistance(position){
-
+    function getDistance(App, position){
         var distance;
-        if(current_position === undefined)
+        if(App.current_position === undefined || App.current_position === null)
             distance= 'Posición actual no definida';
         else if(position.longitude === undefined)
             distance= 'Sin información de longitud';
-        if(position.latitude === undefined)
+        else if(position.latitude === undefined)
             distance= 'Sin información de latitud';
         else{
             distance= Haversine.distance(
-                {latitude: current_position.latitude, longitude: current_position.longitude},
+                {latitude: App.current_position.latitude, longitude: App.current_position.longitude},
                 {latitude: position.latitude, longitude: position.longitude}
             );
             distance= "A "+accounting.formatNumber(distance, 2, '.', ',')+" mts";
