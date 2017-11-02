@@ -103,8 +103,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_position: function (current_position, position) {
-                alert('entre');
-                if(current_position === null)return 'Posición actual no definida';
+                if(current_position === undefined)return 'Posición actual no definida';
                 if(position.longitude === undefined)return 'Sin información de longitud';
                 if(position.latitude === undefined)return 'Sin información de latitud';
                 return 'A '+Haversine.distance(
