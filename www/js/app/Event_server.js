@@ -62,7 +62,7 @@ var Event_server= (function () {
             url: 'courier_event/delete',
             dataType: 'text',
             data: {
-                id: id,
+                evento_id: id,
             },
             successful_online: function(response){
                 LogModel.store({

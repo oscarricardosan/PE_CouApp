@@ -29,14 +29,14 @@ var Event_server= (function () {
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
             success: function(model){
-                delete_event_in_server(model);
+                delete_event_in_server(event.id);
             },
             fail: function(model){
                 Notification.event_server_pickup_danger ('Error procesando evento de recolección '+model.pickup_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Recolección creada número'+event.data.pickup_number);
+            Notification.event_server_pickup_message('Recolección creada número '+event.data.pickup_number);
         if(event.event === 'actualization')
             Notification.event_server_pickup_message('Recolección '+event.data.pickup_number+' actualizada');
     }
@@ -44,30 +44,54 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(model){
-                delete_event_in_server(model);
+                delete_event_in_server(event.id);
             },
             fail: function(model){
                 Notification.event_server_pickup_danger ('Error procesando evento de entrega '+model.delivery_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Entrega creada número'+event.data.delivery_number);
+            Notification.event_server_pickup_message('Entrega creada número '+event.data.delivery_number);
         if(event.event === 'actualization')
             Notification.event_server_pickup_message('Entrega '+event.data.delivery_number+' actualizada');
     }
 
-    function delete_event_in_server(model){
+    function delete_event_in_server(id){
         AjaxQueue.add({
             type: 'post',
             url: 'courier_event/delete',
             dataType: 'text',
             data: {
-                id: model.id,
+                evento_id: id,
             },
-            successful_online: function(response){},
-            failed_online: function(jqXHR, textStatus){},
-            successful_offline: function(response){},
-            failed_offline: function(jqXHR, textStatus){}
+            successful_online: function(response){
+                LogModel.store({
+                    message: 'Delete event server: Transmisión de petición online a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_online: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Delete event server: Error al transmitir al servidor petición online.',
+                    status: 'danger',
+                    data: properties
+                });
+            },
+            successful_offline: function(response){
+                LogModel.store({
+                    message: 'Delete event server: Transmisión de petición offline a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_offline: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Delete event server: Error al transmitir al servidor petición offline.',
+                    status: 'danger',
+                    data: properties
+                });
+            }
         });
     }
 
