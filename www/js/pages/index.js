@@ -106,10 +106,11 @@ function initializePage(){
                 if(current_position === undefined)return 'Posición actual no definida';
                 if(position.longitude === undefined)return 'Sin información de longitud';
                 if(position.latitude === undefined)return 'Sin información de latitud';
-                return 'A '+Haversine.distance(
+                var distance= Haversine.distance(
                     {latitude: current_position.latitude, longitude: current_position.longitude},
                     {latitude: position.latitude, longitude: position.longitude}
-                )+' mts';
+                );
+                return 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts';
             }
         },
         watch: {
