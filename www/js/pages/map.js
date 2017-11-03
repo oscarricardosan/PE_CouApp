@@ -189,9 +189,15 @@ function initializePage() {
             function onLocationFound(e) {
                 var radius = e.accuracy / 2;
 
-                L.marker(e.latlng).addTo(App_.map)
-                    .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto").openPopup();
-
+                var url_params= UrlUtility_.getParams();
+                if(url_params.show_pickup_id !== undefined ||  url_params.show_delivery_id !== undefined){
+                    L.marker(e.latlng).addTo(App_.map)
+                        .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
+                }else{
+                    L.marker(e.latlng).addTo(App_.map)
+                        .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto")
+                        .openPopup();
+                }
                 L.circle(e.latlng, radius).addTo(App_.map);
             }
             function onLocationError(e) {
