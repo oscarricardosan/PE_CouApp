@@ -109,8 +109,8 @@ function initializeIntranet(){
 
         function initializeActionsInLocalNotifications() {
             cordova.plugins.notification.local.on("click", function (notification) {
+                alert(notification.data.action);
                 switch(notification.data.action){
-                    alert(notification.data.action);
                     case "show_delivery":
                         var delivery= notification.data.delivery;
                         window.location.href= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
