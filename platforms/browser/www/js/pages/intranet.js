@@ -43,6 +43,7 @@ function initializeIntranet(){
 
         initializeBackgroundProcess();
         initializeGpsBackground();
+        initializeActionsInLocalNotifications();
 
         cordova.plugins.backgroundMode.on('activate', function() {
             Gps.clear_watches();
@@ -104,6 +105,19 @@ function initializeIntranet(){
                 bigText: false
             });
 
+        }
+
+        function initializeActionsInLocalNotifications() {
+            cordova.plugins.notification.local.on("click", function (notification) {
+
+                alert(JSON.stringify(notification));
+                alert(JSON.stringify(notification.data));
+                switch(notification.data.action){
+                    case "show_delivery":
+                        window.location.href= 'index.html?'
+                        break;
+                }
+            });
         }
         /** CLOSE BACKGROUND PROCESS**/
     }

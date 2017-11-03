@@ -40,9 +40,17 @@ var Event_server= (function () {
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message('Creada número '+event.data.pickup_number+' / '+event.data.pickup_date);
+            Notification.event_server_pickup_message(
+                'Creada número '+event.data.pickup_number+' / '+event.data.pickup_date,
+                undefined,
+                {action: 'show_pickup', pickup: event.data}
+            );
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message(event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date);
+            Notification.event_server_pickup_message(
+                event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date,
+                undefined,
+                {action: 'show_pickup', pickup: event.data}
+            );
     }
 
     function process_deliveries(event){
@@ -58,18 +66,13 @@ var Event_server= (function () {
             Notification.event_server_pickup_message(
                 'Creada número '+event.data.delivery_number+' / '+event.data.delivery_date,
                 undefined,
-                {
-                    action: 'show_delivery',
-                    delivery: event.data
-                });
+                {action: 'show_delivery', delivery: event.data}
+            );
         if(event.event === 'actualization')
             Notification.event_server_pickup_message(
                 event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date,
                 undefined,
-                {
-                    action: 'show_delivery',
-                    delivery: event.data
-                }
+                {action: 'show_delivery', delivery: event.data}
             );
     }
 
