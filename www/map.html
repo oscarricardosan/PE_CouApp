@@ -115,6 +115,13 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="wrapper" id="App">
+        <div style="
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 255, 255, 0.93); text-align: center;
+        font-size: 10em; padding-top: 35vh; z-index: 999999;
+    " v-if="!ready">
+            <i class="fa fa-circle-o-notch fa-spin fa-fw margin-bottom"></i>
+        </div>
 
         <header class="main-header">
             <!-- Logo -->

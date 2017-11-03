@@ -18,7 +18,8 @@ function initializePage() {
             ajax_queue_count: 0,
             current_position: undefined,
             dates_to_filter: [],
-            date_to_filter: undefined
+            date_to_filter: undefined,
+            ready: true
         },
         methods: {
             synchronize_data_operations: function (e) {
