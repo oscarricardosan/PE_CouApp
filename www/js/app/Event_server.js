@@ -59,17 +59,17 @@ var Event_server= (function () {
                 delete_event_in_server(event.id);
             },
             fail: function(model){
-                Notification.event_server_pickup_danger ('Error procesando evento de - '+model.delivery_number);
+                Notification.event_server_delivery_danger('Error procesando evento de - '+model.delivery_number);
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message(
+            Notification.event_server_delivery_message(
                 'Creada número '+event.data.delivery_number+' / '+event.data.delivery_date,
                 undefined,
                 {action: 'show_delivery', delivery: event.data}
             );
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message(
+            Notification.event_server_delivery_message(
                 event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date,
                 undefined,
                 {action: 'show_delivery', delivery: event.data}

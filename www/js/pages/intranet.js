@@ -111,7 +111,6 @@ function initializeIntranet(){
             cordova.plugins.notification.local.on("click", function (notification) {
                 var data= notification.data;
                 if(typeof notification.data === 'string') data= JSON.parse(data);
-                alert(JSON.stringify(data));
                 switch(data.action){
                     case "show_delivery":
                         var delivery= data.delivery;
