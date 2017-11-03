@@ -93,6 +93,9 @@ function initializePage(){
                     response= _.union(response, sorted_deliveries);
                 });
                 return response;
+            },
+            set_number_search: function(search){
+                this.number_search= search;
             }
 
         },
