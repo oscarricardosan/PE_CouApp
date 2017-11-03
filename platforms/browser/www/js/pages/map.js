@@ -83,6 +83,11 @@ function initializePage() {
                     }
                 }
                 return distance.message;
+            },
+            centerLeafletMapOnMarker: function (marker) {
+                var latLngs = [ marker.getLatLng() ];
+                var markerBounds = L.latLngBounds(latLngs);
+                App_.map.fitBounds(markerBounds);
             }
         },
         filters: { },
@@ -90,11 +95,23 @@ function initializePage() {
             operations: {
                 handler(val){
                     App_= this;
+                    var url_params= UrlUtility_.getParams();
                     var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
                     var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
                     this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                    if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                        this.date_to_filter= this.dates_to_filter[0];
+                    if(this.date_to_filter === undefined && this.dates_to_filter.length > 0){
+                        if(url_params.show_pickup_id !== undefined){
+                            PickupModel.loaded(function(){
+                                App_.date_to_filter= PickupModel.find({id: url_params.show_pickup_id*1})[0].pickup_date;
+                            });
+                        }else if(url_params.show_delivery_id !== undefined){
+                            DeliveriesModel.loaded(function(){
+                                App_.date_to_filter= DeliveriesModel.find({id: url_params.show_delivery_id*1})[0].delivery_date;
+                            });
+                        }else{
+                            App_.date_to_filter= this.dates_to_filter[0];
+                        }
+                    }
                 },
                 deep: true
             },
@@ -106,6 +123,7 @@ function initializePage() {
             },
             pickups_to_show: function(pickups){
                 var App_= this;
+                var url_params= UrlUtility_.getParams();
                 $.each(pickups, function (index, pickup) {
                     var icon = App_.new_icon('images/map_icons/pickup_' + pickup.pickup_state.class + '.png?1');
 
@@ -119,13 +137,18 @@ function initializePage() {
                         "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>"+
                         "<i class='fa fa-globe'></i> "+App_.distance_to_pickup(App_ ,pickup)+"  <br>"+
-                        "<a class='btn btn-primary btn-block' href='index.html?filter_date="+pickup.pickup_date+"&search="+pickup.pickup_number+"&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>"
+                        "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+pickup.pickup_date+"&search="+pickup.pickup_number+"&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
+                    if(url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
+                        marker.openPopup();
                     App_.map_markers.push(marker);
+                    if(url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
+                        App_.centerLeafletMapOnMarker(marker);
                 });
             },
             deliveries_to_show:function(deliveries){
                 var App_= this;
+                var url_params= UrlUtility_.getParams();
                 $.each(deliveries, function (index, delivery) {
                     var icon = App_.new_icon('images/map_icons/delivery_' + delivery.delivery_state.class + '.png?1');
 
@@ -139,9 +162,13 @@ function initializePage() {
                         "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
                         "<i class='fa fa-globe'></i> "+App_.distance_to_delivery(App_ ,delivery)+"  <br>"+
-                        "<a class='btn btn-primary btn-block' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"
+                        "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
+                    if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
+                        marker.openPopup();
                     App_.map_markers.push(marker);
+                    if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
+                        App_.centerLeafletMapOnMarker(marker);
                 });
             }
         },
