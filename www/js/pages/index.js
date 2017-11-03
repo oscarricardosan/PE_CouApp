@@ -208,7 +208,7 @@ function initializePage(){
     });
 
     $(document).ready(function(){
-
+        var url_params= UrlUtility_.getParams();
         if(url_params.tab !== undefined){
             $('[href="#'+url_params.tab+'"]').click()
         }
