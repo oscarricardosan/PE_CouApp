@@ -26,9 +26,43 @@ var Haversine= (function () {
         return R * c
     };
 
+    var distance_in_text= function(point_a, point_b){
+        var error= undefined;
+        if(point_a === undefined || point_a === null)error= 'Posición actual no definida';
+        else if(point_b === undefined || point_b === null)error= 'Posición de objetivo no definida';
+        else if(point_a.longitude === undefined)error= 'Sin información de longitud';
+        else if(point_a.latitude === undefined)error= 'Sin información de latitud';
+        else if(point_b.longitude === undefined)error= 'Sin información de longitud en objetivo';
+        else if(point_b.latitude === undefined)error= 'Sin información de latitud en objetivo';
+        if(error !== undefined){
+            return {
+                distance: undefined,
+                success: false,
+                message: error,
+            }
+        }
+        var distance= Haversine.distance(
+            {latitude: point_a.latitude, longitude: point_a.longitude},
+            {latitude: point_b.latitude, longitude: point_b.longitude}
+        );
+        if(distance>1000)
+            return {
+                distance_in_mts: distance,
+                success: success,
+                message: 'A '+accounting.formatNumber(distance/1000, 2, '.', ',')+' km',
+            };
+        else
+            return {
+                distance_in_mts: distance,
+                success: success,
+                message: 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts',
+            };
+    };
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            distance           : distance
+            distance           : distance,
+            distance_in_text   : distance_in_text
         }
     }
     return {construct:construct};//retorna los metodos publicos

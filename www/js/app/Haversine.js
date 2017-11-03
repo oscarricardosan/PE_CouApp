@@ -29,11 +29,11 @@ var Haversine= (function () {
     var distance_in_text= function(point_a, point_b){
         var error= undefined;
         if(point_a === undefined || point_a === null)error= 'Posición actual no definida';
-        if(point_b === undefined || point_b === null)error= 'Posición de objetivo no definida';
-        if(point_a.longitude === undefined)error= 'Sin información de longitud';
-        if(point_a.latitude === undefined)error= 'Sin información de latitud';
-        if(point_b.longitude === undefined)error= 'Sin información de longitud en objetivo';
-        if(point_b.latitude === undefined)error= 'Sin información de latitud en objetivo';
+        else if(point_b === undefined || point_b === null)error= 'Posición de objetivo no definida';
+        else if(point_a.longitude === undefined)error= 'Sin información de longitud';
+        else if(point_a.latitude === undefined)error= 'Sin información de latitud';
+        else if(point_b.longitude === undefined)error= 'Sin información de longitud en objetivo';
+        else if(point_b.latitude === undefined)error= 'Sin información de latitud en objetivo';
         if(error !== undefined){
             return {
                 distance: undefined,

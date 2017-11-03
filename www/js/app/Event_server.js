@@ -99,9 +99,47 @@ var Event_server= (function () {
         });
     }
 
+    function clear_events_in_server(){
+        AjaxQueue.add({
+            type: 'post',
+            url: 'courier_event/clear',
+            dataType: 'text',
+            data: {},
+            successful_online: function(response){
+                LogModel.store({
+                    message: 'Clear events in server: Transmisión de petición online a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_online: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Clear events in server: Error al transmitir al servidor petición online.',
+                    status: 'danger',
+                    data: properties
+                });
+            },
+            successful_offline: function(response){
+                LogModel.store({
+                    message: 'Clear events in server: Transmisión de petición offline a servidor exitosa.',
+                    status: 'success',
+                    data: properties
+                });
+            },
+            failed_offline: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Clear events in server: Error al transmitir al servidor petición offline.',
+                    status: 'danger',
+                    data: properties
+                });
+            }
+        });
+    }
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get_events_from_server                : get_events_from_server,
+            clear_events_in_server                : clear_events_in_server
         }
     }
     return {construct:construct};//retorna los metodos publicos

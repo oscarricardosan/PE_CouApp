@@ -68,7 +68,7 @@ function initializePage(){
                 $.each(pickups_states_date, function(index, pickup_state_id){
                         var sorted_pickups= _(App_.operations.pickups).chain()
                             .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
-                            .sortBy('pickup_start_time')
+                            .sortBy('distance_in_mts')
                             .reverse()
                             .value();
                     response= _.union(response, sorted_pickups);
@@ -80,7 +80,7 @@ function initializePage(){
                 var response= [];
                 var deliveries_states_date= _(App_.operations.deliveries).chain()
                     .where({delivery_date: App_.date_to_filter})
-                    .groupBy('distance_in_mts')
+                    .groupBy('delivery_state_id')
                     .keys().value();
 
                 $.each(deliveries_states_date, function(index, delivery_state_id){
@@ -103,10 +103,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_pickup: function (current_position, pickup) {
-                distance= Haversine.distance_in_text(
-                    {latitude: current_position.latitude, longitude: current_position.longitude},
-                    {latitude: pickup.latitude, longitude: pickup.longitude}
-                );
+                distance= Haversine.distance_in_text(current_position, pickup);
                 if(distance.success){
                     pickup.distance_in_mts= distance.distance_in_mts;
                     PickupModel.update({id: pickup.id}, pickup, {
@@ -118,10 +115,7 @@ function initializePage(){
                 return distance.message;
             },
             distance_to_delivery: function (current_position, delivery) {
-                distance= Haversine.distance_in_text(
-                    {latitude: current_position.latitude, longitude: current_position.longitude},
-                    {latitude: delivery.latitude, longitude: delivery.longitude}
-                );
+                distance= Haversine.distance_in_text(current_position, delivery);
                 if(distance.success){
                     delivery.distance_in_mts= distance.distance_in_mts;
                     DeliveriesModel.update({id: delivery.id}, pickup, {
@@ -196,7 +190,7 @@ function initializePage(){
                     App_.settings_current_printer= printer.address;
             });
             GpsModel.loaded(function () {
-                App.current_position= GpsModel.get();
+                App_.current_position= GpsModel.get();
             });
         }
     });
