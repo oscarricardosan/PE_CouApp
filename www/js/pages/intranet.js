@@ -112,6 +112,9 @@ function initializeIntranet(){
                 alert(JSON.stringify(notification));
                 alert(JSON.stringify(notification.data));
                 alert(JSON.stringify(notification.data.action));
+                alert(typeof (notification.data));
+                alert(typeof (notification.data.action));
+                alert(notification.data.action);
                 switch(notification.data.action){
                     case "show_delivery":
                         var delivery= notification.data.delivery;
