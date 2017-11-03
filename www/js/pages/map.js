@@ -185,9 +185,7 @@ function initializePage() {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
             }).addTo(App_.map);
-            if(url_params.show_pickup_id === undefined &&  url_params.show_delivery_id === undefined) {
-                App_.map.locate({setView: true, maxZoom: 16});
-            }
+            App_.map.locate({setView: true, maxZoom: 16});
 
             /** DETECTAR UBICACIÓN ACTUAL **/
             function onLocationFound(e) {
