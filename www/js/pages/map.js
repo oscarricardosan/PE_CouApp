@@ -175,6 +175,7 @@ function initializePage() {
         },
         mounted: function () {
             App_ = this;
+            var url_params= UrlUtility_.getParams();
 
             /**
              * Create map
@@ -184,13 +185,12 @@ function initializePage() {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
             }).addTo(App_.map);
-            App_.map.locate({setView: true, maxZoom: 16});
+            if(url_params.show_pickup_id === undefined &&  url_params.show_delivery_id === undefined){
+                App_.map.locate({setView: true, maxZoom: 16});
 
             /** DETECTAR UBICACIÓN ACTUAL **/
             function onLocationFound(e) {
                 var radius = e.accuracy / 2;
-
-                var url_params= UrlUtility_.getParams();
                 if(url_params.show_pickup_id !== undefined ||  url_params.show_delivery_id !== undefined){
                     L.marker(e.latlng).addTo(App_.map)
                         .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
