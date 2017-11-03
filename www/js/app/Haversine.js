@@ -41,7 +41,7 @@ var Haversine= (function () {
                 message: error,
             }
         }
-        var distance= Haversine.distance(
+        var distance= distance(
             {latitude: point_a.latitude, longitude: point_a.longitude},
             {latitude: point_b.latitude, longitude: point_b.longitude}
         );
