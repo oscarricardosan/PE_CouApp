@@ -69,7 +69,7 @@ function initializePage(){
                     var sorted_pickups= _(App_.operations.pickups).chain()
                         .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
                         .sortBy('distance_in_mts')
-                        .reverse()
+                        //.reverse()
                         .value();
                     response= _.union(response, sorted_pickups);
                 });
@@ -87,7 +87,7 @@ function initializePage(){
                     var sorted_deliveries= _(App_.operations.deliveries).chain()
                         .where({delivery_state_id: delivery_state_id*1, delivery_date: App_.date_to_filter})
                         .sortBy('distance_in_mts')
-                        .reverse()
+                        //.reverse()
                         .value();
                     response= _.union(response, sorted_deliveries);
                 });
