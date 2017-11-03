@@ -46,7 +46,7 @@ function initializePage() {
             new_icon: function(iconUrl){
                 return L.icon({
                     iconUrl: iconUrl,
-                    shadowUrl: 'images/map_icons/marker-shadow.png',
+                    shadowUrl:  'images/map_icons/marker-shadow.png',
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
