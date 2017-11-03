@@ -109,15 +109,16 @@ function initializeIntranet(){
 
         function initializeActionsInLocalNotifications() {
             cordova.plugins.notification.local.on("click", function (notification) {
-                switch(notification.data.action){
-                    alert(notification.data.action);
+                var data= notification.data;
+                if(typeof notification.data === 'string') data= JSON.parse(data);
+                switch(data.action){
                     case "show_delivery":
-                        var delivery= notification.data.delivery;
-                        window.location.href= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
+                        var delivery= data.delivery;
+                        window.location= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
                         break;
                     case "show_pickup":
-                        var pickup= notification.data.pickup;
-                        window.location.href= 'index.html?filter_date='+pickup.pickup_date+'&search='+pickup.pickup_number+'&tab=tab_pickups';
+                        var pickup= data.pickup;
+                        window.location= 'index.html?filter_date='+pickup.pickup_date+'&search='+pickup.pickup_number+'&tab=tab_pickups';
                         break;
                 }
             });

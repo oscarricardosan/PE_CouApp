@@ -23,7 +23,8 @@ function initializePage(){
             number_search: '',
             pickups_in_list: 0,
             deliveries_in_list: 0,
-            current_position: undefined
+            current_position: undefined,
+            ready: true
         },
         methods: {
             synchronize_data_operations: function(e) {

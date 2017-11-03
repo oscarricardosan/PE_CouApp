@@ -63,12 +63,8 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="tpl/dist/css/skins/_all-skins.min.css">
-    <!-- Morris chart -->
-    <link rel="stylesheet" href="tpl/bower_components/morris.js/morris.css">
     <!-- Date Picker -->
     <link rel="stylesheet" href="tpl/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="tpl/bower_components/bootstrap-daterangepicker/daterangepicker.css">
 
     <!-- SELECT2 -->
     <script src="tpl/bower_components/select2/dist/js/select2.full.min.js"></script>
@@ -136,6 +132,13 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
 <div class="wrapper" id="App">
+    <div style="
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.93); text-align: center;
+    font-size: 10em; padding-top: 35vh; z-index: 999999;
+" v-if="!ready">
+        <i class="fa fa-circle-o-notch fa-spin fa-fw margin-bottom"></i>
+    </div>
 
     <header class="main-header">
         <!-- Logo -->
@@ -852,23 +855,9 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
-<!-- s.js charts -->
-<script src="tpl/bower_components/raphael/raphael.min.js"></script>
-<script src="tpl/bower_components/morris.js/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="tpl/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script src="tpl/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="tpl/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="tpl/bower_components/jquery-knob/dist/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
 <script src="tpl/bower_components/moment/min/moment.min.js"></script>
-<script src="tpl/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="tpl/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="tpl/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Slimscroll -->
 <script src="tpl/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- bootstrap datepicker -->
