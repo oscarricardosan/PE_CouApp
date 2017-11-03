@@ -23,7 +23,6 @@ var Process= (function () {
         var background_processes= polish_property(process);
         background_processes[process].last_attempt= moment().unix();
 
-        console.log(background_processes);
         if(background_processes._id === undefined){
             ProcessModel.store(background_processes, callback);
         }else{
