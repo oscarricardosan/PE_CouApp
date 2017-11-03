@@ -1,17 +1,44 @@
 var Event_server= (function () {
     
     function get_events_from_server() {
-        var request = $.ajax({
-            url: Settings.route_api_pasar("courier_event/get_all"),
+
+        AjaxQueue.add({
             type: 'post',
-            dataType: "json",
-            data: SecurityUtility_.add_user_authenticated({})
-        });
-        request.done(function(server_events){
-            process_server_events(server_events);
-        });
-        request.fail(function(jqXHR, textStatus) {
-            AjaxUtility_.processFaillRequestWithLocalNotification(jqXHR, textStatus);
+            url: 'courier_event/get_all',
+            dataType: 'json',
+            data: {},
+            successful_online: function(response){
+                LogModel.store({
+                    message: 'Get events from server: Transmisión de petición online a servidor exitosa.',
+                    status: 'success',
+                    data: response
+                });
+                process_server_events(server_events);
+            },
+            failed_online: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Get events from server: Error al transmitir al servidor petición online.',
+                    status: 'danger',
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
+                });
+                AjaxUtility_.processFaillRequestWithLocalNotification(jqXHR, textStatus);
+            },
+            successful_offline: function(response){
+                LogModel.store({
+                    message: 'Get events from server: Transmisión de petición offline a servidor exitosa.',
+                    status: 'success',
+                    data: response
+                });
+                process_server_events(server_events);
+            },
+            failed_offline: function(jqXHR, textStatus){
+                LogModel.store({
+                    message: 'Get events from server: Error al transmitir al servidor petición offline.',
+                    status: 'danger',
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
+                });
+                AjaxUtility_.processFaillRequestWithLocalNotification(jqXHR, textStatus);
+            }
         });
         Process.store_last_attempt('get_events_from_server');
     }
@@ -88,28 +115,28 @@ var Event_server= (function () {
                 LogModel.store({
                     message: 'Delete event server: Transmisión de petición online a servidor exitosa.',
                     status: 'success',
-                    data: properties
+                    data: response
                 });
             },
             failed_online: function(jqXHR, textStatus){
                 LogModel.store({
                     message: 'Delete event server: Error al transmitir al servidor petición online.',
                     status: 'danger',
-                    data: properties
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
                 });
             },
             successful_offline: function(response){
                 LogModel.store({
                     message: 'Delete event server: Transmisión de petición offline a servidor exitosa.',
                     status: 'success',
-                    data: properties
+                    data: response
                 });
             },
             failed_offline: function(jqXHR, textStatus){
                 LogModel.store({
                     message: 'Delete event server: Error al transmitir al servidor petición offline.',
                     status: 'danger',
-                    data: properties
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
                 });
             }
         });
@@ -125,28 +152,28 @@ var Event_server= (function () {
                 LogModel.store({
                     message: 'Clear events in server: Transmisión de petición online a servidor exitosa.',
                     status: 'success',
-                    data: properties
+                    data: response
                 });
             },
             failed_online: function(jqXHR, textStatus){
                 LogModel.store({
                     message: 'Clear events in server: Error al transmitir al servidor petición online.',
                     status: 'danger',
-                    data: properties
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
                 });
             },
             successful_offline: function(response){
                 LogModel.store({
                     message: 'Clear events in server: Transmisión de petición offline a servidor exitosa.',
                     status: 'success',
-                    data: properties
+                    data: response
                 });
             },
             failed_offline: function(jqXHR, textStatus){
                 LogModel.store({
                     message: 'Clear events in server: Error al transmitir al servidor petición offline.',
                     status: 'danger',
-                    data: properties
+                    data: {jqXHR: jqXHR, textStatus: textStatus}
                 });
             }
         });

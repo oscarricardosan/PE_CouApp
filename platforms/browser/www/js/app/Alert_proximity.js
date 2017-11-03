@@ -32,7 +32,7 @@ var Alert_proximity= (function () {
             navigator.notification.beep(3);
         }
     }
-
+<
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
             distance_in_mts: {"$lt": Settings.alert.minimum_meters},
