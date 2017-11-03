@@ -14,6 +14,7 @@ var Operations= (function () {
         });
         request.done(function(response){
             callback.success(response);
+            Event_server.clear_events_in_server();
         });
         request.fail(function(jqXHR, textStatus) {
             callback.fail(jqXHR, textStatus);
@@ -54,6 +55,7 @@ var Operations= (function () {
             }
         });
     };
+
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
