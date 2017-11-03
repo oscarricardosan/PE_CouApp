@@ -198,10 +198,21 @@ function initializePage(){
             GpsModel.loaded(function () {
                 App_.current_position= GpsModel.get();
             });
+
+            var url_params= UrlUtility_.getParams();
+            if(url_params.filter_date !== undefined)
+                this.date_to_filter= url_params.filter_date;
+            if(url_params.search !== undefined)
+                this.number_search= url_params.search;
         }
     });
 
     $(document).ready(function(){
+
+        if(url_params.tab !== undefined)
+            $('[href="#'+url_params.tab+'"]').click()
+            this.number_search= url_params.search;
+
         $('#scan_barcode_to_search').click(function(){
             cloudSky.zBar.scan({
                 text_title: "Escanear código de barras", // Android only

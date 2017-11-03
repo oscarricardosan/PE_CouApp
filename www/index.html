@@ -280,7 +280,7 @@
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a href="#tab_1" data-toggle="tab">
+                                <a href="#tab_pickups" data-toggle="tab">
                                     Recolecciones
                                     <span class="label bg-green">
                                         {{ pickups_in_list }} de {{ operations.pickups.length }}
@@ -288,7 +288,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#tab_2" data-toggle="tab">
+                                <a href="#tab_deliveries" data-toggle="tab">
                                     Entregas <span class="label bg-blue">
                                         {{ deliveries_in_list }} de {{ operations.deliveries.length }}
                                     </span>
@@ -296,7 +296,7 @@
                             </li>
                         </ul>
                         <div class="tab-content no-padding">
-                            <div class="tab-pane active" id="tab_1">
+                            <div class="tab-pane active" id="tab_pickups">
                                 <div class="list-group pickups">
                                     <a href="#" class="pickup list-group-item"
                                        v-for=" (pickup, index) in pickups_sorted()"
@@ -324,7 +324,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tab_2">
+                            <div class="tab-pane" id="tab_deliveries">
                                 <div class="list-group deliveries">
                                     <a href="#" class="delivery list-group-item"
                                        v-for="(delivery, index) in deliveries_sorted()"
