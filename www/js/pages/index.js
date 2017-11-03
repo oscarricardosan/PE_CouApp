@@ -103,57 +103,37 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_pickup: function (current_position, pickup) {
-                alert('distance_to_pickup: 1.1');
                 var App_= this;
-                alert('distance_to_pickup: 1.2');
                 try{
                     distance= Haversine.distance_in_text(crrent_position, pickup);
                 }catch (error){ alert(error.message);}
-                alert('distance_to_pickup: 1.3');
                 if(distance.success){
-                    alert('distance_to_pickup: 2.1');
                     if(pickup.distance_in_mts !== distance.distance_in_mts){
-                        alert('distance_to_pickup: 3.1');
                         pickup.distance_in_mts= distance.distance_in_mts;
-                        alert('distance_to_pickup: 3.2');
                         PickupModel.update({id: pickup.id}, pickup, {
                             success: function(){
-                                alert('distance_to_pickup: 4.1');
                                 App_.operations.pickups= PickupModel.get();
-                                alert('distance_to_pickup: 4.2');
                             }
                         });
-                        alert('distance_to_pickup: 3.3');
                     }
                 }
-                alert('distance_to_delivery: 1.4');
                 return distance.message;
             },
             distance_to_delivery: function (current_position, delivery) {
-                alert('distance_to_delivery: 1.1');
                 var App_= this;
-                alert('distance_to_delivery: 1.2');
                 try{
                     distance= Haversine.distance_in_text(current_position, delivery);
                 }catch (error){ alert(error.message);}
-                alert('distance_to_delivery: 1.3');
                 if(distance.success){
-                    alert('distance_to_delivery: 2.1');
                     if(delivery.distance_in_mts !== distance.distance_in_mts){
-                        alert('distance_to_delivery: 3.1');
                         delivery.distance_in_mts= distance.distance_in_mts;
-                        alert('distance_to_delivery: 3.2');
                         DeliveriesModel.update({id: delivery.id}, delivery, {
                             success: function(){
-                                alert('distance_to_delivery: 4.1');
                                 App_.operations.deliveries= DeliveriesModel.get();
-                                alert('distance_to_delivery: 4.2');
                             }
                         });
-                        alert('distance_to_delivery: 3.3');
                     }
                 }
-                alert('distance_to_delivery: 1.4');
                 return distance.message;
             }
         },
