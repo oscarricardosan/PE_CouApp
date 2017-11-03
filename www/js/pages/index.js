@@ -106,12 +106,14 @@ function initializePage(){
                 var App_= this;
                 distance= Haversine.distance_in_text(current_position, pickup);
                 if(distance.success){
-                    pickup.distance_in_mts= distance.distance_in_mts;
-                    PickupModel.update({id: pickup.id}, pickup, {
-                        success: function(){
-                            App_.operations.pickups= PickupModel.get();
-                        }
-                    });
+                    if(pickup.distance_in_mts !== distance.distance_in_mts){
+                        pickup.distance_in_mts= distance.distance_in_mts;
+                        PickupModel.update({id: pickup.id}, pickup, {
+                            success: function(){
+                                App_.operations.pickups= PickupModel.get();
+                            }
+                        });
+                    }
                 }
                 return distance.message;
             },
@@ -119,12 +121,14 @@ function initializePage(){
                 var App_= this;
                 distance= Haversine.distance_in_text(current_position, delivery);
                 if(distance.success){
-                    delivery.distance_in_mts= distance.distance_in_mts;
-                    DeliveriesModel.update({id: delivery.id}, pickup, {
-                        success: function(){
-                            App_.operations.deliveries= DeliveriesModel.get();
-                        }
-                    });
+                    if(delivery.distance_in_mts !== distance.distance_in_mts){
+                        delivery.distance_in_mts= distance.distance_in_mts;
+                        DeliveriesModel.update({id: delivery.id}, delivery, {
+                            success: function(){
+                                App_.operations.deliveries= DeliveriesModel.get();
+                            }
+                        });
+                    }
                 }
                 return distance.message;
             }

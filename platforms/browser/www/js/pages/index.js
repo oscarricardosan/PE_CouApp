@@ -66,11 +66,11 @@ function initializePage(){
                     .groupBy('pickup_state_id')
                     .keys().value();
                 $.each(pickups_states_date, function(index, pickup_state_id){
-                        var sorted_pickups= _(App_.operations.pickups).chain()
-                            .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
-                            .sortBy('distance_in_mts')
-                            .reverse()
-                            .value();
+                    var sorted_pickups= _(App_.operations.pickups).chain()
+                        .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
+                        .sortBy('distance_in_mts')
+                        .reverse()
+                        .value();
                     response= _.union(response, sorted_pickups);
                 });
                 return response;
@@ -103,6 +103,7 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_pickup: function (current_position, pickup) {
+                var App_= this;
                 distance= Haversine.distance_in_text(current_position, pickup);
                 if(distance.success){
                     pickup.distance_in_mts= distance.distance_in_mts;
@@ -115,6 +116,7 @@ function initializePage(){
                 return distance.message;
             },
             distance_to_delivery: function (current_position, delivery) {
+                var App_= this;
                 distance= Haversine.distance_in_text(current_position, delivery);
                 if(distance.success){
                     delivery.distance_in_mts= distance.distance_in_mts;
