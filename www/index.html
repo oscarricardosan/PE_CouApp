@@ -178,7 +178,7 @@
                     <li class="dropdown notifications-menu">
                         <a href="#">
                             <i class="fa fa-tags"></i>
-                            <span class="label label-primary">{{ operations.deliveries.length }}</span>
+                            <span class="label label-danger">{{ operations.deliveries.length }}</span>
                         </a>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
@@ -319,7 +319,7 @@
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ current_position | distance_to_position(pickup) }}
+                                            {{ current_position | distance_to_pickup(pickup) }}
                                         </div>
                                     </a>
                                 </div>
@@ -347,7 +347,7 @@
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ current_position | distance_to_position(delivery) }}
+                                            {{ current_position | distance_to_delivery(delivery) }}
                                         </div>
                                     </a>
                                 </div>

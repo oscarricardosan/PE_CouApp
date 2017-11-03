@@ -11,8 +11,9 @@ var Event_server= (function () {
             process_server_events(server_events);
         });
         request.fail(function(jqXHR, textStatus) {
-            AjaxUtility_.processFaillRequest(jqXHR, textStatus);
+            AjaxUtility_.processFaillRequestWithLocalNotification(jqXHR, textStatus);
         });
+        Process.store_last_attempt('get_events_from_server');
     }
     
     function process_server_events(server_events) {

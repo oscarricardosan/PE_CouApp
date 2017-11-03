@@ -80,13 +80,13 @@ function initializePage(){
                 var response= [];
                 var deliveries_states_date= _(App_.operations.deliveries).chain()
                     .where({delivery_date: App_.date_to_filter})
-                    .groupBy('delivery_state_id')
+                    .groupBy('distance_in_mts')
                     .keys().value();
 
                 $.each(deliveries_states_date, function(index, delivery_state_id){
                     var sorted_deliveries= _(App_.operations.deliveries).chain()
                         .where({delivery_state_id: delivery_state_id*1, delivery_date: App_.date_to_filter})
-                        .sortBy('delivery_start_time')
+                        .sortBy('distance_in_mts')
                         .reverse()
                         .value();
                     response= _.union(response, sorted_deliveries);
@@ -102,15 +102,35 @@ function initializePage(){
             formatNumber: function (value) {
                 return accounting.formatNumber(value);
             },
-            distance_to_position: function (current_position, position) {
-                if(current_position === undefined || current_position === null)return 'Posición actual no definida';
-                if(position.longitude === undefined)return 'Sin información de longitud';
-                if(position.latitude === undefined)return 'Sin información de latitud';
-                var distance= Haversine.distance(
+            distance_to_pickup: function (current_position, pickup) {
+                distance= Haversine.distance_in_text(
                     {latitude: current_position.latitude, longitude: current_position.longitude},
-                    {latitude: position.latitude, longitude: position.longitude}
+                    {latitude: pickup.latitude, longitude: pickup.longitude}
                 );
-                return 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts';
+                if(distance.success){
+                    pickup.distance_in_mts= distance.distance_in_mts;
+                    PickupModel.update({id: pickup.id}, pickup, {
+                        success: function(){
+                            App_.operations.pickups= PickupModel.get();
+                        }
+                    });
+                }
+                return distance.message;
+            },
+            distance_to_delivery: function (current_position, delivery) {
+                distance= Haversine.distance_in_text(
+                    {latitude: current_position.latitude, longitude: current_position.longitude},
+                    {latitude: delivery.latitude, longitude: delivery.longitude}
+                );
+                if(distance.success){
+                    delivery.distance_in_mts= distance.distance_in_mts;
+                    DeliveriesModel.update({id: delivery.id}, pickup, {
+                        success: function(){
+                            App_.operations.deliveries= DeliveriesModel.get();
+                        }
+                    });
+                }
+                return distance.message;
             }
         },
         watch: {
