@@ -1,10 +1,12 @@
-var Alert_proximity= (function () {
+var Alert_time= (function () {
 
+    var time_to_search;
     var run= function(){
         DeliveriesModel.loaded(function(){
             PickupModel.loaded(function(){
+                time_to_search= Alert_time.get_time_to_search();
                 alerts_by_proximity();
-                Process.store_last_attempt('alert_by_proximity');
+                Process.store_last_attempt('alert_by_time');
             });
         });
     };
@@ -16,13 +18,13 @@ var Alert_proximity= (function () {
 
     function alerts_by_proximity_deliveries(){
         var deliveries= DeliveriesModel.find({
-            distance_in_mts: {"$lt": Settings.alert.minimum_meters},
+            delivery_start_time: time_to_search,
             delivery_state_id:1,
             delivery_date: MomentUtility_.current_date()
         });
         $.each(deliveries, function(index, delivery){
             Notification.event_server_delivery_message(
-                delivery.delivery_number+' a '+accounting.formatNumber(delivery.distance_in_mts, 2, '.', ',')+' mts',
+                delivery.delivery_number+' a las '+time_to_search,
                 undefined,
                 {action: 'show_delivery', delivery: delivery}
             );
@@ -35,13 +37,13 @@ var Alert_proximity= (function () {
 
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
-            distance_in_mts: {"$lt": Settings.alert.minimum_meters},
+            delivery_start_time: time_to_search,
             pickup_state_id:1,
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){
             Notification.event_server_pickup_message(
-                pickup.pickup_number+' a '+accounting.formatNumber(pickup.distance_in_mts, 2, '.', ',')+' mts',
+                pickup.pickup_number+' a las '+time_to_search,
                 undefined,
                 {action: 'show_pickup', pickup: pickup}
             );
@@ -52,6 +54,12 @@ var Alert_proximity= (function () {
         }
     }
 
+    function get_time_to_search() {
+        var time_search = moment().add(Settings.alert.minimum_minutes, 'minutes' );
+        var hour= time_search().hour()<10?'0'+time_search().hour()*1:time_search().hour();
+        var minute= time_search().minute()<10?'0'+time_search().minute()*1:time_search().minute();
+        return hour+':'+minute+':00';
+    }
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             run           : run,

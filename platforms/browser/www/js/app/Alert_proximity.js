@@ -21,7 +21,7 @@ var Alert_proximity= (function () {
             delivery_date: MomentUtility_.current_date()
         });
         $.each(deliveries, function(index, delivery){
-            Notification.alert(
+            Notification.event_server_delivery_message(
                 delivery.delivery_number+' a '+delivery.distance_in_mts+' mts',
                 undefined,
                 {action: 'show_delivery', delivery: delivery}
@@ -32,7 +32,7 @@ var Alert_proximity= (function () {
             navigator.notification.beep(3);
         }
     }
-<
+
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
             distance_in_mts: {"$lt": Settings.alert.minimum_meters},
@@ -40,7 +40,7 @@ var Alert_proximity= (function () {
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){
-            Notification.alert(
+            Notification.event_server_pickup_message(
                 pickup.pickup_number+' a '+pickup.distance_in_mts+' mts',
                 undefined,
                 {action: 'show_pickup', pickup: pickup}
