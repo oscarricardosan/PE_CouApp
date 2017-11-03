@@ -46,7 +46,7 @@ function initializePage() {
             new_icon: function(iconUrl){
                 return L.icon({
                     iconUrl: iconUrl,
-                    shadowUrl: 'images/map_icons/marker-shadow.png',
+                    shadowUrl:  'images/map_icons/marker-shadow.png',
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
@@ -118,7 +118,8 @@ function initializePage() {
                         "<b>Dirección: </b> " + pickup.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+App_.distance_to_pickup(App_ ,pickup)+"  <br>"
+                        "<i class='fa fa-globe'></i> "+App_.distance_to_pickup(App_ ,pickup)+"  <br>"+
+                        "<a class='btn btn-primary btn-block' href='index.html?filter_date="+pickup.pickup_date+"&search="+pickup.pickup_number+"&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
                     App_.map_markers.push(marker);
                 });
@@ -137,7 +138,8 @@ function initializePage() {
                         "<b>Dirección: </b> " + delivery.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+App_.distance_to_delivery(App_ ,delivery)+"  <br>"
+                        "<i class='fa fa-globe'></i> "+App_.distance_to_delivery(App_ ,delivery)+"  <br>"+
+                        "<a class='btn btn-primary btn-block' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
                     App_.map_markers.push(marker);
                 });
