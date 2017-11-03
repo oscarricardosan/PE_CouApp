@@ -10,6 +10,9 @@ var ProcessForeground= (function () {
         if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
             Event_server.get_events_from_server();
         }
+        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alerts)){
+            Alert_proximity.run();
+        }
         index_executionFor++;
         first_execution= false;
     };

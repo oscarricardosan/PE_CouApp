@@ -17,6 +17,9 @@ var ProcessBackground= (function () {
         if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
             Event_server.get_events_from_server();
         }
+        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alerts)){
+            Alert_proximity.run();
+        }
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;

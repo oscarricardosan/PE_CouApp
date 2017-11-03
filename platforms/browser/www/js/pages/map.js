@@ -18,7 +18,8 @@ function initializePage() {
             ajax_queue_count: 0,
             current_position: undefined,
             dates_to_filter: [],
-            date_to_filter: undefined
+            date_to_filter: undefined,
+            ready: true
         },
         methods: {
             synchronize_data_operations: function (e) {
@@ -174,6 +175,7 @@ function initializePage() {
         },
         mounted: function () {
             App_ = this;
+            var url_params= UrlUtility_.getParams();
 
             /**
              * Create map
@@ -188,10 +190,14 @@ function initializePage() {
             /** DETECTAR UBICACIÓN ACTUAL **/
             function onLocationFound(e) {
                 var radius = e.accuracy / 2;
-
-                L.marker(e.latlng).addTo(App_.map)
-                    .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto").openPopup();
-
+                if(url_params.show_pickup_id !== undefined ||  url_params.show_delivery_id !== undefined){
+                    L.marker(e.latlng).addTo(App_.map)
+                        .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
+                }else{
+                    L.marker(e.latlng).addTo(App_.map)
+                        .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto")
+                        .openPopup();
+                }
                 L.circle(e.latlng, radius).addTo(App_.map);
             }
             function onLocationError(e) {
