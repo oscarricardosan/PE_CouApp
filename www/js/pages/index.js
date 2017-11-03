@@ -106,7 +106,9 @@ function initializePage(){
                 alert('distance_to_pickup: 1.1');
                 var App_= this;
                 alert('distance_to_pickup: 1.2');
-                distance= Haversine.distance_in_text(current_position, pickup);
+                try{
+                    distance= Haversine.distance_in_text(crrent_position, pickup);
+                }catch (error){ alert(error.message);}
                 alert('distance_to_pickup: 1.3');
                 if(distance.success){
                     alert('distance_to_pickup: 2.1');
@@ -131,7 +133,9 @@ function initializePage(){
                 alert('distance_to_delivery: 1.1');
                 var App_= this;
                 alert('distance_to_delivery: 1.2');
-                distance= Haversine.distance_in_text(current_position, delivery);
+                try{
+                    distance= Haversine.distance_in_text(current_position, delivery);
+                }catch (error){ alert(error.message);}
                 alert('distance_to_delivery: 1.3');
                 if(distance.success){
                     alert('distance_to_delivery: 2.1');
