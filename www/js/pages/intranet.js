@@ -110,7 +110,8 @@ function initializeIntranet(){
         function initializeActionsInLocalNotifications() {
             cordova.plugins.notification.local.on("click", function (notification) {
 
-                alert('acá');
+                alert(JSON.stringify(notification));
+                alert(JSON.stringify(notification.data));
                 switch(notification.data.action){
                     case "show_delivery":
                         alert('Hola');
