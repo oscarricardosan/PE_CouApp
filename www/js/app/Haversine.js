@@ -48,13 +48,13 @@ var Haversine= (function () {
         if(distance>1000)
             return {
                 distance_in_mts: distance,
-                success: success,
+                success: true,
                 message: 'A '+accounting.formatNumber(distance/1000, 2, '.', ',')+' km',
             };
         else
             return {
                 distance_in_mts: distance,
-                success: success,
+                success: true,
                 message: 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts',
             };
     };
