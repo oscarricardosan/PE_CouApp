@@ -4,7 +4,7 @@ var Alert_time= (function () {
     var run= function(){
         DeliveriesModel.loaded(function(){
             PickupModel.loaded(function(){
-                time_to_search= Alert_time.get_time_to_search();
+                time_to_search= get_time_to_search();
                 alerts_by_proximity();
                 Process.store_last_attempt('alert_by_time');
             });
@@ -56,8 +56,8 @@ var Alert_time= (function () {
 
     function get_time_to_search() {
         var time_search = moment().add(Settings.alert.minimum_minutes, 'minutes' );
-        var hour= time_search().hour()<10?'0'+time_search().hour()*1:time_search().hour();
-        var minute= time_search().minute()<10?'0'+time_search().minute()*1:time_search().minute();
+        var hour= time_search.hour()<10?'0'+time_search.hour()*1:time_search.hour();
+        var minute= time_search.minute()<10?'0'+time_search.minute()*1:time_search.minute();
         return hour+':'+minute+':00';
     }
     function construct(){//Funcion que controla cuales son los metodos publicos

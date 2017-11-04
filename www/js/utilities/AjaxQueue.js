@@ -56,8 +56,8 @@ var AjaxQueue= (function () {
                     });
                     callbacks.success(properties, response);
                 }else{
-                    callbacks.fail(properties, jqXHR, textStatus);
-                    properties.failed_offline(jqXHR, textStatus);
+                    callbacks.fail(properties, response);
+                    properties.failed_offline(properties, response);
                 }
             }else{
                 properties.successful_offline(response);
@@ -83,7 +83,7 @@ var AjaxQueue= (function () {
                 return false;
             }
             callbacks.fail(properties, jqXHR, textStatus);
-            properties.failed_offline(jqXHR, textStatus);
+            properties.failed_offline(properties, jqXHR, textStatus);
             App.ajax_queue_count= Ajax_queueModel.get().length;
         });
     };
