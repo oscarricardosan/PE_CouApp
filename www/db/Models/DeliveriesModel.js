@@ -62,6 +62,14 @@ var DeliveriesModel= (function () {
             update({id: data.id}, data, callback);
     };
 
+    var increment_attemp_gps_alert= function(delivery){
+        if(delivery.attempt_gps_alert === undefined)
+            delivery.attempt_gps_alert= 1;
+        else
+            delivery.attempt_gps_alert= delivery.attempt_gps_alert+1;
+        update({id: delivery.id}, delivery);
+    };
+
     var get = function(){
         return db.collection(collection_name).find();
     };
@@ -104,15 +112,16 @@ var DeliveriesModel= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            get                   : get,
-            find                  : find,
-            store                 : store,
-            update                : update,
-            loaded                : loaded,
-            isEmpty               : isEmpty,
-            drop                  : drop,
-            remove                : remove,
-            insertOrUpdateById    : insertOrUpdateById
+            get                        : get,
+            find                       : find,
+            store                      : store,
+            update                     : update,
+            loaded                     : loaded,
+            isEmpty                    : isEmpty,
+            drop                       : drop,
+            remove                     : remove,
+            insertOrUpdateById         : insertOrUpdateById,
+            increment_attemp_gps_alert : increment_attemp_gps_alert
         }
     };
     return {construct:construct};//retorna los metodos publicos

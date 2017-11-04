@@ -62,6 +62,14 @@ var PickupModel= (function () {
             store(data, callback);
     };
 
+    var increment_attemp_gps_alert= function(pickup){
+        if(pickup.attempt_gps_alert === undefined)
+            pickup.attempt_gps_alert = 1;
+        else
+            pickup.attempt_gps_alert= pickup.attempt_gps_alert+1;
+        update({id: pickup.id}, pickup);
+    };
+
     var get = function(){
         return db.collection(collection_name).find();
     };
@@ -104,15 +112,16 @@ var PickupModel= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            get                   : get,
-            find                  : find,
-            store                 : store,
-            loaded                : loaded,
-            isEmpty               : isEmpty,
-            drop                  : drop,
-            remove                : remove,
-            update                : update,
-            insertOrUpdateById    : insertOrUpdateById
+            get                        : get,
+            find                       : find,
+            store                      : store,
+            loaded                     : loaded,
+            isEmpty                    : isEmpty,
+            drop                       : drop,
+            remove                     : remove,
+            update                     : update,
+            insertOrUpdateById         : insertOrUpdateById,
+            increment_attemp_gps_alert : increment_attemp_gps_alert,
         }
     };
     return {construct:construct};//retorna los metodos publicos

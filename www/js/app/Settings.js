@@ -22,5 +22,6 @@ var Settings= {
     alert: {
         minimum_meters: 1000,
         minimum_minutes: 10,
+        attempt_gps: 1
     }
 };
