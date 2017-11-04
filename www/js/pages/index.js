@@ -284,6 +284,7 @@ function initializePage(){
             form= $(this).closest('.modal');
             form.loading();
             AjaxQueue.add({
+                process_name: 'Adjunto foto delivery: ',
                 type: 'post',
                 url: 'delivery/attach_photo',
                 dataType: 'json',
@@ -291,21 +292,20 @@ function initializePage(){
                     data_uri_photo: App.current_photo,
                     entrega_id: App.operations.current_delivery.id,
                 },
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()){
+                        form.unloading();
                         ToastrUtility_.success(response.message);
                         $('#delivery_attach_photo').modal('hide');
-                    }else{
-                        alert("Error en servidor: "+response.message);
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    $('#delivery_attach_photo').modal('hide');
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
-                },
+                fail: function(jqXHR, textStatus){
+                    if(!cordova.plugins.backgroundMode.isActive()){
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        $('#delivery_attach_photo').modal('hide');
+                    }
+                }
             });
         });
         $('.attach_photo_to_pickup').click(function(){
@@ -315,6 +315,7 @@ function initializePage(){
             form= $(this).closest('.modal');
             form.loading();
             AjaxQueue.add({
+                process_name: 'Adjunto foto pickup: ',
                 type: 'post',
                 url: 'pickup/attach_photo',
                 dataType: 'json',
@@ -322,20 +323,18 @@ function initializePage(){
                     data_uri_photo: App.current_photo,
                     recoleccion_id: App.operations.current_pickup.id,
                 },
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
-                        ToastrUtility_.success(response.message);
-                        $('#pickup_attach_photo').modal('hide');
-                    }else{
-                        alert("Error en servidor: "+response.message);
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()){
+                        form.unloading();
+                        ToastrUtility_.success(response.message)s
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    $('#pickup_attach_photo').modal('hide');
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
+                fail: function(jqXHR, textStatus){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        $('#pickup_attach_photo').modal('hide');
+                    }
                 },
             });
         });
@@ -356,37 +355,53 @@ function initializePage(){
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
+                process_name: 'Pickup guardar excepción: ',
                 type: 'post',
                 url: 'pickup/store_exception',
                 dataType: 'json',
                 data: data,
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
                         PickupModel.update({id: response.data.id}, response.data, {
-                            success: function(){
-                                App.operations.current_pickup=  response.data;
+                            success: function () {
+                                App.operations.current_pickup = response.data;
                                 ToastrUtility_.success(response.message);
                                 $('#pickup_exception_modal').modal('hide');
-                                App.operations.pickups= PickupModel.get();
+                                App.operations.pickups = PickupModel.get();
                             }
                         });
                     }else{
-                        alert("Error en servidor: "+response.message);
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_pickup = response.data;
+                                App.operations.pickups = PickupModel.get();
+                            }
+                        });
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
-                    App.operations.current_pickup.pickup_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
-                    App.operations.current_pickup.pickup_state_id= 3;
-                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                        success: function(){
-                            $('#pickup_exception_modal').modal('hide');
-                            App.operations.pickups= PickupModel.get();
-                        }
-                    });
+                fail: function(jqXHR, textStatus){
+                    App.operations.current_pickup.pickup_state = {
+                        name: "Excepción",
+                        class: "red",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_pickup.pickup_state_id = 3;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {
+                                $('#pickup_exception_modal').modal('hide');
+                                App.operations.pickups = PickupModel.get();
+                            }
+                        });
+                    }else{
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {App.operations.pickups = PickupModel.get();}
+                        });
+                    }
                 },
             });
         });
@@ -397,37 +412,53 @@ function initializePage(){
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
+                process_name: 'Delivery guardar excepción: ',
                 type: 'post',
                 url: 'delivery/store_exception',
                 dataType: 'json',
                 data: data,
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
                         DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function(){
-                                App.operations.current_delivery=  response.data;
+                            success: function () {
+                                App.operations.current_delivery = response.data;
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_exception_modal').modal('hide');
-                                App.operations.deliveries= DeliveriesModel.get();
+                                App.operations.deliveries = DeliveriesModel.get();
                             }
                         });
                     }else{
-                        alert("Error en servidor: "+response.message);
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_delivery = response.data;
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
-                    App.operations.current_delivery.delivery_state= {name: "Excepción", class: "red", can_edit: false, can_cancel: false};
-                    App.operations.current_delivery.delivery_state_id= 3;
-                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                        success: function(){
-                            $('#delivery_exception_modal').modal('hide');
-                            App.operations.deliveries= DeliveriesModel.get();
-                        }
-                    });
+                fail: function(jqXHR, textStatus){
+                    App.operations.current_delivery.delivery_state = {
+                        name: "Excepción",
+                        class: "red",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_delivery.delivery_state_id = 3;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {
+                                $('#delivery_exception_modal').modal('hide');
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
+                    }else{
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {App.operations.deliveries = DeliveriesModel.get();}
+                        });
+                    }
                 },
             });
         });
@@ -448,37 +479,53 @@ function initializePage(){
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
+                process_name: 'Pickup exitoso: ',
                 type: 'post',
                 url: 'pickup/store_successful',
                 dataType: 'json',
                 data: data,
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
                         PickupModel.update({id: response.data.id}, response.data, {
-                            success: function(){
-                                App.operations.current_pickup=  response.data;
+                            success: function () {
+                                App.operations.current_pickup = response.data;
                                 ToastrUtility_.success(response.message);
                                 $('#pickup_success_modal').modal('hide');
-                                App.operations.pickups= PickupModel.get();
+                                App.operations.pickups = PickupModel.get();
                             }
                         });
                     }else{
-                        alert("Error en servidor: "+response.message);;
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_pickup = response.data;
+                                App.operations.pickups = PickupModel.get();
+                            }
+                        });
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
-                    App.operations.current_pickup.pickup_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
-                    App.operations.current_pickup.pickup_state_id= 2;
-                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                        success: function(){
-                            $('#pickup_success_modal').modal('hide');
-                            App.operations.pickups= PickupModel.get();
-                        }
-                    });
+                fail: function(jqXHR, textStatus){
+                    App.operations.current_pickup.pickup_state = {
+                        name: "Realizada",
+                        class: "green",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_pickup.pickup_state_id = 2;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {
+                                $('#pickup_success_modal').modal('hide');
+                                App.operations.pickups = PickupModel.get();
+                            }
+                        });
+                    }else{
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {App.operations.pickups = PickupModel.get();}
+                        });
+                    }
                 },
             });
         });
@@ -489,37 +536,53 @@ function initializePage(){
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
+                process_name: 'Delivery exitoso: ',
                 type: 'post',
                 url: 'delivery/store_successful',
                 dataType: 'json',
                 data: data,
-                successful_online: function(response){
-                    form.unloading();
-                    if(response.success){
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
                         DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function(){
-                                App.operations.current_delivery=  response.data;
+                            success: function () {
+                                App.operations.current_delivery = response.data;
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_success_modal').modal('hide');
-                                App.operations.deliveries= DeliveriesModel.get();
+                                App.operations.deliveries = DeliveriesModel.get();
                             }
                         });
                     }else{
-                        alert("Error en servidor: "+response.message);
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_delivery = response.data;
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
                     }
                 },
-                failed_online: function(jqXHR, textStatus){
-                    form.unloading();
-                    ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                    App.ajax_queue_count= Ajax_queueModel.get().length;
-                    App.operations.current_delivery.delivery_state= {name: "Realizada", class: "green", can_edit: false, can_cancel: false};
-                    App.operations.current_delivery.delivery_state_id= 2;
-                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                        success: function(){
-                            $('#delivery_success_modal').modal('hide');
-                            App.operations.deliveries= DeliveriesModel.get();
-                        }
-                    });
+                fail: function(jqXHR, textStatus){
+                    App.operations.current_delivery.delivery_state = {
+                        name: "Realizada",
+                        class: "green",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_delivery.delivery_state_id = 2;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        form.unloading();
+                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {
+                                $('#delivery_success_modal').modal('hide');
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
+                    }else{
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {App.operations.deliveries = DeliveriesModel.get();}
+                        });
+                    }
                 },
             });
         });

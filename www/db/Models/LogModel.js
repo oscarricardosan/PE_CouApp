@@ -35,6 +35,20 @@ var LogModel= (function () {
         });
     };
 
+    var store_success= function(message, data, callback){
+        data.message= message;
+        data.data= data;
+        data.status= 'success';
+        store(data, callback);
+    };
+
+    var store_fail= function(message, data, callback){
+        data.message= message;
+        data.data= data;
+        data.status= 'danger';
+        store(data, callback);
+    };
+
     var get = function(){
         var records= db.collection(collection_name).find();
         return records;
@@ -79,7 +93,9 @@ var LogModel= (function () {
             loaded            : loaded,
             isEmpty           : isEmpty,
             drop              : drop,
-            remove            : remove
+            remove            : remove,
+            store_success     : store_success,
+            store_fail        : store_fail
         }
     };
     return {construct:construct};//retorna los metodos publicos

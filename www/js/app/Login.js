@@ -21,7 +21,7 @@ var Login= (function () {
         });
         request.fail(function(jqXHR, textStatus) {
             callback.failure(jqXHR, textStatus);
-            AjaxUtility_.processFaillRequest(jqXHR, textStatus);
+            AjaxUtility_.processFailRequest(jqXHR, textStatus);
         });
     };
 

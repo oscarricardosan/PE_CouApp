@@ -53,6 +53,7 @@ var Gps= (function () {
 
     function store_position(position) {
         AjaxQueue.add({
+            process_name: 'GPS: ',
             type: 'post',
             url: 'courier/store_geo_position',
             dataType: 'text',
@@ -60,34 +61,6 @@ var Gps= (function () {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 registered_at: MomentUtility_.now()
-            },
-            successful_online: function(response){
-                LogModel.store({
-                    message: 'GPS: Transmisión de petición online a servidor exitosa.',
-                    status: 'success',
-                    data: properties
-                });
-            },
-            failed_online: function(jqXHR, textStatus){
-                LogModel.store({
-                    message: 'GPS: Error al transmitir al servidor petición online.',
-                    status: 'danger',
-                    data: properties
-                });
-            },
-            successful_offline: function(response){
-                LogModel.store({
-                    message: 'GPS: Transmisión de petición offline a servidor exitosa.',
-                    status: 'success',
-                    data: properties
-                });
-            },
-            failed_offline: function(jqXHR, textStatus){
-                LogModel.store({
-                    message: 'GPS: Error al transmitir al servidor petición offline.',
-                    status: 'danger',
-                    data: properties
-                });
             }
         });
     }
