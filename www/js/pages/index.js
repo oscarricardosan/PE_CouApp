@@ -107,14 +107,13 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_pickup: function (current_position, pickup) {
-                var App_= this;
                 distance= Haversine.distance_in_text(current_position, pickup);
                 if(distance.success){
                     if(pickup.distance_in_mts !== distance.distance_in_mts){
                         pickup.distance_in_mts= distance.distance_in_mts;
                         PickupModel.update({id: pickup.id}, pickup, {
                             success: function(){
-                                App_.operations.pickups= PickupModel.get();
+                                App.operations.pickups= PickupModel.get();
                             }
                         });
                     }
@@ -122,14 +121,13 @@ function initializePage(){
                 return distance.message;
             },
             distance_to_delivery: function (current_position, delivery) {
-                var App_= this;
                 distance= Haversine.distance_in_text(current_position, delivery);
                 if(distance.success){
                     if(delivery.distance_in_mts !== distance.distance_in_mts){
                         delivery.distance_in_mts= distance.distance_in_mts;
                         DeliveriesModel.update({id: delivery.id}, delivery, {
                             success: function(){
-                                App_.operations.deliveries= DeliveriesModel.get();
+                                App.operations.deliveries= DeliveriesModel.get();
                             }
                         });
                     }
@@ -326,7 +324,7 @@ function initializePage(){
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         form.unloading();
-                        ToastrUtility_.success(response.message)s
+                        ToastrUtility_.success(response.message);
                     }
                 },
                 fail: function(jqXHR, textStatus){

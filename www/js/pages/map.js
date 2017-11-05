@@ -137,7 +137,7 @@ function initializePage() {
                         "<b>Dirección: </b> " + pickup.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+App_.distance_to_pickup(App_ ,pickup)+"  <br>"+
+                        "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(pickup.distance_in_mts)+"  <br>"+
                         "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+pickup.pickup_date+"&search="+pickup.pickup_number+"&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
                     if(url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
@@ -162,7 +162,7 @@ function initializePage() {
                         "<b>Dirección: </b> " + delivery.address + " <br>" +
                         "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
                         "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> "+App_.distance_to_delivery(App_ ,delivery)+"  <br>"+
+                        "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(delivery.distance_in_mts)+"  <br>"+
                         "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"
                     );
                     if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
@@ -171,6 +171,9 @@ function initializePage() {
                     if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
                         App_.centerLeafletMapOnMarker(marker);
                 });
+            },
+            current_position: function(current_position){
+                App_.map.locate({setView: true, maxZoom: 12});
             }
         },
         mounted: function () {
@@ -185,7 +188,7 @@ function initializePage() {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
             }).addTo(App_.map);
-            App_.map.locate({setView: true, maxZoom: 16});
+            App_.map.locate({setView: true, maxZoom: 12});
 
             /** DETECTAR UBICACIÓN ACTUAL **/
             function onLocationFound(e) {

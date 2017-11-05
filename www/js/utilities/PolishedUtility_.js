@@ -25,19 +25,6 @@ var PolishedUtility_= (function () {
         properties.dataType= eval(properties, 'dataType', 'json');
         properties.data= eval(properties, 'data', {});
 
-        properties.successful_online= eval(properties, 'successful_online', function(response){
-            if(response.success)
-                ToastrUtility_.success(response.message);
-            else
-                ToastrUtility_.error(response.message);
-
-            LogModel.store({
-                message: 'Transmisión de petición online a servidor exitosa.',
-                status: 'success',
-                data: properties
-            });
-        });
-
         properties.success= eval(properties, 'success', function(){});
         properties.fail= eval(properties, 'fail', function(){});
 

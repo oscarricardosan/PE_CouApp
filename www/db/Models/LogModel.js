@@ -26,7 +26,7 @@ var LogModel= (function () {
     var store = function(data, callback){
         callback= PolishedUtility_.callback(callback);
 
-        data.created_at= MomentUtility_.now()
+        data.created_at= MomentUtility_.now();
         db.collection(collection_name).insert(data);
 
         db.collection(collection_name).save(function (err) {
@@ -36,17 +36,19 @@ var LogModel= (function () {
     };
 
     var store_success= function(message, data, callback){
-        data.message= message;
-        data.data= data;
-        data.status= 'success';
-        store(data, callback);
+        store({
+            message: message,
+            data: data,
+            status: 'success'
+        }, callback);
     };
 
     var store_fail= function(message, data, callback){
-        data.message= message;
-        data.data= data;
-        data.status= 'danger';
-        store(data, callback);
+        store({
+            message: message,
+            data: data,
+            status: 'danger'
+        }, callback);
     };
 
     var get = function(){

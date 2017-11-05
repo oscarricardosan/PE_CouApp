@@ -15,8 +15,9 @@ var AjaxQueue= (function () {
                     properties.success(response, properties);
                     LogModel.store_success(properties.process_name, response);
                 }else{
+                    var data= {properties: properties, response: response};
                     properties.fail(data);
-                    LogModel.store_fail(properties.process_name, {queue: properties, response: response});
+                    LogModel.store_fail(properties.process_name, data);
                 }
             }else{
                 properties.success(response, properties);
