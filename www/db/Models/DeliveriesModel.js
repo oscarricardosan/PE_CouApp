@@ -56,10 +56,15 @@ var DeliveriesModel= (function () {
      */
     var insertOrUpdateById = function(data, callback){
         callback= PolishedUtility_.callback(callback);
-        if(data.id !== undefined && find({id: data.id}).length === 1)
+        console.log(data.id);
+        console.log(find({id: data.id}));
+        if(data.id !== undefined && find({id: data.id}).length === 1){
+            alert('Update delivery');
             update({id: data.id}, data, callback);
-        else
+        }else{
+            alert('Store delivery');
             store(data, callback);
+        }
     };
 
     var increment_attemp_gps_alert= function(delivery){

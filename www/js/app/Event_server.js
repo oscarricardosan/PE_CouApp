@@ -19,18 +19,16 @@ var Event_server= (function () {
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
-        if(server_events.events.length>=1){
+        if(server_events.events.length>0){
             navigator.vibrate([3000, 2000, 3000]);
             navigator.notification.beep(3);
-
-            DeliveriesModel.loaded(function(){App.operations.deliveries= DeliveriesModel.get();});
-            PickupModel.loaded(function(){App.operations.pickups= PickupModel.get();});
         }
     }
     
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
             success: function(){
+                App.operations.pickups= PickupModel.get();
                 Event_server.delete_event_in_server(event.id);
             },
             fail: function(){
@@ -54,6 +52,7 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(){
+                App.operations.deliveries= DeliveriesModel.get();
                 Event_server.delete_event_in_server(event.id);
             },
             fail: function(){
