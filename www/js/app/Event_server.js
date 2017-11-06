@@ -30,10 +30,10 @@ var Event_server= (function () {
     
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
-            success: function(model){
-                delete_event_in_server(event.id);
+            success: function(){
+                Event_server.delete_event_in_server(event.id);
             },
-            fail: function(model){
+            fail: function(){
                 Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.pickup_number);
             }
         });
@@ -53,10 +53,10 @@ var Event_server= (function () {
 
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
-            success: function(model){
+            success: function(){
                 Event_server.delete_event_in_server(event.id);
             },
-            fail: function(model){
+            fail: function(){
                 Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.delivery_number);
             }
         });
