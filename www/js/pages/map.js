@@ -116,6 +116,7 @@ function initializePage() {
                             App_.date_to_filter= this.dates_to_filter[0];
                         }
                     }else{
+                        this.date_to_filter= undefined;
                         this.date_to_filter= this.date_to_filter;
                     }
                 },
