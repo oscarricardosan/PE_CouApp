@@ -181,7 +181,8 @@ function initializePage() {
                 });
             },
             current_position: function(current_position){
-                App_.map.locate({maxZoom: 12});
+                if(this.can_refresh_position)
+                    App_.map.locate({maxZoom: 12});
             }
         },
         mounted: function () {
@@ -197,6 +198,8 @@ function initializePage() {
                 maxZoom: 18
             }).addTo(App_.map);
             App_.map.locate({setView: true, maxZoom: 18});
+
+            /** DETECTAR UBICACIÓN ACTUAL **/
             App_.map.on('locationfound', onLocationFound);
             App_.map.on('locationerror', onLocationError);
 

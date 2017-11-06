@@ -79,7 +79,7 @@ var AjaxQueue= (function () {
     };
 
     function validate_request_fail(jqXHR){
-        console.log(jqXHR.responseJSON);
+        console.log(jqXHR);
         if(jqXHR.status===422){
             if(typeof jqXHR.responseJSON === 'object')
                 Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
