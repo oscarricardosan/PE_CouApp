@@ -56,13 +56,9 @@ var DeliveriesModel= (function () {
      */
     var insertOrUpdateById = function(data, callback){
         callback= PolishedUtility_.callback(callback);
-        console.log(data.id);
-        console.log(find({id: data.id}));
         if(data.id !== undefined && find({id: data.id}).length === 1){
-            alert('Update delivery');
             update({id: data.id}, data, callback);
         }else{
-            alert('Store delivery');
             store(data, callback);
         }
     };
