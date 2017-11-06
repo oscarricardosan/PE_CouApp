@@ -173,7 +173,7 @@ function initializePage() {
                 });
             },
             current_position: function(current_position){
-                App_.map.locate({setView: true, maxZoom: 12});
+                App_.map.locate({maxZoom: 12});
             }
         },
         mounted: function () {
