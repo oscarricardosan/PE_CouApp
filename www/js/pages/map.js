@@ -17,9 +17,12 @@ function initializePage() {
             pickups_to_show: [],
             ajax_queue_count: 0,
             current_position: undefined,
+            current_position_marker: undefined,
+            current_position_circle: undefined,
             dates_to_filter: [],
             date_to_filter: undefined,
-            ready: true
+            ready: true,
+            can_refresh_position: false
         },
         methods: {
             synchronize_data_operations: function (e) {
@@ -112,6 +115,8 @@ function initializePage() {
                         }else{
                             App_.date_to_filter= this.dates_to_filter[0];
                         }
+                    }else{
+                        this.date_to_filter= this.date_to_filter;
                     }
                 },
                 deep: true
@@ -173,7 +178,8 @@ function initializePage() {
                 });
             },
             current_position: function(current_position){
-                App_.map.locate({maxZoom: 12});
+                if(this.can_refresh_position)
+                    App_.map.locate({maxZoom: 12});
             }
         },
         mounted: function () {
@@ -192,10 +198,19 @@ function initializePage() {
 
             /** DETECTAR UBICACIÓN ACTUAL **/
             function onLocationFound(e) {
+                if(App_.current_position_marker !== undefined){
+                    App_.map.removeLayer(App_.current_position_marker);
+                }
+                if(App_.current_position_circle !== undefined) {
+                    App_.map.removeLayer(App_.current_position_circle);
+                }
+
                 var radius = e.accuracy / 2;
                 L.marker(e.latlng).addTo(App_.map)
                     .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
                 L.circle(e.latlng, radius).addTo(App_.map);
+                setTimeout(function(){ App_.can_refresh_position= true; }, 1000);
+
             }
             function onLocationError(e) {
                 alert(e.message);
