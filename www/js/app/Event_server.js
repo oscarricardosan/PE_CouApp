@@ -29,12 +29,13 @@ var Event_server= (function () {
     }
     
     function process_pickups(event) {
+        try{
         PickupModel.insertOrUpdateById(event.data, {
             success: function(model){
                 delete_event_in_server(event.id);
             },
             fail: function(model){
-                Notification.event_server_pickup_danger ('Error procesando evento - '+model.pickup_number);
+                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.pickup_number);
             }
         });
         if(event.event === 'creation')
@@ -49,9 +50,11 @@ var Event_server= (function () {
                 undefined,
                 {action: 'show_pickup', pickup: event.data}
             );
+        }catch (e){ alert(e.message); }
     }
 
     function process_deliveries(event){
+        try{
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(model){
                 Event_server.delete_event_in_server(event.id);
@@ -72,6 +75,7 @@ var Event_server= (function () {
                 undefined,
                 {action: 'show_delivery', delivery: event.data}
             );
+        }catch (e){ alert(e.message); }
     }
 
     function delete_event_in_server(id){
