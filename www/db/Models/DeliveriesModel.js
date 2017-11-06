@@ -57,9 +57,9 @@ var DeliveriesModel= (function () {
     var insertOrUpdateById = function(data, callback){
         callback= PolishedUtility_.callback(callback);
         if(data.id !== undefined && find({id: data.id}).length === 1)
-            store(data, callback);
-        else
             update({id: data.id}, data, callback);
+        else
+            store(data, callback);
     };
 
     var increment_attemp_gps_alert= function(delivery){
