@@ -116,8 +116,10 @@ function initializePage() {
                             App_.date_to_filter= this.dates_to_filter[0];
                         }
                     }else{
+                        var current_date= this.date_to_filter;
                         this.date_to_filter= undefined;
-                        this.date_to_filter= this.date_to_filter;
+                        setTimeout(function(){ App_.date_to_filter= current_date; }, 300);
+
                     }
                 },
                 deep: true
@@ -179,8 +181,7 @@ function initializePage() {
                 });
             },
             current_position: function(current_position){
-                if(this.can_refresh_position)
-                    App_.map.locate({maxZoom: 12});
+                App_.map.locate({maxZoom: 12});
             }
         },
         mounted: function () {
@@ -196,26 +197,6 @@ function initializePage() {
                 maxZoom: 18
             }).addTo(App_.map);
             App_.map.locate({setView: true, maxZoom: 18});
-
-            /** DETECTAR UBICACIÓN ACTUAL **/
-            function onLocationFound(e) {
-                if(App_.current_position_marker !== undefined){
-                    App_.map.removeLayer(App_.current_position_marker);
-                }
-                if(App_.current_position_circle !== undefined) {
-                    App_.map.removeLayer(App_.current_position_circle);
-                }
-
-                var radius = e.accuracy / 2;
-                L.marker(e.latlng).addTo(App_.map)
-                    .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
-                L.circle(e.latlng, radius).addTo(App_.map);
-                setTimeout(function(){ App_.can_refresh_position= true; }, 1000);
-
-            }
-            function onLocationError(e) {
-                alert(e.message);
-            }
             App_.map.on('locationfound', onLocationFound);
             App_.map.on('locationerror', onLocationError);
 
@@ -252,5 +233,23 @@ function initializePage() {
     $(document).ready(function () {
         //$('.synchronize_data_operations').trigger("click");
     });
+
+    /** DETECTAR UBICACIÓN ACTUAL **/
+    function onLocationFound(e) {
+        if(App_.current_position_marker !== undefined)
+            App_.map.removeLayer(App_.current_position_marker);
+        if(App_.current_position_circle !== undefined)
+            App_.map.removeLayer(App_.current_position_circle);
+
+        var radius = e.accuracy / 2;
+        App_.current_position_marker= L.marker(e.latlng).addTo(App_.map)
+            .bindPopup("Tu estas en un radio de " + radius + " metros desde este punto");
+        App_.current_position_circle= L.circle(e.latlng, radius).addTo(App_.map);
+        setTimeout(function(){ App_.can_refresh_position= true; }, 1000);
+
+    }
+    function onLocationError(e) {
+        ToastrUtility_.error(e.message);
+    }
 
 }

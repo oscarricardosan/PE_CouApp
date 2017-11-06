@@ -79,12 +79,16 @@ var AjaxQueue= (function () {
     };
 
     function validate_request_fail(jqXHR){
+        console.log(jqXHR.responseJSON);
         if(jqXHR.status===422){
-            Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
+            if(typeof jqXHR.responseJSON === 'object')
+                Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
+            else
+                Alert_('Queue: Error de validació en campos');
             return false;
         }
         if(jqXHR.status===403){
-            Alert_('Queue: Acceso denegado. '+ jqXHR.responseJSON.message);
+            Alert_('Queue: Acceso denegado.');
             Login.logout();
             return false;
         }
