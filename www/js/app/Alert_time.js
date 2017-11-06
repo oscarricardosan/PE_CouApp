@@ -24,7 +24,7 @@ var Alert_time= (function () {
         });
         $.each(deliveries, function(index, delivery){
             Notification.event_server_delivery_message(
-                delivery.delivery_number+' a las '+time_to_search,
+                delivery.delivery_number+' a las '+delivery.delivery_start_time,
                 undefined,
                 {action: 'show_delivery', delivery: delivery}
             );
@@ -37,13 +37,13 @@ var Alert_time= (function () {
 
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
-            delivery_start_time: time_to_search,
+            pickup_start_time: time_to_search,
             pickup_state_id:100,
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){
             Notification.event_server_pickup_message(
-                pickup.pickup_number+' a las '+time_to_search,
+                pickup.pickup_number+' a las '+pickup.pickup_start_time,
                 undefined,
                 {action: 'show_pickup', pickup: pickup}
             );
