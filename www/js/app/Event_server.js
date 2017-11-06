@@ -19,7 +19,7 @@ var Event_server= (function () {
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
-        if(server_events.length>=1){
+        if(server_events.events.length>=1){
             navigator.vibrate([3000, 2000, 3000]);
             navigator.notification.beep(3);
 
