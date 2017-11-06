@@ -18,7 +18,7 @@ var Alert_proximity= (function () {
         var deliveries= DeliveriesModel.find({
             distance_in_mts: {"$lte": Settings.alert.minimum_meters},
             $or: [{attempt_gps_alert: {"$lt": Settings.alert.attempt_gps}}, {attempt_gps_alert: undefined}],
-            delivery_state_id:1,
+            delivery_state_id:100,
             delivery_date: MomentUtility_.current_date()
         });
         $.each(deliveries, function(index, delivery){
@@ -39,7 +39,7 @@ var Alert_proximity= (function () {
         var pickups= PickupModel.find({
             distance_in_mts: {"$lte": Settings.alert.minimum_meters},
             $or: [{attempt_gps_alert: {"$lt": Settings.alert.attempt_gps}}, {attempt_gps_alert: undefined}],
-            pickup_state_id:1,
+            pickup_state_id:100,
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){

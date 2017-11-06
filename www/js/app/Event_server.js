@@ -8,14 +8,14 @@ var Event_server= (function () {
             dataType: 'json',
             data: {},
             success: function(server_events){
-                process_server_events(server_events);
+                Event_server.process_server_events(server_events);
             }
         });
         Process.store_last_attempt('get_events_from_server');
     }
     
     function process_server_events(server_events) {
-        $.each(server_events, function(index, event){
+        $.each(server_events.events, function(index, event){
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
@@ -54,7 +54,7 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(model){
-                delete_event_in_server(event.id);
+                Event_server.delete_event_in_server(event.id);
             },
             fail: function(model){
                 Notification.event_server_delivery_danger('Error procesando evento de - '+model.delivery_number);
@@ -97,7 +97,9 @@ var Event_server= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get_events_from_server                : get_events_from_server,
-            clear_events_in_server                : clear_events_in_server
+            clear_events_in_server                : clear_events_in_server,
+            process_server_events                 : process_server_events,
+            delete_event_in_server                : delete_event_in_server
         }
     }
     return {construct:construct};//retorna los metodos publicos

@@ -71,12 +71,12 @@ var ProcessBackground= (function () {
         var sin_recoger= 0;
         try {
             DeliveriesModel.loaded(function(){
-                sin_entregar= DeliveriesModel.find({delivery_state_id: 1}).length;
+                sin_entregar= DeliveriesModel.find({delivery_state_id: 100}).length;
                 notify_message.deliveries =
                     (sin_entregar>0)?'Sin Entregar ' + sin_entregar:'Todo entregado';
 
                 PickupModel.loaded(function(){
-                    sin_recoger= PickupModel.find({pickup_state_id: 1}).length;
+                    sin_recoger= PickupModel.find({pickup_state_id: 100}).length;
                     notify_message.pickups=
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 

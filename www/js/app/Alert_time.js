@@ -19,7 +19,7 @@ var Alert_time= (function () {
     function alerts_by_proximity_deliveries(){
         var deliveries= DeliveriesModel.find({
             delivery_start_time: time_to_search,
-            delivery_state_id:1,
+            delivery_state_id:100,
             delivery_date: MomentUtility_.current_date()
         });
         $.each(deliveries, function(index, delivery){
@@ -38,7 +38,7 @@ var Alert_time= (function () {
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
             delivery_start_time: time_to_search,
-            pickup_state_id:1,
+            pickup_state_id:100,
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){
