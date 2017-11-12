@@ -8,6 +8,7 @@ var Event_server= (function () {
             dataType: 'json',
             data: {},
             success: function(server_events){
+                Ajax_queueModel.remove({url: 'courier_event/get_all'}, function(){});
                 Event_server.process_server_events(server_events);
             }
         });
