@@ -601,6 +601,140 @@ function initializePage(){
         });
         /** <!-- CIERRA STORE DE EXITOSAS */
 
+
+        /** ABRE ASOCIAR GUIAS */
+        $('#pickup_consignments_modal').on('show.bs.modal', function () {
+            $('#pickup_consignments_modal [name="guias"]').val(
+                App.operations.current_pickup.consignments.join("\n")
+            );
+        });
+        $('#delivery_consignments_modal').on('show.bs.modal', function () {
+            $('#delivery_consignments_modal [name="guias"]').val(
+                App.operations.current_delivery.consignments.join("\n")
+            );
+        });
+        $('#pickup_consignments_modal form').submit(function (event) {
+            event.preventDefault();
+            var form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.recoleccion_id= App.operations.current_pickup.id;
+            AjaxQueue.add({
+                process_name: 'Pickup exitoso: ',
+                type: 'post',
+                url: 'pickup/store_successful',
+                dataType: 'json',
+                data: data,
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        if(typeof form === 'object')form.unloading();
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_pickup = response.data;
+                                App.operations.pickups = PickupModel.get();
+                                if($('#pickup_success_modal').is(':visible')) {
+                                    ToastrUtility_.success(response.message);
+                                    $('#pickup_success_modal').modal('hide');
+                                }
+                            }
+                        });
+                    }else{
+                        PickupModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_pickup = response.data;
+                                App.operations.pickups = PickupModel.get();
+                            }
+                        });
+                    }
+                },
+                fail: function(jqXHR, textStatus){
+                    App.operations.current_pickup.pickup_state = {
+                        name: "Realizada",
+                        class: "green",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_pickup.pickup_state_id = 200;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        if($('#pickup_success_modal').is(':visible'))
+                            ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        if(typeof form === 'object')form.unloading();
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {
+                                App.operations.pickups = PickupModel.get();
+                                if($('#pickup_success_modal').is(':visible')) $('#pickup_success_modal').modal('hide');
+                            }
+                        });
+                    }else{
+                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                            success: function () {App.operations.pickups = PickupModel.get();}
+                        });
+                    }
+                },
+            });
+        });
+        $('#delivery_consignments_modal form').submit(function (event) {
+            event.preventDefault();
+            var form= $(this);
+            form.loading();
+            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            data.entrega_id= App.operations.current_delivery.id;
+            AjaxQueue.add({
+                process_name: 'Delivery exitoso: ',
+                type: 'post',
+                url: 'delivery/store_successful',
+                dataType: 'json',
+                data: data,
+                success: function(response){
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        if(typeof form === 'object')form.unloading();
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_delivery = response.data;
+                                App.operations.deliveries = DeliveriesModel.get();
+                                if($('#delivery_success_modal').is(':visible')) {
+                                    ToastrUtility_.success(response.message);
+                                    $('#delivery_success_modal').modal('hide');
+                                }
+                            }
+                        });
+                    }else{
+                        DeliveriesModel.update({id: response.data.id}, response.data, {
+                            success: function () {
+                                App.operations.current_delivery = response.data;
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
+                    }
+                },
+                fail: function(){
+                    App.operations.current_delivery.delivery_state = {
+                        name: "Realizada",
+                        class: "green",
+                        can_edit: false,
+                        can_cancel: false
+                    };
+                    App.operations.current_delivery.delivery_state_id = 200;
+                    if(!cordova.plugins.backgroundMode.isActive()) {
+                        if(typeof form === 'object')form.unloading();
+                        if($('#delivery_success_modal').is(':visible'))
+                            ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {
+                                if($('#delivery_success_modal').is(':visible')) $('#delivery_success_modal').modal('hide');
+                                App.operations.deliveries = DeliveriesModel.get();
+                            }
+                        });
+                    }else{
+                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                            success: function () {App.operations.deliveries = DeliveriesModel.get();}
+                        });
+                    }
+                },
+            });
+        });
+        /** <!-- CIERRA ASOCIAR GUIAS */
+
         /** ABRE IMPRESION DE LABELS */
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();

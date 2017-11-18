@@ -424,7 +424,7 @@
                                 </button>
                             </div>
                             <div class=" col-xs-6">
-                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
+                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#pickup_consignments_modal">
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
@@ -634,6 +634,36 @@
         </div>
     </div>
 
+    <!-- MODAL CONSIGNMENTS DELIVERY -->
+    <div class="modal fade" id="pickup_consignments_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_pickup.pickup_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="callout callout-info">
+                                <p>
+                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Guías:</label>
+                            <textarea class="form-control" name="guias" rows="6"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Asociar guías</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
     <!-- MODAL ACTION DELIVERY -->
@@ -668,7 +698,7 @@
                                 </button>
                             </div>
                             <div class=" col-xs-6">
-                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
+                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_consignments_modal">
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
@@ -871,6 +901,36 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL CONSIGNMENTS DELIVERY -->
+    <div class="modal fade" id="delivery_consignments_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="callout callout-info">
+                                <p>
+                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Guías:</label>
+                            <textarea class="form-control" name="guias" rows="6"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Asociar guías</button>
                     </div>
                 </form>
             </div>
