@@ -402,36 +402,38 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class=" col-xs-6"  v-if="operations.current_pickup.pickup_state_id === 100">
-                            <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#pickup_success_modal">
-                                <i class="fa fa-check-circle"></i> Registrar recolección
-                            </button>
-                        </div>
-                        <div class=" col-xs-6"  style="margin-top: 1em; margin-bottom: 1em;" v-if="operations.current_pickup.pickup_state_id === 100">
-                            <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#pickup_exception_modal">
-                                <i class="fa fa-ban"></i> Registrar excepción
-                            </button>
-                        </div>
-                        <div class=" col-xs-6" >
-                            <button class="btn btn-block btn-flat btn-app bg-blue"  data-toggle="modal" data-target="#print_pickup_label">
-                                <i class="fa fa-print"></i> Label
-                            </button>
-                        </div>
-                        <div class=" col-xs-6" >
-                            <button class="btn btn-block btn-flat btn-app bg-purple" data-toggle="modal" data-target="#pickup_attach_photo">
-                                <i class="fa fa-camera"></i> Asociar foto
-                            </button>
-                        </div>
-                        <div class=" col-xs-6">
-                            <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
-                                <i class="fa fa-bars"></i> Asociar guías
-                            </button>
-                        </div>
-                        <div class=" col-xs-6" >
-                            <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_pickup_id='+operations.current_pickup.id">
-                                <i class="fa fa-globe"></i>
-                                Ver en mapa
-                            </a>
+                        <div class="col-xs-12 no-padding">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100">
+                                <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#pickup_success_modal">
+                                    <i class="fa fa-check-circle"></i> Registrar recolección
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100">
+                                <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#pickup_exception_modal">
+                                    <i class="fa fa-ban"></i> Registrar excepción
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" >
+                                <button class="btn btn-block btn-flat btn-app bg-blue"  data-toggle="modal" data-target="#print_pickup_label">
+                                    <i class="fa fa-print"></i> Label
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" >
+                                <button class="btn btn-block btn-flat btn-app bg-purple" data-toggle="modal" data-target="#pickup_attach_photo">
+                                    <i class="fa fa-camera"></i> Asociar foto
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
+                                    <i class="fa fa-bars"></i> Asociar guías
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" >
+                                <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_pickup_id='+operations.current_pickup.id">
+                                    <i class="fa fa-globe"></i>
+                                    Ver en mapa
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -644,35 +646,37 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id === 100">
-                            <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#delivery_success_modal">
-                                <i class="fa fa-check-circle"></i> Registrar entrega
-                            </button>
-                        </div>
-                        <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  === 100">
-                            <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#delivery_exception_modal">
-                                <i class="fa fa-ban"></i> Registrar excepción
-                            </button>
-                        </div>
-                        <div class=" col-xs-6">
-                            <button class="btn btn-block btn-flat btn-app bg-blue"  data-toggle="modal" data-target="#print_delivery_label">
-                                <i class="fa fa-print"></i> Label
-                            </button>
-                        </div>
-                        <div class=" col-xs-6">
-                            <button class="btn btn-block btn-flat btn-app bg-purple" data-toggle="modal" data-target="#delivery_attach_photo">
-                                <i class="fa fa-camera"></i> Asociar foto
-                            </button>
-                        </div>
-                        <div class=" col-xs-6">
-                            <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
-                                <i class="fa fa-bars"></i> Asociar guías
-                            </button>
-                        </div>
-                        <div class=" col-xs-6">
-                            <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_delivery_id='+operations.current_delivery.id">
-                                <i class="fa fa-globe"></i> Ver en mapa
-                            </a>
+                        <div class="col-xs-12 no-padding">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id === 100">
+                                <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#delivery_success_modal">
+                                    <i class="fa fa-check-circle"></i> Registrar entrega
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  === 100">
+                                <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#delivery_exception_modal">
+                                    <i class="fa fa-ban"></i> Registrar excepción
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-blue"  data-toggle="modal" data-target="#print_delivery_label">
+                                    <i class="fa fa-print"></i> Label
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-purple" data-toggle="modal" data-target="#delivery_attach_photo">
+                                    <i class="fa fa-camera"></i> Asociar foto
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#delivery_attach_photo">
+                                    <i class="fa fa-bars"></i> Asociar guías
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_delivery_id='+operations.current_delivery.id">
+                                    <i class="fa fa-globe"></i> Ver en mapa
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

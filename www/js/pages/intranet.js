@@ -87,7 +87,7 @@ function initializeIntranet(){
                 debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
                 // notificationIconColor: '#4CAF50',
-                notificationTitle: 'CourierApp Abrir',
+                notificationTitle: 'CourierApp toca para abrir',
                 notificationText: '. . .',
                 //  notificationIcon: '/images/danger.png'
             });
