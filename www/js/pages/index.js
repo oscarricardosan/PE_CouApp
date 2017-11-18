@@ -46,6 +46,8 @@ function initializePage(){
                 AjaxQueue.check_queue_from_element(element);
             },
             contains: function(search, value) {
+                if(typeof value === 'object')
+                    value= JSON.stringify(value);
                 return value.toUpperCase().indexOf(search.toUpperCase()) >= 0;
             },
             refresh_counters_in_list: function(){
