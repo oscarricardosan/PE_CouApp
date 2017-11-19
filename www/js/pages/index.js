@@ -779,7 +779,7 @@ function initializePage(){
                         }catch (error){
                             alert(error.message);
                         }
-                        alert(JSON.stringify(PrinterModel.get());
+                        alert(JSON.stringify(PrinterModel.get()));
                     },
                     function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
                 );
