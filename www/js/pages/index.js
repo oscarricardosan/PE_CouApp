@@ -773,13 +773,8 @@ function initializePage(){
                 callbacks= PolishedUtility_.callback(callbacks);
                 window.DatecsPrinter.connect(printer_address,
                     function() {
-                        try{
-                            callbacks.success();
-                            PrinterModel.store({address:device_address});
-                        }catch (error){
-                            alert(error.message);
-                        }
-                        alert(JSON.stringify(PrinterModel.get()));
+                        callbacks.success();
+                        PrinterModel.store({address:printer_address});
                     },
                     function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
                 );
