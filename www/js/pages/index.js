@@ -196,7 +196,6 @@ function initializePage(){
 
             PrinterModel.loaded(function(){
                 var printer= PrinterModel.get();
-                alert(JSON.stringify(printer));
                 if(printer !== null)
                     App_.settings_current_printer= printer.address;
             });
@@ -774,8 +773,13 @@ function initializePage(){
                 callbacks= PolishedUtility_.callback(callbacks);
                 window.DatecsPrinter.connect(printer_address,
                     function() {
-                        callbacks.success();
-                        PrinterModel.store({address:device_address});
+                        try{
+                            callbacks.success();
+                            PrinterModel.store({address:device_address});
+                        }catch (error){
+                            alert(error.message);
+                        }
+                        alert(JSON.stringify(PrinterModel.get());
                     },
                     function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
                 );
