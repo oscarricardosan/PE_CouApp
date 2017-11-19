@@ -196,6 +196,7 @@ function initializePage(){
 
             PrinterModel.loaded(function(){
                 var printer= PrinterModel.get();
+                alert(JSON.stringify(printer));
                 if(printer !== null)
                     App_.settings_current_printer= printer.address;
             });
