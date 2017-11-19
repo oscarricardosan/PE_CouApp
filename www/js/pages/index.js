@@ -233,6 +233,9 @@ function initializePage(){
                 text_instructions: "Por favor apuntar tu camara al código de barras", // Android only
             }, function(code){
                 var guias= button.closest('form').find('[name="guias"]');
+                if($.trim(guias.val()) != ''){
+                    guias.val(guias.val()+"\n");
+                }
                 guias.val(guias.val()+code+"\n");
             }, function(){});
         });
