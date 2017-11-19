@@ -9,7 +9,7 @@ var Settings= {
     timer_run_alert_proximity: 1,//minutes
     timer_run_alert_time: 1,//minutes
     notification_id: {
-        queue_ajax: 1
+        queue_ajax: 10
     },
     icon:{
         message: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/chat-128.png",
