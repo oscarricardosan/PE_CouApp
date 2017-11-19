@@ -225,6 +225,15 @@ function initializePage(){
                 App.number_search= code;
             }, function(){});
         });
+
+        $('.scan_barcode_update_consigment').click(function(){
+            cloudSky.zBar.scan({
+                text_title: "Escanear código de barras", // Android only
+                text_instructions: "Por favor apuntar tu camara al código de barras", // Android only
+            }, function(code){
+                $().closest('form').find('[name="guias"]').val(code+"\n");
+            }, function(){});
+        });
         /**
          * OPEN PHOTOS
          */
