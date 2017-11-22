@@ -290,6 +290,7 @@ function initializePage(){
         /** ABRE STORE DE FOTOS */
         $('#delivery_attach_photo, #pickup_attach_photo').on('hidden.bs.modal', function () {
             App.current_photo= 'images/camera.png';
+            $(this).find('[name]').val('');
         });
         $('.attach_photo_to_delivery').click(function(){
             if(App.current_photo === 'images/camera.png'){
@@ -297,7 +298,7 @@ function initializePage(){
             }
             var form= $(this).closest('.modal');
             form.loading();
-            var data= FormUtility_.serialized_data_to_json(form.find('form'));
+            var data= FormUtility_.serialized_data_to_json(form.find('form').serializeArray());
             data.data_uri_photo= App.current_photo;
             data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
@@ -328,7 +329,7 @@ function initializePage(){
             }
             var form= $(this).closest('.modal');
             form.loading();
-            var data= FormUtility_.serialized_data_to_json(form.find('form'));
+            var data= FormUtility_.serialized_data_to_json(form.find('form').serializeArray());
             data.data_uri_photo= App.current_photo;
             data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
