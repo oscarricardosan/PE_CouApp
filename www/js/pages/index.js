@@ -297,15 +297,15 @@ function initializePage(){
             }
             var form= $(this).closest('.modal');
             form.loading();
+            var data= FormUtility_.serialized_data_to_json(form.find('form'));
+            data.data_uri_photo= App.current_photo;
+            data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
                 process_name: 'Adjunto foto delivery: ',
                 type: 'post',
                 url: 'delivery/attach_photo',
                 dataType: 'json',
-                data: {
-                    data_uri_photo: App.current_photo,
-                    entrega_id: App.operations.current_delivery.id,
-                },
+                data: data,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive() && $('#delivery_attach_photo').is(':visible')){
                         ToastrUtility_.success(response.message);
@@ -328,15 +328,15 @@ function initializePage(){
             }
             var form= $(this).closest('.modal');
             form.loading();
+            var data= FormUtility_.serialized_data_to_json(form.find('form'));
+            data.data_uri_photo= App.current_photo;
+            data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
                 process_name: 'Adjunto foto pickup: ',
                 type: 'post',
                 url: 'pickup/attach_photo',
                 dataType: 'json',
-                data: {
-                    data_uri_photo: App.current_photo,
-                    recoleccion_id: App.operations.current_pickup.id,
-                },
+                data: data,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive() && $('#pickup_attach_photo').is(':visible')){
                         ToastrUtility_.success(response.message);
