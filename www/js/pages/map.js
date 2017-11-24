@@ -103,7 +103,6 @@ function initializePage() {
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
-                this.refresh_counters_in_list();
             },
             "operations.pickups": function(newVal, oldVal){
                 App_= this;
@@ -112,7 +111,6 @@ function initializePage() {
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
-                this.refresh_counters_in_list();
             },
             date_to_filter: function(date){
                 var App_= this;

@@ -804,15 +804,19 @@ function initializePage(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-        window.DatecsPrinter.listBluetoothDevices(
-            function (devices) {
-                App.bluetooth_devices= devices;
-            },
-            function (error) {
-                alert('Error: '+JSON.stringify(error));
-            }
-        );
+        scanBluetoohtDevices();
     }
+}
+
+function scanBluetoohtDevices(){
+    window.DatecsPrinter.listBluetoothDevices(
+        function (devices) {
+            App.bluetooth_devices= devices;
+        },
+        function (error) {
+            alert('Error: '+JSON.stringify(error));
+        }
+    );
 }
 
 function printText() {
