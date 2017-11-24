@@ -1,6 +1,6 @@
 var AjaxUtility_= (function () {
 
-    var processFaillRequest= function(jqXHR, textStatus, errorThrown){
+    var processFailRequest= function(jqXHR, textStatus, errorThrown){
         if(jqXHR.status===422)
             alert(_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
         else if(jqXHR.status===500)
@@ -14,7 +14,7 @@ var AjaxUtility_= (function () {
             alert("No se han podido cargar los datos. Intente mas tarde.**--"+ textStatus );
     };
 
-    var processFaillRequestWithLocalNotification= function(jqXHR, textStatus, errorThrown){
+    var processFailRequestWithLocalNotification= function(jqXHR, textStatus, errorThrown){
         if(jqXHR.status===422)
             Notification.alert(_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
         else if(jqXHR.status===500)
@@ -28,8 +28,8 @@ var AjaxUtility_= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            processFaillRequest                       : processFaillRequest,
-            processFaillRequestWithLocalNotification  : processFaillRequestWithLocalNotification
+            processFailRequest                       : processFailRequest,
+            processFailRequestWithLocalNotification  : processFailRequestWithLocalNotification
         }
     };
     return {construct:construct};//retorna los metodos publicos

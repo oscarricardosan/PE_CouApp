@@ -53,8 +53,14 @@ function initializePage(){
             refresh_counters_in_list: function(){
                 App_= this;
                 setTimeout(function(){
-                    App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
-                    App_.deliveries_in_list= $('.list-group.deliveries>.delivery').length;
+                    var pickups= $('.list-group.pickups>.pickup').length;
+                    var deliveries= $('.list-group.deliveries>.delivery').length;
+                    App_.pickups_in_list= pickups;
+                    App_.deliveries_in_list= deliveries;
+
+                    if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
+                    if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+
                 }, 200);
                 setTimeout(function(){
                     App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
@@ -138,17 +144,23 @@ function initializePage(){
             }
         },
         watch: {
-            operations: {
-                handler(val){
-                    App_= this;
-                    var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                    var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
-                    this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                    if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                        this.date_to_filter= this.dates_to_filter[0];
-                    this.refresh_counters_in_list();
-                },
-                deep: true
+            "operations.deliveries": function(newVal, oldVal){
+                App_= this;
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
+                    this.date_to_filter= this.dates_to_filter[0];
+                this.refresh_counters_in_list();
+            },
+            "operations.pickups": function(newVal, oldVal){
+                App_= this;
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
+                    this.date_to_filter= this.dates_to_filter[0];
+                this.refresh_counters_in_list();
             },
             date_to_filter: function(){
                 this.refresh_counters_in_list();
@@ -214,7 +226,7 @@ function initializePage(){
     $(document).ready(function(){
         var url_params= UrlUtility_.getParams();
         if(url_params.tab !== undefined){
-            $('[href="#'+url_params.tab+'"]').click()
+            $('[href="#'+url_params.tab+'"]').click();
         }
 
         $('#scan_barcode_to_search').click(function(){

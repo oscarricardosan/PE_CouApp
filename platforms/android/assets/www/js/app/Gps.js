@@ -21,7 +21,7 @@ var Gps= (function () {
                     Process.store_last_attempt('gps_tracking');
                 }
             },
-            function (error) {ProcessBackground.set_main_message_notification_bar('Error '+error.message); },
+            function (error) {ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message); },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);
@@ -53,6 +53,7 @@ var Gps= (function () {
 
     function store_position(position) {
         AjaxQueue.add({
+            process_name: 'GPS: ',
             type: 'post',
             url: 'courier/store_geo_position',
             dataType: 'text',
@@ -60,34 +61,6 @@ var Gps= (function () {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 registered_at: MomentUtility_.now()
-            },
-            successful_online: function(response){
-                LogModel.store({
-                    message: 'GPS: Transmisión de petición online a servidor exitosa.',
-                    status: 'success',
-                    data: properties
-                });
-            },
-            failed_online: function(jqXHR, textStatus){
-                LogModel.store({
-                    message: 'GPS: Error al transmitir al servidor petición online.',
-                    status: 'danger',
-                    data: properties
-                });
-            },
-            successful_offline: function(response){
-                LogModel.store({
-                    message: 'GPS: Transmisión de petición offline a servidor exitosa.',
-                    status: 'success',
-                    data: properties
-                });
-            },
-            failed_offline: function(jqXHR, textStatus){
-                LogModel.store({
-                    message: 'GPS: Error al transmitir al servidor petición offline.',
-                    status: 'danger',
-                    data: properties
-                });
             }
         });
     }

@@ -16,13 +16,15 @@ var Alert_proximity= (function () {
 
     function alerts_by_proximity_deliveries(){
         var deliveries= DeliveriesModel.find({
-            distance_in_mts: {"$lt": Settings.alert.minimum_meters},
-            delivery_state_id:1,
+            distance_in_mts: {"$lte": Settings.alert.minimum_meters},
+            $or: [{attempt_gps_alert: {"$lt": Settings.alert.attempt_gps}}, {attempt_gps_alert: undefined}],
+            delivery_state_id:100,
             delivery_date: MomentUtility_.current_date()
         });
         $.each(deliveries, function(index, delivery){
+            DeliveriesModel.increment_attemp_gps_alert(delivery);
             Notification.event_server_delivery_message(
-                delivery.delivery_number+' a '+delivery.distance_in_mts+' mts',
+                delivery.delivery_number+' a '+accounting.formatNumber(delivery.distance_in_mts, 2, '.', ',')+' mts',
                 undefined,
                 {action: 'show_delivery', delivery: delivery}
             );
@@ -35,13 +37,15 @@ var Alert_proximity= (function () {
 
     function alerts_by_proximity_pickups(){
         var pickups= PickupModel.find({
-            distance_in_mts: {"$lt": Settings.alert.minimum_meters},
-            pickup_state_id:1,
+            distance_in_mts: {"$lte": Settings.alert.minimum_meters},
+            $or: [{attempt_gps_alert: {"$lt": Settings.alert.attempt_gps}}, {attempt_gps_alert: undefined}],
+            pickup_state_id:100,
             pickup_date: MomentUtility_.current_date()
         });
         $.each(pickups, function(index, pickup){
+            PickupModel.increment_attemp_gps_alert(pickup);
             Notification.event_server_pickup_message(
-                pickup.pickup_number+' a '+pickup.distance_in_mts+' mts',
+                pickup.pickup_number+' a '+accounting.formatNumber(pickup.distance_in_mts, 2, '.', ',')+' mts',
                 undefined,
                 {action: 'show_pickup', pickup: pickup}
             );

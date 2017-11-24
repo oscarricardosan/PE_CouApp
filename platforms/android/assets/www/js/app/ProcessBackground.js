@@ -17,8 +17,11 @@ var ProcessBackground= (function () {
         if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
             Event_server.get_events_from_server();
         }
-        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alerts)){
+        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alert_proximity)){
             Alert_proximity.run();
+        }
+        if(Process.it_can_be_executed('alert_by_time', Settings.timer_run_alert_time)){
+            Alert_time.run();
         }
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
@@ -38,7 +41,7 @@ var ProcessBackground= (function () {
                             jqXHR: jqXHR, textStatus: textStatus, properties: properties
                         })
                     });
-                    Notification.ajax_queue_danger('Fallo transmisión de peticiones');
+                    ProcessBackground.set_main_message_notification_bar('QUEUE: Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -47,10 +50,10 @@ var ProcessBackground= (function () {
                         status: 'success',
                         data: {properties: properties, response: response}
                     });
-                    Notification.ajax_queue_message('Petición transmitida');
+                    ProcessBackground.set_main_message_notification_bar('QUEUE: Petición transmitida');
                 },
                 empty: function(){
-                    Notification.ajax_queue_message('Cola vacía');
+                    ProcessBackground.set_main_message_notification_bar('Cola vacía');
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
@@ -68,12 +71,12 @@ var ProcessBackground= (function () {
         var sin_recoger= 0;
         try {
             DeliveriesModel.loaded(function(){
-                sin_entregar= DeliveriesModel.find({delivery_state_id: 1}).length;
+                sin_entregar= DeliveriesModel.find({delivery_state_id: 100}).length;
                 notify_message.deliveries =
                     (sin_entregar>0)?'Sin Entregar ' + sin_entregar:'Todo entregado';
 
                 PickupModel.loaded(function(){
-                    sin_recoger= PickupModel.find({pickup_state_id: 1}).length;
+                    sin_recoger= PickupModel.find({pickup_state_id: 100}).length;
                     notify_message.pickups=
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 

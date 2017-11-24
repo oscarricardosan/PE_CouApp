@@ -96,33 +96,23 @@ function initializePage() {
         },
         filters: { },
         watch: {
-            operations: {
-                handler(val){
-                    App_= this;
-                    var url_params= UrlUtility_.getParams();
-                    var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                    var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
-                    this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                    if(this.date_to_filter === undefined && this.dates_to_filter.length > 0){
-                        if(url_params.show_pickup_id !== undefined){
-                            PickupModel.loaded(function(){
-                                App_.date_to_filter= PickupModel.find({id: url_params.show_pickup_id*1})[0].pickup_date;
-                            });
-                        }else if(url_params.show_delivery_id !== undefined){
-                            DeliveriesModel.loaded(function(){
-                                App_.date_to_filter= DeliveriesModel.find({id: url_params.show_delivery_id*1})[0].delivery_date;
-                            });
-                        }else{
-                            App_.date_to_filter= this.dates_to_filter[0];
-                        }
-                    }else{
-                        var current_date= this.date_to_filter;
-                        this.date_to_filter= undefined;
-                        setTimeout(function(){ App_.date_to_filter= current_date; }, 300);
-
-                    }
-                },
-                deep: true
+            "operations.deliveries": function(newVal, oldVal){
+                App_= this;
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
+                    this.date_to_filter= this.dates_to_filter[0];
+                this.refresh_counters_in_list();
+            },
+            "operations.pickups": function(newVal, oldVal){
+                App_= this;
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
+                    this.date_to_filter= this.dates_to_filter[0];
+                this.refresh_counters_in_list();
             },
             date_to_filter: function(date){
                 var App_= this;

@@ -3,9 +3,9 @@ var Settings= {
     route_api_pasar: function(route){
         return this.url_server+'/mobile_api/'+route;
     },
-    timer_to_gps: 1,//minutes
-    timer_check_ajax_queue: 1,//minutes
-    timer_get_events_from_server: 1,//minutes
+    timer_to_gps: 3,//minutes
+    timer_check_ajax_queue: 5,//minutes
+    timer_get_events_from_server: 6,//minutes
     timer_run_alert_proximity: 1,//minutes
     timer_run_alert_time: 1,//minutes
     notification_id: {

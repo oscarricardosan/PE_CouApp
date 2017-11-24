@@ -26,13 +26,29 @@ var LogModel= (function () {
     var store = function(data, callback){
         callback= PolishedUtility_.callback(callback);
 
-        data.created_at= MomentUtility_.now()
+        data.created_at= MomentUtility_.now();
         db.collection(collection_name).insert(data);
 
         db.collection(collection_name).save(function (err) {
             if (!err) {callback.success();}
             else{callback.fail(); alert('Error al guardar en '+collection_name);}
         });
+    };
+
+    var store_success= function(message, data, callback){
+        store({
+            message: message,
+            data: data,
+            status: 'success'
+        }, callback);
+    };
+
+    var store_fail= function(message, data, callback){
+        store({
+            message: message,
+            data: data,
+            status: 'danger'
+        }, callback);
     };
 
     var get = function(){
@@ -79,7 +95,9 @@ var LogModel= (function () {
             loaded            : loaded,
             isEmpty           : isEmpty,
             drop              : drop,
-            remove            : remove
+            remove            : remove,
+            store_success     : store_success,
+            store_fail        : store_fail
         }
     };
     return {construct:construct};//retorna los metodos publicos

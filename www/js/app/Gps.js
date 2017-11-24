@@ -21,7 +21,7 @@ var Gps= (function () {
                     Process.store_last_attempt('gps_tracking');
                 }
             },
-            function (error) {ProcessBackground.set_main_message_notification_bar('Error '+error.message); },
+            function (error) {ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message); },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);

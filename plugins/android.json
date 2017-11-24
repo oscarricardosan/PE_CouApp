@@ -7,7 +7,43 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-background-mode": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-cszbar": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-datecs-printer": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
     "cordova-plugin-device": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-navis-background-geolocation": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova.plugins.diagnostic": {
       "PACKAGE_NAME": "savne.courier_app"
     },
     "de.appplant.cordova.plugin.local-notification": {

@@ -18,7 +18,7 @@ var Operations= (function () {
         });
         request.fail(function(jqXHR, textStatus) {
             callback.fail(jqXHR, textStatus);
-            AjaxUtility_.processFaillRequest(jqXHR, textStatus);
+            AjaxUtility_.processFailRequest(jqXHR, textStatus);
         });
     };
 
