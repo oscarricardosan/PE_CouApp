@@ -13,15 +13,15 @@ var AjaxQueue= (function () {
             if(properties.dataType === 'json'){
                 if(response.success){
                     properties.success(response, properties);
-                    LogModel.store_success(properties.process_name, response);
+                    LogModel.store_success(properties.process_name, {response: response, properties: properties});
                 }else{
-                    var data= {properties: properties, response: response};
+                    var data= {properties: properties, response: {response: response, properties: properties}};
                     properties.fail(data);
                     LogModel.store_fail(properties.process_name, data);
                 }
             }else{
                 properties.success(response, properties);
-                LogModel.store_success(properties.process_name, response);
+                LogModel.store_success(properties.process_name, {response: response, properties: properties});
             }
         });
         request.fail(function(jqXHR, textStatus) {
