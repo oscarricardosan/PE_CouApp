@@ -40,7 +40,6 @@ var Login= (function () {
         DeliveriesModel.drop(function(){
             PickupModel.drop(function(){
                 UserModel.drop(function(){
-                    SettingsModel.drop(function(){});
                     window.location.href= 'login.html';
                 });
             });
