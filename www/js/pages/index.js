@@ -804,7 +804,12 @@ function initializePage(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-        scanBluetoohtDevices();
+        cordova.plugins.diagnostic.isBluetoothAvailable(function(available) {
+            if (available) {
+                scanBluetoohtDevices();
+            }
+        });
+
     }
 }
 
