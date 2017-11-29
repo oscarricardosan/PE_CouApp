@@ -21,8 +21,8 @@ var Settings= {
         danger: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/racingflags-128.png"
     },
     gps:{
-        start_hour: 7,
-        end_hour: 20
+        start_hour: 5,
+        end_hour: 23
     },
     alert: {
         minimum_meters: 1000,

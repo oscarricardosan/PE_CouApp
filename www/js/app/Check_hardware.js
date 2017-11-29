@@ -43,10 +43,10 @@ var Check_hardware= (function () {
             locationAvailable();
             return false;
         }
-        if(!bluetooth_available){
+        /*if(!bluetooth_available){
             bluetoothAvailable();
             return false;
-        }
+        }*/
         if(location_available && bluetooth_available)
             initializeIntranet();
         else
