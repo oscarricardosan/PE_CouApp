@@ -45,24 +45,25 @@ var Haversine= (function () {
             {latitude: point_a.latitude, longitude: point_a.longitude},
             {latitude: point_b.latitude, longitude: point_b.longitude}
         );
-        if(distance>1000)
-            return {
-                distance_in_mts: distance,
-                success: true,
-                message: 'A '+accounting.formatNumber(distance/1000, 2, '.', ',')+' km',
-            };
+        return {
+            distance_in_mts: distance,
+            success: true,
+            message: 'A '+mtrs_to_text(distance)
+        };
+    };
+
+    var mtrs_to_text= function(mts){
+        if(mts>1000)
+            return accounting.formatNumber(mts/1000, 2, '.', ',')+' km';
         else
-            return {
-                distance_in_mts: distance,
-                success: true,
-                message: 'A '+accounting.formatNumber(distance, 2, '.', ',')+' mts',
-            };
+            return accounting.formatNumber(mts, 2, '.', ',')+' mts';
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             distance           : distance,
-            distance_in_text   : distance_in_text
+            distance_in_text   : distance_in_text,
+            mtrs_to_text       : mtrs_to_text
         }
     }
     return {construct:construct};//retorna los metodos publicos

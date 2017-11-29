@@ -1,5 +1,10 @@
 var Settings= {
-    url_server: 'https://courier-app.savne.net',
+    url_server: null,
+    setSettings: function(settings){
+        if(settings !== null && settings !== undefined) {
+            this.url_server = settings.url_server;
+        }
+    },
     route_api_pasar: function(route){
         return this.url_server+'/mobile_api/'+route;
     },
@@ -25,3 +30,7 @@ var Settings= {
         attempt_gps: 1
     }
 };
+
+SettingsModel.loaded(function () {
+    Settings.setSettings(SettingsModel.get());
+});

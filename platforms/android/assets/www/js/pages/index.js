@@ -60,6 +60,7 @@ function initializePage(){
 
                     if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
                     if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+
                 }, 200);
                 setTimeout(function(){
                     App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
@@ -225,7 +226,7 @@ function initializePage(){
     $(document).ready(function(){
         var url_params= UrlUtility_.getParams();
         if(url_params.tab !== undefined){
-            $('[href="#'+url_params.tab+'"]').click()
+            $('[href="#'+url_params.tab+'"]').click();
         }
 
         $('#scan_barcode_to_search').click(function(){
@@ -803,15 +804,19 @@ function initializePage(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-        window.DatecsPrinter.listBluetoothDevices(
-            function (devices) {
-                App.bluetooth_devices= devices;
-            },
-            function (error) {
-                alert('Error: '+JSON.stringify(error));
-            }
-        );
+        scanBluetoohtDevices();
     }
+}
+
+function scanBluetoohtDevices(){
+    window.DatecsPrinter.listBluetoothDevices(
+        function (devices) {
+            App.bluetooth_devices= devices;
+        },
+        function (error) {
+            alert('Error: '+JSON.stringify(error));
+        }
+    );
 }
 
 function printText() {

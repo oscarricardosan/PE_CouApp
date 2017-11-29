@@ -56,10 +56,19 @@ var DeliveriesModel= (function () {
      */
     var insertOrUpdateById = function(data, callback){
         callback= PolishedUtility_.callback(callback);
-        if(data.id !== undefined && find({id: data.id}).lengt === 1)
-            store(data, callback);
-        else
+        if(data.id !== undefined && find({id: data.id}).length === 1){
             update({id: data.id}, data, callback);
+        }else{
+            store(data, callback);
+        }
+    };
+
+    var increment_attemp_gps_alert= function(delivery){
+        if(delivery.attempt_gps_alert === undefined)
+            delivery.attempt_gps_alert= 1;
+        else
+            delivery.attempt_gps_alert= delivery.attempt_gps_alert+1;
+        update({id: delivery.id}, delivery);
     };
 
     var get = function(){
@@ -104,15 +113,16 @@ var DeliveriesModel= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            get                   : get,
-            find                  : find,
-            store                 : store,
-            update                : update,
-            loaded                : loaded,
-            isEmpty               : isEmpty,
-            drop                  : drop,
-            remove                : remove,
-            insertOrUpdateById    : insertOrUpdateById
+            get                        : get,
+            find                       : find,
+            store                      : store,
+            update                     : update,
+            loaded                     : loaded,
+            isEmpty                    : isEmpty,
+            drop                       : drop,
+            remove                     : remove,
+            insertOrUpdateById         : insertOrUpdateById,
+            increment_attemp_gps_alert : increment_attemp_gps_alert
         }
     };
     return {construct:construct};//retorna los metodos publicos

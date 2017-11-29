@@ -193,6 +193,14 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "file": "plugins/call-number/www/CallNumber.js",
+        "id": "call-number.CallNumber",
+        "pluginId": "call-number",
+        "clobbers": [
+            "call"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -214,7 +222,8 @@ module.exports.metadata =
     "diogo.cordova.plugin.local-notification": "0.1.14",
     "cordova-plugin-device": "1.1.6",
     "cordova-plugin-app-event": "1.2.1",
-    "de.appplant.cordova.plugin.local-notification": "0.8.5"
+    "de.appplant.cordova.plugin.local-notification": "0.8.5",
+    "call-number": "1.0.4"
 }
 // BOTTOM OF METADATA
 });

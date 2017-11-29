@@ -87,7 +87,7 @@ function initializeIntranet(){
                 debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
                 // notificationIconColor: '#4CAF50',
-                notificationTitle: 'Courier App G',
+                notificationTitle: 'CourierApp toca para abrir',
                 notificationText: '. . .',
                 //  notificationIcon: '/images/danger.png'
             });
@@ -96,7 +96,7 @@ function initializeIntranet(){
         function initializeBackgroundProcess(){
             //Configuracion status bar
             cordova.plugins.backgroundMode.setDefaults({
-                title: 'Courier App',
+                title: 'CourierApp',
                 text: 'Bienvenido',
                 //icon: '/images/danger.png', // this will look for icon.png in platforms/android/res/drawable|mipmap
                 //color: '#ff0000', // hex format like 'F14F4D'

@@ -21,7 +21,7 @@ var Login= (function () {
         });
         request.fail(function(jqXHR, textStatus) {
             callback.failure(jqXHR, textStatus);
-            AjaxUtility_.processFaillRequest(jqXHR, textStatus);
+            AjaxUtility_.processFailRequest(jqXHR, textStatus);
         });
     };
 
@@ -30,7 +30,7 @@ var Login= (function () {
             var user= UserModel.get();
             var nowadte= MomentUtility_.numericDate();
             var success= false;
-            if(!UserModel.isEmpty() && user.token_generated_at == nowadte)
+            if(!UserModel.isEmpty() && user.token_generated_at === nowadte)
                 success= true;
             callback(success, user)
         });

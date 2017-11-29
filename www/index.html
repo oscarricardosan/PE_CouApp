@@ -334,6 +334,9 @@
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
                                             {{ current_position | distance_to_pickup(pickup) }}
+                                            <span v-if="pickup.score !== null && pickup.score < 50">
+                                                ADVERTENCIA: Confiabilidad del {{ pickup.score }}%
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -363,6 +366,9 @@
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
                                             {{ current_position | distance_to_delivery(delivery) }}
+                                            <span v-if="delivery.score !== null && delivery.score < 50">
+                                                ADVERTENCIA: Confiabilidad del {{ delivery.score }}%
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -395,7 +401,7 @@
 
     <!--  MODALS -->
     <!-- MODAL ACTION PICKUP -->
-    <div class="modal fade" id="pickup_action_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="pickup_action_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -405,12 +411,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#pickup_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar recolección
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#pickup_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -430,11 +436,17 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6" >
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_pickup_id='+operations.current_pickup.id">
                                     <i class="fa fa-globe"></i>
                                     Ver en mapa
                                 </a>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_pickup.phone != null">
+                                <button class="btn btn-block btn-flat btn-app bg-aqua" onclick="" type="button"
+                                        @click.prevent="window.plugins.CallNumber.callNumber(function(){}, function(){}, operations.current_pickup.phone, true)">
+                                    <i class="fa fa-phone"></i> Llamar a {{ operations.current_pickup.phone}}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -446,7 +458,7 @@
         </div>
     </div>
     <!-- MODAL SUCCESS PICKUP -->
-    <div class="modal fade" id="pickup_success_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="pickup_success_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <form>
                 <div class="modal-content">
@@ -506,7 +518,7 @@
         </div>
     </div>
     <!-- MODAL PRINT PICKUP LABEL -->
-    <div class="modal fade" id="print_pickup_label" tabindex="-1" role="dialog">
+    <div class="modal" id="print_pickup_label" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <form>
                 <div class="modal-content">
@@ -546,7 +558,7 @@
         </div>
     </div>
     <!-- MODAL ATTACH PHOTO PICKUP-->
-    <div class="modal fade" id="pickup_attach_photo" tabindex="-1" role="dialog">
+    <div class="modal" id="pickup_attach_photo" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -584,7 +596,7 @@
         </div>
     </div>
     <!-- MODAL EXCEPTION PICKUP -->
-    <div class="modal fade" id="pickup_exception_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="pickup_exception_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form>
@@ -647,7 +659,7 @@
     </div>
 
     <!-- MODAL CONSIGNMENTS PICKUP -->
-    <div class="modal fade" id="pickup_consignments_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="pickup_consignments_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form>
@@ -684,7 +696,7 @@
 
 
     <!-- MODAL ACTION DELIVERY -->
-    <div class="modal fade" id="delivery_action_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="delivery_action_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -694,12 +706,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id === 100">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id == 100 || operations.current_delivery.delivery_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#delivery_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar entrega
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  === 100">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  == 100 || operations.current_delivery.delivery_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#delivery_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -719,10 +731,16 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_delivery_id='+operations.current_delivery.id">
                                     <i class="fa fa-globe"></i> Ver en mapa
                                 </a>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_delivery.phone != null">
+                                <button class="btn btn-block btn-flat btn-app bg-aqua" onclick="" type="button"
+                                @click.prevent="window.plugins.CallNumber.callNumber(function(){}, function(){}, operations.current_delivery.phone, true)">
+                                    <i class="fa fa-phone"></i> Llamar a {{ operations.current_delivery.phone}}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -734,7 +752,7 @@
         </div>
     </div>
     <!-- MODAL PRINT DELIVERY LABEL -->
-    <div class="modal fade" id="print_delivery_label" tabindex="-1" role="dialog">
+    <div class="modal" id="print_delivery_label" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <form>
                 <div class="modal-content">
@@ -774,7 +792,7 @@
         </div>
     </div>
     <!-- MODAL SUCCESS DELIVERY -->
-    <div class="modal fade" id="delivery_success_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="delivery_success_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <form>
                 <div class="modal-content">
@@ -834,7 +852,7 @@
         </div>
     </div>
     <!-- MODAL ATTACH PHOTO DELIVERY-->
-    <div class="modal fade" id="delivery_attach_photo" tabindex="-1" role="dialog">
+    <div class="modal" id="delivery_attach_photo" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -872,7 +890,7 @@
         </div>
     </div>
     <!-- MODAL EXCEPTION DELIVERY -->
-    <div class="modal fade" id="delivery_exception_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="delivery_exception_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form>
@@ -934,7 +952,7 @@
         </div>
     </div>
     <!-- MODAL CONSIGNMENTS DELIVERY -->
-    <div class="modal fade" id="delivery_consignments_modal" tabindex="-1" role="dialog">
+    <div class="modal" id="delivery_consignments_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form>

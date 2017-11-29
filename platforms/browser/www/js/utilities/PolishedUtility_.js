@@ -10,6 +10,13 @@ var PolishedUtility_= (function () {
         return callback;
     };
 
+    var queue= function (callback){
+        callback.success= eval(callback, 'success', function(){});
+        callback.fail= eval(callback, 'fail', function(){});
+        callback.empty= eval(callback, 'empty', function(){});
+        return callback;
+    };
+
     var ajaxQueueProperties= function (raw_properties){
         if(typeof(raw_properties) !== 'object') properties= {};
         else properties= raw_properties;
@@ -18,46 +25,8 @@ var PolishedUtility_= (function () {
         properties.dataType= eval(properties, 'dataType', 'json');
         properties.data= eval(properties, 'data', {});
 
-        properties.successful_online= eval(properties, 'successful_online', function(response){
-            if(response.success)
-                ToastrUtility_.success(response.message);
-            else
-                ToastrUtility_.error(response.message);
-
-            LogModel.store({
-                message: 'Transmisión de petición online a servidor exitosa.',
-                status: 'success',
-                data: properties
-            });
-        });
-        properties.failed_online= eval(properties, 'failed_online', function(jqXHR, textStatus){
-            ToastrUtility_.warning(jqXHR.responseJSON.message+" \nSin conexion a servidor, se transmitira más tarde.");
-            LogModel.store({
-                message: 'Error al transmitir al servidor petición online.',
-                status: 'danger',
-                data: properties
-            });
-        });
-
-
-        properties.successful_offline= eval(properties, 'successful_offline', function(response){
-            properties.response_server_successful= response;
-            LogModel.store({
-                message: 'Transmisión de petición offline a servidor exitosa.',
-                status: 'success',
-                data: properties
-            });
-        });
-        properties.failed_offline= eval(properties, 'failed_offline', function(jqXHR, textStatus){
-            properties.response_server_fail= {
-                jqXHR: jqXHR, textStatus: textStatus
-            };
-            LogModel.store({
-                message: 'Error al transmitir al servidor petición offline.',
-                status: 'danger',
-                data: properties
-            });
-        });
+        properties.success= eval(properties, 'success', function(){});
+        properties.fail= eval(properties, 'fail', function(){});
 
         return properties;
     };
@@ -73,6 +42,7 @@ var PolishedUtility_= (function () {
         return {
             callback              : callback,
             ajaxQueueProperties   : ajaxQueueProperties,
+            queue                 : queue
         }
     };
 

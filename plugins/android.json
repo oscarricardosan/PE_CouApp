@@ -48,6 +48,9 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "savne.courier_app"
+    },
+    "call-number": {
+      "PACKAGE_NAME": "savne.courier_app"
     }
   },
   "dependent_plugins": {

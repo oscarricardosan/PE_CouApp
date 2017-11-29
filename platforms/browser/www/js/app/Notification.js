@@ -1,7 +1,7 @@
 var Notification= (function () {
 
     var ajax_queue_message= function(message, title, data){
-        title= title===undefined?'Courier App Peticiones':title;
+        title= title===undefined?'CourierApp Peticiones':title;
         cordova.plugins.notification.local.schedule({
             id: Settings.notification_id.queue_ajax,
             title: title,
@@ -14,7 +14,7 @@ var Notification= (function () {
     };
 
     var ajax_queue_danger= function(message, title, data){
-        title= title===undefined?'Courier App Peticiones':title;
+        title= title===undefined?'CourierApp Peticiones':title;
         cordova.plugins.notification.local.schedule({
             id: Settings.notification_id.queue_ajax,
             title: title,
@@ -28,7 +28,7 @@ var Notification= (function () {
     };
 
     var event_server_pickup_message= function(message, title, data){
-        title= title===undefined?'Courier App Recolección':title;
+        title= title===undefined?'CourierApp Recolección':title;
         cordova.plugins.notification.local.schedule({
             id: generate_random_id(),
             title: title,
@@ -41,7 +41,7 @@ var Notification= (function () {
     };
 
     var event_server_pickup_danger= function(message, title, data){
-        title= title===undefined?'Courier App Recolección':title;
+        title= title===undefined?'CourierApp Recolección':title;
         cordova.plugins.notification.local.schedule({
             id: generate_random_id(),
             title: title,
@@ -54,7 +54,7 @@ var Notification= (function () {
     };
 
     var event_server_delivery_message= function(message, title, data){
-        title= title===undefined?'Courier App Entrega':title;
+        title= title===undefined?'CourierApp Entrega':title;
         cordova.plugins.notification.local.schedule({
             id: generate_random_id(),
             title: title,
@@ -67,7 +67,7 @@ var Notification= (function () {
     };
 
     var event_server_delivery_danger= function(message, title, data){
-        title= title===undefined?'Courier App Entrega':title;
+        title= title===undefined?'CourierApp Entrega':title;
         cordova.plugins.notification.local.schedule({
             id: generate_random_id(),
             title: title,
@@ -80,7 +80,7 @@ var Notification= (function () {
     };
 
     var alert= function(message, title, data){
-        title= title===undefined?'Courier App Alerta':title;
+        title= title===undefined?'CourierApp Alerta':title;
         cordova.plugins.notification.local.schedule({
             id: generate_random_id(),
             title: title,

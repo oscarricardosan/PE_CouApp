@@ -39,7 +39,7 @@ var Check_hardware= (function () {
     };
 
     var diagnostic_in_intranet= function() {
-        /*if(!location_available){
+        if(!location_available){
             locationAvailable();
             return false;
         }
@@ -47,10 +47,10 @@ var Check_hardware= (function () {
             bluetoothAvailable();
             return false;
         }
-        if(location_available && bluetooth_available)*/
+        if(location_available && bluetooth_available)
             initializeIntranet();
-        /*else
-            window.location.reload();*/
+        else
+            window.location.reload();
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos

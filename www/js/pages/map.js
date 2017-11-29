@@ -122,52 +122,56 @@ function initializePage() {
                 var App_= this;
                 var url_params= UrlUtility_.getParams();
                 $.each(pickups, function (index, pickup) {
-                    var icon = App_.new_icon('images/map_icons/pickup_' + pickup.pickup_state.class + '.png?1');
+                    if(pickup.longitude !== null && pickup.latitude !== null) {
+                        var icon = App_.new_icon('images/map_icons/pickup_' + pickup.pickup_state.class + '.png?1');
 
-                    var marker= new L.marker().setLatLng({
-                        lng: pickup.longitude,
-                        lat: pickup.latitude
-                    }).setIcon(icon).addTo(App_.map).bindPopup(
-                        "<div style='text-align:center;'>Recolección <span class='label bg-" + pickup.pickup_state.class + "'>" + pickup.pickup_state.name + "</span></div>" +
-                        "<i class='fa fa-user'></i>" + pickup.courier.email + " - <b>" + pickup.pickup_number + "</b><br>" +
-                        "<b>Dirección: </b> " + pickup.address + " <br>" +
-                        "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
-                        "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(pickup.distance_in_mts)+"  <br>"+
-                        "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+pickup.pickup_date+"&search="+pickup.pickup_number+"&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>"+
-                        "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
-                    );
-                    if(url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
-                        marker.openPopup();
-                    App_.map_markers.push(marker);
-                    if(url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
-                        App_.centerLeafletMapOnMarker(marker);
+                        var marker = new L.marker().setLatLng({
+                            lng: pickup.longitude,
+                            lat: pickup.latitude
+                        }).setIcon(icon).addTo(App_.map).bindPopup(
+                            "<div style='text-align:center;'>Recolección <span class='label bg-" + pickup.pickup_state.class + "'>" + pickup.pickup_state.name + "</span></div>" +
+                            "<i class='fa fa-user'></i>" + pickup.courier.email + " - <b>" + pickup.pickup_number + "</b><br>" +
+                            "<b>Dirección: </b> " + pickup.address + " <br>" +
+                            "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
+                            "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>" +
+                            "<i class='fa fa-globe'></i> A " + Haversine.mtrs_to_text(pickup.distance_in_mts) + "  <br>" +
+                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date=" + pickup.pickup_date + "&search=" + pickup.pickup_number + "&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>" +
+                            "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
+                        );
+                        if (url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
+                            marker.openPopup();
+                        App_.map_markers.push(marker);
+                        if (url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
+                            App_.centerLeafletMapOnMarker(marker);
+                    }
                 });
             },
             deliveries_to_show:function(deliveries){
                 var App_= this;
                 var url_params= UrlUtility_.getParams();
                 $.each(deliveries, function (index, delivery) {
-                    var icon = App_.new_icon('images/map_icons/delivery_' + delivery.delivery_state.class + '.png?1');
+                    if(delivery.longitude !== null && delivery.latitude !== null){
+                        var icon = App_.new_icon('images/map_icons/delivery_' + delivery.delivery_state.class + '.png?1');
 
-                    var marker= new L.marker().setLatLng({
-                        lng: delivery.longitude,
-                        lat: delivery.latitude
-                    }).setIcon(icon).addTo(App_.map).bindPopup(
-                        "<div style='text-align:center;'>Entrega <span class='label bg-" + delivery.delivery_state.class + "'>" + delivery.delivery_state.name + "</span></div>" +
-                        "<i class='fa fa-user'></i>" + delivery.courier.email + " - <b>" + delivery.delivery_number + "</b><br>" +
-                        "<b>Dirección: </b> " + delivery.address + " <br>" +
-                        "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
-                        "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
-                        "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(delivery.distance_in_mts)+"  <br>"+
-                        "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"+
-                        "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
-                    );
-                    if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
-                        marker.openPopup();
-                    App_.map_markers.push(marker);
-                    if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
-                        App_.centerLeafletMapOnMarker(marker);
+                        var marker= new L.marker().setLatLng({
+                            lng: delivery.longitude,
+                            lat: delivery.latitude
+                        }).setIcon(icon).addTo(App_.map).bindPopup(
+                            "<div style='text-align:center;'>Entrega <span class='label bg-" + delivery.delivery_state.class + "'>" + delivery.delivery_state.name + "</span></div>" +
+                            "<i class='fa fa-user'></i>" + delivery.courier.email + " - <b>" + delivery.delivery_number + "</b><br>" +
+                            "<b>Dirección: </b> " + delivery.address + " <br>" +
+                            "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
+                            "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
+                            "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(delivery.distance_in_mts)+"  <br>"+
+                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"+
+                            "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
+                        );
+                        if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
+                            marker.openPopup();
+                        App_.map_markers.push(marker);
+                        if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
+                            App_.centerLeafletMapOnMarker(marker);
+                    }
                 });
             },
             current_position: function(current_position){

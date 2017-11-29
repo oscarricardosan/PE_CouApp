@@ -30,7 +30,7 @@ var Login= (function () {
             var user= UserModel.get();
             var nowadte= MomentUtility_.numericDate();
             var success= false;
-            if(!UserModel.isEmpty() && user.token_generated_at == nowadte)
+            if(!UserModel.isEmpty() && user.token_generated_at === nowadte)
                 success= true;
             callback(success, user)
         });

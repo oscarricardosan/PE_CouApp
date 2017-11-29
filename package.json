@@ -20,10 +20,12 @@
       "cordova-plugin-geolocation": {},
       "cordova-plugin-navis-background-geolocation": {},
       "de.appplant.cordova.plugin.local-notification": {},
-      "cordova-plugin-device": {}
+      "cordova-plugin-device": {},
+      "call-number": {}
     }
   },
   "dependencies": {
+    "call-number": "git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
     "cordova-background-location-services": "git+https://github.com/pmwisdom/cordova-background-geolocation-services.git",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-app-event": "^1.2.1",

@@ -13,15 +13,15 @@ var AjaxQueue= (function () {
             if(properties.dataType === 'json'){
                 if(response.success){
                     properties.success(response, properties);
-                    LogModel.store_success(properties.process_name, response);
+                    LogModel.store_success(properties.process_name, {response: response, properties: properties});
                 }else{
-                    var data= {properties: properties, response: response};
+                    var data= {properties: properties, response: {response: response, properties: properties}};
                     properties.fail(data);
                     LogModel.store_fail(properties.process_name, data);
                 }
             }else{
                 properties.success(response, properties);
-                LogModel.store_success(properties.process_name, response);
+                LogModel.store_success(properties.process_name, {response: response, properties: properties});
             }
         });
         request.fail(function(jqXHR, textStatus) {
@@ -52,7 +52,7 @@ var AjaxQueue= (function () {
                 if(response.success){
                     properties.success(response, properties);
                     callbacks.success(response, properties);
-                    LogModel.store_success(properties.process_name, response);
+                    LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
                 }else{
                     var data= {properties: properties, response: response};
@@ -63,7 +63,7 @@ var AjaxQueue= (function () {
             }else{
                 callbacks.success(response, properties);
                 properties.success(response, properties);
-                LogModel.store_success(properties.process_name, response);
+                LogModel.store_success(properties.process_name, {response: response, properties: properties});
                 Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
             }
             App.ajax_queue_count= Ajax_queueModel.get().length;

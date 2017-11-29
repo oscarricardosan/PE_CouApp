@@ -1,8 +1,8 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "Courier APP",
-  "short_name": "Courier APP",
+  "name": "CourierAPP",
+  "short_name": "CourierAPP",
   "version": "savne.courier_app",
   "description": "Aplicación para courier",
   "author": "Oscar Sanchez",
