@@ -643,9 +643,13 @@ function initializePage(){
         $('#pickup_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            form.loading();
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
+            if($.trim(data.guias)==''){
+                alert('Campo guías es obligatorio');
+                return false;
+            }
+            form.loading();
             AjaxQueue.add({
                 process_name: 'Pickup asociación guías: ',
                 type: 'post',
@@ -697,9 +701,13 @@ function initializePage(){
         $('#delivery_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            form.loading();
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
+            if($.trim(data.guias)==''){
+                alert('Campo guías es obligatorio');
+                return false;
+            }
+            form.loading();
             AjaxQueue.add({
                 process_name: 'Delivery asociación guías: ',
                 type: 'post',
