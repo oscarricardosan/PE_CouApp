@@ -328,6 +328,9 @@
                                         <b>{{ pickup.type_of_identity_document.short_name }}</b>: {{ pickup.identity_document }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
+                                        <span v-if="pickup.long_address !== null && pickup.long_address !== undefined">
+                                            {{ pickup.long_address }}<br>
+                                        </span>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments.join(', ') }}<br>
@@ -360,6 +363,9 @@
                                         <b>{{ delivery.type_of_identity_document.short_name }}</b>: {{ delivery.identity_document }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
+                                        <span v-if="delivery.long_address !== null && delivery.long_address !== undefined">
+                                            {{ delivery.long_address }}<br>
+                                        </span>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments.join(', ') }}<br>
