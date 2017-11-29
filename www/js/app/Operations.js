@@ -30,22 +30,24 @@ var Operations= (function () {
                 if(!response.deliveries.success){
                     alert(response.deliveries.message);
                 }else{
-                    DeliveriesModel.remove();
-                    DeliveriesModel.store(response.deliveries.data, {
-                        success:function(){
-                            App.operations.deliveries= DeliveriesModel.get();
-                        }
+                    DeliveriesModel.remove({}, function(){
+                        DeliveriesModel.store(response.deliveries.data, {
+                            success:function(){
+                                App.operations.deliveries= DeliveriesModel.get();
+                            }
+                        });
                     });
                 }
 
                 if(!response.pickups.success){
                     alert(response.deliveries.message);
                 }else{
-                    PickupModel.remove();
-                    PickupModel.store(response.pickups.data, {
-                        success:function(){
-                            App.operations.pickups= PickupModel.get();
-                        }
+                    PickupModel.remove({}, function(){
+                        PickupModel.store(response.pickups.data, {
+                            success:function(){
+                                App.operations.pickups= PickupModel.get();
+                            }
+                        });
                     });
                 }
                 external_callbacks.success();

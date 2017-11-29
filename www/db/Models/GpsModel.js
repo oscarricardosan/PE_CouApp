@@ -48,7 +48,7 @@ var GpsModel= (function () {
 
     var drop= function(callback){
         db.collection(collection_name).drop(function(){
-            callback()
+            callback();
             db.collection(collection_name).save(function (err) {
                 if (!err){
                     if(typeof(callback) === 'function'){callback();}
