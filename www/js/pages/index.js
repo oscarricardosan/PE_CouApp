@@ -500,7 +500,10 @@ function initializePage(){
 
         /** ABRE STORE DE EXITOSAS */
         $('#delivery_success_modal, #pickup_success_modal').on('show.bs.modal', function () {
-            $(this).find('[name]').val('');
+            $(this).find('[name]:not([default-value])').val('');
+            $(this).find('[default-value]').each(function(){
+                $(this).val($(this).attr('default-value'));
+            });
             $(this).find('[current_time]').val(
                 MomentUtility_.current_time().substr(0,5)
             );

@@ -31,3 +31,9 @@
     top: 8px;
     right: 8px;
 }
+.extra_data[hidde]{
+    display: none;
+}
+input[type="number"]{
+    text-align: right;
+}
