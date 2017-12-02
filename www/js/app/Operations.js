@@ -33,6 +33,7 @@ var Operations= (function () {
                 }else{
                     DeliveriesModel.remove({}, function(){
                         App.operations.deliveries= [];
+                        ToastrUtility_.warning('Entregas removidas');
                         DeliveriesModel.store(response.deliveries.data, {
                             success:function(){
                                 App.operations.deliveries= DeliveriesModel.get();
@@ -48,6 +49,7 @@ var Operations= (function () {
                 }else{
                     PickupModel.remove({}, function(){
                         App.operations.pickups= [];
+                        ToastrUtility_.warning('Recolecciones removidas');
                         PickupModel.store(response.pickups.data, {
                             success:function(){
                                 App.operations.pickups= PickupModel.get();
