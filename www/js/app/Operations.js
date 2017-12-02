@@ -32,11 +32,14 @@ var Operations= (function () {
                     alert(response.deliveries.message);
                 }else{
                     DeliveriesModel.remove({}, function(){
+                        App.operations.deliveries= [];
                         DeliveriesModel.store(response.deliveries.data, {
                             success:function(){
                                 App.operations.deliveries= DeliveriesModel.get();
+                                ToastrUtility_.success('Entregas almacenadas');
                             }
                         });
+
                     });
                 }
 
@@ -44,9 +47,11 @@ var Operations= (function () {
                     alert(response.deliveries.message);
                 }else{
                     PickupModel.remove({}, function(){
+                        App.operations.pickups= [];
                         PickupModel.store(response.pickups.data, {
                             success:function(){
                                 App.operations.pickups= PickupModel.get();
+                                ToastrUtility_.success('Recolecciones almacenadas');
                             }
                         });
                     });
