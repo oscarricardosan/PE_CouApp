@@ -32,7 +32,7 @@ function initializePage(){
                 element.loading();
                 Operations.synchronize_data_operations({
                     success: function(){element.unloading();},
-                    fail: function(){ element.unloading(); }
+                    fail: function(){ alert('Error al sincronizar');element.unloading(); }
                 });
             }, showPickupModal: function(pickup){
                 this.operations.current_pickup= pickup;
