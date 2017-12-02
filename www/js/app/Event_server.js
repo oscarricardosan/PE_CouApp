@@ -1,5 +1,10 @@
 var Event_server= (function () {
-    
+
+    var pickup_noti_update= [];
+    var pickup_noti_new= [];
+    var delivery_noti_update= [];
+    var delivery_noti_new= [];
+
     function get_events_from_server() {
         AjaxQueue.add({
             process_name: 'Get events of courier',
@@ -20,6 +25,31 @@ var Event_server= (function () {
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
         });
+
+        if(delivery_noti_new.length === 1){
+            Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
+        }else if(delivery_noti_new.length > 1){
+            Notification.event_server_pickup_message(delivery_noti_new.length+' nuevas entregas.');
+        }
+
+        if(delivery_noti_update.length === 1){
+            Notification.event_server_pickup_message(delivery_noti_update[0].message, delivery_noti_update[0].title, delivery_noti_update[0].data);
+        }else if(delivery_noti_update.length > 1){
+            Notification.event_server_pickup_message(delivery_noti_update.length+' entregas actualizadas.');
+        }
+
+        if(pickup_noti_new.length === 1){
+            Notification.event_server_pickup_message(pickup_noti_new[0].message, pickup_noti_new[0].title, pickup_noti_new[0].data);
+        }else if(pickup_noti_new.length > 1){
+            Notification.event_server_pickup_message(pickup_noti_new.length+' nuevas recolecciones.');
+        }
+
+        if(pickup_noti_update.length === 1){
+            Notification.event_server_pickup_message(pickup_noti_update[0].message, pickup_noti_update[0].title, pickup_noti_update[0].data);
+        }else if(pickup_noti_update > 1){
+            Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
+        }
+
         if(server_events.events.length>0){
             navigator.vibrate([3000, 2000, 3000]);
             navigator.notification.beep(3);
@@ -37,17 +67,17 @@ var Event_server= (function () {
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_pickup_message(
-                'Creada número '+event.data.pickup_number+' / '+event.data.pickup_date,
-                undefined,
-                {action: 'show_pickup', pickup: event.data}
-            );
+            pickup_noti_new.push({
+                'message': 'Creada número '+event.data.pickup_number+' / '+event.data.pickup_date,
+                'title': undefined,
+                'data': {action: 'show_pickup', pickup: event.data}
+            });
         if(event.event === 'actualization')
-            Notification.event_server_pickup_message(
-                event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date,
-                undefined,
-                {action: 'show_pickup', pickup: event.data}
-            );
+            pickup_noti_update.push({
+                'message': event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date,
+                'title': undefined,
+                'data': {action: 'show_pickup', pickup: event.data}
+            });
     }
 
     function process_deliveries(event){
@@ -61,17 +91,17 @@ var Event_server= (function () {
             }
         });
         if(event.event === 'creation')
-            Notification.event_server_delivery_message(
-                'Creada número '+event.data.delivery_number+' / '+event.data.delivery_date,
-                undefined,
-                {action: 'show_delivery', delivery: event.data}
-            );
+            delivery_noti_new.push({
+                'message': 'Creada número '+event.data.delivery_number+' / '+event.data.delivery_date,
+                'title': undefined,
+                'data': {action: 'show_delivery', delivery: event.data}
+            });
         if(event.event === 'actualization')
-            Notification.event_server_delivery_message(
-                event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date,
-                undefined,
-                {action: 'show_delivery', delivery: event.data}
-            );
+            delivery_noti_update.push({
+                'message': event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date,
+                'title': undefined,
+                'data': {action: 'show_delivery', delivery: event.data}
+            });
     }
 
     function delete_event_in_server(id){
