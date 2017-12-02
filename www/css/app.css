@@ -7,11 +7,17 @@
     margin-right: 0px!important;
     margin-left: 0px!important;
 }
+.modal .btn-app{
+    background: #dadada!important;
+}
 .modal .modal-dialog{
     margin: 0px!important;
 }
 .modal .modal-footer button{
     width: 48%;
+}
+.modal .modal-header button.close{
+    opacity: .5;
 }
 .modal .modal-header button.close span{
     font-size: 39px;

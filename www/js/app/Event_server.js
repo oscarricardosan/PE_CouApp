@@ -27,29 +27,29 @@ var Event_server= (function () {
         });
 
         try{
-        if(delivery_noti_new.length === 1){
-            Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
-        }else if(delivery_noti_new.length > 1){
-            Notification.event_server_pickup_message(delivery_noti_new.length+' nuevas entregas.');
-        }
+            if(delivery_noti_new.length === 1){
+                Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
+            }else if(delivery_noti_new.length > 1){
+                Notification.event_server_pickup_message(delivery_noti_new.length+' nuevas entregas.');
+            }
 
-        if(delivery_noti_update.length === 1){
-            Notification.event_server_pickup_message(delivery_noti_update[0].message, delivery_noti_update[0].title, delivery_noti_update[0].data);
-        }else if(delivery_noti_update.length > 1){
-            Notification.event_server_pickup_message(delivery_noti_update.length+' entregas actualizadas.');
-        }
+            if(delivery_noti_update.length === 1){
+                Notification.event_server_pickup_message(delivery_noti_update[0].message, delivery_noti_update[0].title, delivery_noti_update[0].data);
+            }else if(delivery_noti_update.length > 1){
+                Notification.event_server_pickup_message(delivery_noti_update.length+' entregas actualizadas.');
+            }
 
-        if(pickup_noti_new.length === 1){
-            Notification.event_server_pickup_message(pickup_noti_new[0].message, pickup_noti_new[0].title, pickup_noti_new[0].data);
-        }else if(pickup_noti_new.length > 1){
-            Notification.event_server_pickup_message(pickup_noti_new.length+' nuevas recolecciones.');
-        }
+            if(pickup_noti_new.length === 1){
+                Notification.event_server_pickup_message(pickup_noti_new[0].message, pickup_noti_new[0].title, pickup_noti_new[0].data);
+            }else if(pickup_noti_new.length > 1){
+                Notification.event_server_pickup_message(pickup_noti_new.length+' nuevas recolecciones.');
+            }
 
-        if(pickup_noti_update.length === 1){
-            Notification.event_server_pickup_message(pickup_noti_update[0].message, pickup_noti_update[0].title, pickup_noti_update[0].data);
-        }else if(pickup_noti_update > 1){
-            Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
-        }
+            if(pickup_noti_update.length === 1){
+                Notification.event_server_pickup_message(pickup_noti_update[0].message, pickup_noti_update[0].title, pickup_noti_update[0].data);
+            }else if(pickup_noti_update > 1){
+                Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
+            }
         }catch (e){ alert(e.message);}
         if(server_events.events.length>0){
             navigator.vibrate([3000, 2000, 3000]);
