@@ -27,6 +27,7 @@ var Operations= (function () {
         var external_callbacks= PolishedUtility_.callback(external_callbacks);
         Operations.get_data(MomentUtility_.current_date(), {
             success: function(response){
+                App.date_to_filter= null;
                 if(!response.deliveries.success){
                     alert(response.deliveries.message);
                 }else{

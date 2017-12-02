@@ -130,6 +130,11 @@ function initializeIntranet(){
         $.mobile.allowCrossDomainPages = true;
     });
 
+    function onBackKeyDown(e) {
+        $($('.modal:visible')[$('.modal:visible').length-1]).modal('hide')
+    }
+    document.addEventListener("backbutton", onBackKeyDown, false);
+
     initializePage();
 }
 //initializePage();
