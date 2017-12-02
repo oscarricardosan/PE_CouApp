@@ -4,6 +4,8 @@ var Operations= (function () {
         var callback= PolishedUtility_.callback(callback);
         if(date === undefined)
             date= MomentUtility_.current_date();
+
+        ToastrUtility_.success('Conecatando a servidor, espere por favor.');
         var request = $.ajax({
             url: Settings.route_api_pasar("operations_data"),
             type: 'post',
@@ -13,6 +15,7 @@ var Operations= (function () {
             })
         });
         request.done(function(response){
+            ToastrUtility_.success('Conexión exitosa.');
             callback.success(response);
             Event_server.clear_events_in_server();
         });
