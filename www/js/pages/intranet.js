@@ -1,1 +1,143 @@
-function onDeviceReadyIntranet(){Check_hardware.diagnostic_in_intranet()}function initializeIntranet(){function e(){function e(){"undefined"!=typeof t&&clearInterval(t),"undefined"!=typeof a&&clearInterval(a)}function n(){backgroundGeoLocation.configure(Gps.store_position_from_background,function(e){ProcessBackground.set_main_message_notification_bar("Error "+e.message)},{desiredAccuracy:10,stationaryRadius:20,distanceFilter:30,debug:!1,stopOnTerminate:!0,notificationTitle:"CourierApp toca para abrir",notificationText:". . ."})}function o(){cordova.plugins.backgroundMode.setDefaults({title:"CourierApp",text:"Bienvenido",resume:!1,hidden:!1,bigText:!1})}function i(){cordova.plugins.notification.local.on("click",function(e){var n=e.data;switch("string"==typeof e.data&&(n=JSON.parse(n)),n.action){case"show_delivery":var o=n.delivery;window.location="index.html?filter_date="+o.delivery_date+"&search="+o.delivery_number+"&tab=tab_deliveries";break;case"show_pickup":var i=n.pickup;window.location="index.html?filter_date="+i.pickup_date+"&search="+i.pickup_number+"&tab=tab_pickups"}})}var t=void 0,a=void 0;window.open=cordova.InAppBrowser.open,cordova.plugins.backgroundMode.overrideBackButton(),cordova.plugins.backgroundMode.enable(),cordova.plugins.backgroundMode.disableWebViewOptimizations(),o(),n(),i(),cordova.plugins.backgroundMode.on("activate",function(){try{Gps.clear_watches(),backgroundGeoLocation.start(),ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run()},300)}),e(),t=setInterval(function(){ProcessBackground.run()},5e3)}catch(n){Notification.event_server_pickup_message("Background 2 "+n.message)}}),cordova.plugins.backgroundMode.on("deactivate",function(){try{backgroundGeoLocation.stop(),Gps.start_tracking(),e(),a=setInterval(function(){ProcessForeground.run()},5e3)}catch(n){Notification.event_server_pickup_message("Background 2 "+n.message)}}),a=setInterval(function(){ProcessForeground.run()},5e3),Gps.start_tracking()}$(document).ready(function(){Login.is_logged_in(function(e,n){e||(alert("Debes iniciar sesión para continuar"),window.location.href="login.html")}),$(".logout").click(function(e){e.preventDefault(),Login.logout()})}),document.addEventListener("deviceready",e,!1),$(document).bind("mobileinit",function(){$.mobile.allowCrossDomainPages=!0}),initializePage()}document.addEventListener("deviceready",onDeviceReadyIntranet,!1);
+
+
+//initializeIntranet();
+/** Ready on mobiles **/
+document.addEventListener("deviceready", onDeviceReadyIntranet, false);
+function onDeviceReadyIntranet() {
+    Check_hardware.diagnostic_in_intranet();
+}
+
+function initializeIntranet(){
+    $(document).ready(function(){
+        Login.is_logged_in(function(success, user){
+            if(!success){
+                alert('Debes iniciar sesión para continuar');
+                window.location.href= 'login.html';
+            }
+        });
+
+        $('.logout').click(function(event){
+            event.preventDefault();
+            Login.logout();
+        });
+    });
+
+
+
+    /** Ready on mobiles **/
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+
+        var backgroundProcessTimer= undefined;
+        var foreGroundProcessTimer= undefined;
+
+        window.open = cordova.InAppBrowser.open;
+
+
+        /** BACKGROUND PROCESS**/
+        //Override the back button on Android to go to background instead of closing the app.
+        cordova.plugins.backgroundMode.overrideBackButton();
+        //active background process
+        cordova.plugins.backgroundMode.enable();
+        cordova.plugins.backgroundMode.disableWebViewOptimizations();
+
+        initializeBackgroundProcess();
+        initializeGpsBackground();
+        initializeActionsInLocalNotifications();
+
+        cordova.plugins.backgroundMode.on('activate', function() {
+            try{
+                Gps.clear_watches();
+                backgroundGeoLocation.start();
+                //Mostrar el estado inicial de la barra
+                ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
+                //Limpiar timers
+                clearProcesses();
+                //Ejecuta proceso de fondo cada 5 segundos
+                backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
+            }catch(e){
+                Notification.event_server_pickup_message('Background 2 '+e.message);
+            }
+        });
+
+        cordova.plugins.backgroundMode.on('deactivate', function() {
+            try{
+                backgroundGeoLocation.stop();
+                Gps.start_tracking();
+                //Limpiar timers
+                clearProcesses();
+                //Ejecuta proceso de frente cada 5 segundos
+                foreGroundProcessTimer = setInterval(function(){
+                    ProcessForeground.run();
+                }, 5000);
+            }catch(e){
+                Notification.event_server_pickup_message('Background 2 '+e.message);
+            }
+        });
+        foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
+        Gps.start_tracking();
+
+
+        function clearProcesses(){
+            if(typeof(backgroundProcessTimer) !== 'undefined')clearInterval(backgroundProcessTimer);
+            if(typeof(foreGroundProcessTimer) !== 'undefined')clearInterval(foreGroundProcessTimer);
+        }
+
+
+        function initializeGpsBackground(){
+            //Configuracion GPS Background
+            backgroundGeoLocation.configure(Gps.store_position_from_background, function(error){
+                ProcessBackground.set_main_message_notification_bar('Error '+error.message);
+            }, {
+                desiredAccuracy: 10,
+                stationaryRadius: 20,
+                distanceFilter: 30,
+                debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+                stopOnTerminate: true, // <-- enable this to clear background location settings when the app terminates
+                // notificationIconColor: '#4CAF50',
+                notificationTitle: 'CourierApp toca para abrir',
+                notificationText: '. . .',
+                //  notificationIcon: '/images/danger.png'
+            });
+        }
+
+        function initializeBackgroundProcess(){
+            //Configuracion status bar
+            cordova.plugins.backgroundMode.setDefaults({
+                title: 'CourierApp',
+                text: 'Bienvenido',
+                //icon: '/images/danger.png', // this will look for icon.png in platforms/android/res/drawable|mipmap
+                //color: '#ff0000', // hex format like 'F14F4D'
+                resume: false,
+                hidden: false,
+                bigText: false
+            });
+
+        }
+
+        function initializeActionsInLocalNotifications() {
+            cordova.plugins.notification.local.on("click", function (notification) {
+                var data= notification.data;
+                if(typeof notification.data === 'string') data= JSON.parse(data);
+                switch(data.action){
+                    case "show_delivery":
+                        var delivery= data.delivery;
+                        window.location= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
+                        break;
+                    case "show_pickup":
+                        var pickup= data.pickup;
+                        window.location= 'index.html?filter_date='+pickup.pickup_date+'&search='+pickup.pickup_number+'&tab=tab_pickups';
+                        break;
+                }
+            });
+        }
+        /** CLOSE BACKGROUND PROCESS**/
+    }
+
+    $(document).bind("mobileinit", function(){
+        $.mobile.allowCrossDomainPages = true;
+    });
+
+    initializePage();
+}
+//initializePage();
