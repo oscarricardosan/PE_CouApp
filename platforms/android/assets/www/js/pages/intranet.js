@@ -46,25 +46,33 @@ function initializeIntranet(){
         initializeActionsInLocalNotifications();
 
         cordova.plugins.backgroundMode.on('activate', function() {
-            Gps.clear_watches();
-            backgroundGeoLocation.start();
-            //Mostrar el estado inicial de la barra
-            ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
-            //Limpiar timers
-            clearProcesses();
-            //Ejecuta proceso de fondo cada 5 segundos
-            backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
+            try{
+                Gps.clear_watches();
+                backgroundGeoLocation.start();
+                //Mostrar el estado inicial de la barra
+                ProcessBackground.reload_message_to_notification_bar(function(){setTimeout(function(){ProcessBackground.run();}, 300);});
+                //Limpiar timers
+                clearProcesses();
+                //Ejecuta proceso de fondo cada 5 segundos
+                backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
+            }catch(e){
+                Notification.event_server_pickup_message('Background 2 '+e.message);
+            }
         });
 
         cordova.plugins.backgroundMode.on('deactivate', function() {
-            backgroundGeoLocation.stop();
-            Gps.start_tracking();
-            //Limpiar timers
-            clearProcesses();
-            //Ejecuta proceso de frente cada 5 segundos
-            foreGroundProcessTimer = setInterval(function(){
-                ProcessForeground.run();
-            }, 5000);
+            try{
+                backgroundGeoLocation.stop();
+                Gps.start_tracking();
+                //Limpiar timers
+                clearProcesses();
+                //Ejecuta proceso de frente cada 5 segundos
+                foreGroundProcessTimer = setInterval(function(){
+                    ProcessForeground.run();
+                }, 5000);
+            }catch(e){
+                Notification.event_server_pickup_message('Background 2 '+e.message);
+            }
         });
         foreGroundProcessTimer = setInterval(function(){ProcessForeground.run()}, 5000);
         Gps.start_tracking();

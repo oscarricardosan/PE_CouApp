@@ -522,30 +522,23 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    alert('success');
                     if(!cordova.plugins.backgroundMode.isActive()) {
-                        alert('background activo');
                         if(typeof form === 'object'){
                             form.unloading();
-                            alert('form unloading');
-                        }else{ alert('no form');}
+                        }
                         PickupModel.update({id: response.data.id}, response.data, {
                             success: function () {
                                 App.operations.current_pickup = response.data;
                                 App.operations.pickups = PickupModel.get();
-                                alert('update exitoso 1');
                                 if($('#pickup_success_modal').is(':visible')) {
-                                    alert('modal visible');
                                     ToastrUtility_.success(response.message);
                                     $('#pickup_success_modal').modal('hide');
                                 }
                             }
                         });
                     }else{
-                        alert('background no activo');
                         PickupModel.update({id: response.data.id}, response.data, {
                             success: function () {
-                                alert('update exitoso 1');
                                 App.operations.current_pickup = response.data;
                                 App.operations.pickups = PickupModel.get();
                             }

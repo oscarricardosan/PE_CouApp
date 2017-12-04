@@ -290,11 +290,13 @@
                             <option v-for="date in dates_to_filter" :value="date">{{ date }}</option>
                         </select>
                     </div>
+                </div>
+                <div class="col-sm-12" style="padding: 0">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#tab_pickups" data-toggle="tab">
-                                    Recolecciones
+                                    Recolecciónes
                                     <span class="label bg-green">
                                         {{ pickups_in_list }} de {{ operations.pickups.length }}
                                     </span>
@@ -328,12 +330,18 @@
                                         <b>{{ pickup.type_of_identity_document.short_name }}</b>: {{ pickup.identity_document }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
+                                        <span v-if="pickup.long_address !== null && pickup.long_address !== undefined">
+                                            {{ pickup.long_address }}<br>
+                                        </span>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ pickup.phone }}<br>
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments.join(', ') }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
                                             {{ current_position | distance_to_pickup(pickup) }}
+                                            <span v-if="pickup.score !== null && pickup.score < 50">
+                                                ADVERTENCIA: Confiabilidad del {{ pickup.score }}%
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -357,12 +365,18 @@
                                         <b>{{ delivery.type_of_identity_document.short_name }}</b>: {{ delivery.identity_document }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
+                                        <span v-if="delivery.long_address !== null && delivery.long_address !== undefined">
+                                            {{ delivery.long_address }}<br>
+                                        </span>
                                         <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact_name }}<br>
                                         <i class="fa fa-phone"></i> <b>Teléfono:</b> {{ delivery.phone }}<br>
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments.join(', ') }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
                                             {{ current_position | distance_to_delivery(delivery) }}
+                                            <span v-if="delivery.score !== null && delivery.score < 50">
+                                                ADVERTENCIA: Confiabilidad del {{ delivery.score }}%
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -400,17 +414,22 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    <h4 class="modal-title">
+                        Recolección {{ operations.current_pickup.pickup_number }}
+                        <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
+                            Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                        </div>
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100 || operations.current_pickup.pickup_state_id === 50">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#pickup_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar recolección
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id === 100 || operations.current_pickup.pickup_state_id === 50">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#pickup_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -430,11 +449,17 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6" >
+                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_pickup_id='+operations.current_pickup.id">
                                     <i class="fa fa-globe"></i>
                                     Ver en mapa
                                 </a>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_pickup.phone != null">
+                                <button class="btn btn-block btn-flat btn-app bg-aqua" onclick="" type="button"
+                                        @click.prevent="window.plugins.CallNumber.callNumber(function(){}, function(){}, operations.current_pickup.phone, true)">
+                                    <i class="fa fa-phone"></i> Llamar a {{ operations.current_pickup.phone}}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -452,7 +477,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                        <h4 class="modal-title">
+                            Recolección {{ operations.current_pickup.pickup_number }}
+                            <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
+                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -495,6 +525,18 @@
                         <div class="form-group">
                             <label class="control-label">Observaciones:</label>
                             <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+
+                        <div class="form-group" style="text-align: right; margin: 0;">
+                            <a href="#" @click.prevent="$('.extra_data').css('display', 'block')">
+                                <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Información adicional
+                            </a>
+                        </div>
+                        <div class="form-group extra_data" hidde>
+                            <label class="control-label">Temperatura:</label>
+                            <input class="form-control" type="number" step="0.01" name="informacion_adicional[0][value]"  default-value="">
+                            <input type="hidden" name="informacion_adicional[0][label]" default-value="Temperatura">
+                            <input type="hidden" name="informacion_adicional[0][name]" default-value="temperatura">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -551,7 +593,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                    <h4 class="modal-title">
+                        Recolección {{ operations.current_pickup.pickup_number }}
+                        <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
+                            Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                        </div>
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -590,7 +637,12 @@
                 <form>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Recoleccion {{ operations.current_pickup.pickup_number }}</h4>
+                        <h4 class="modal-title">
+                            Recolección {{ operations.current_pickup.pickup_number }}
+                            <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
+                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -653,7 +705,12 @@
                 <form>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Recolección {{ operations.current_pickup.pickup_number }}</h4>
+                        <h4 class="modal-title">
+                            Recolección {{ operations.current_pickup.pickup_number }}
+                            <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
+                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -670,7 +727,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Guías:</label>
-                            <textarea class="form-control" name="guias" rows="6"></textarea>
+                            <textarea class="form-control" name="guias" rows="6" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -689,17 +746,22 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    <h4 class="modal-title">
+                        Entrega {{ operations.current_delivery.delivery_number }}
+                        <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
+                            Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                        </div>
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id === 100 || operations.current_delivery.delivery_state_id === 50">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id == 100 || operations.current_delivery.delivery_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#delivery_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar entrega
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  === 100 || operations.current_delivery.delivery_state_id === 50">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  == 100 || operations.current_delivery.delivery_state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#delivery_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -719,10 +781,16 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_delivery_id='+operations.current_delivery.id">
                                     <i class="fa fa-globe"></i> Ver en mapa
                                 </a>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_delivery.phone != null">
+                                <button class="btn btn-block btn-flat btn-app bg-aqua" onclick="" type="button"
+                                @click.prevent="window.plugins.CallNumber.callNumber(function(){}, function(){}, operations.current_delivery.phone, true)">
+                                    <i class="fa fa-phone"></i> Llamar a {{ operations.current_delivery.phone}}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -780,7 +848,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                        <h4 class="modal-title">
+                            Entrega {{ operations.current_delivery.delivery_number }}
+                            <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
+                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -824,6 +897,18 @@
                             <label class="control-label">Observaciones:</label>
                             <textarea class="form-control" name="observaciones"></textarea>
                         </div>
+
+                        <div class="form-group" style="text-align: right; margin: 0;">
+                            <a href="#" @click.prevent="$('.extra_data').css('display', 'block')">
+                                <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Información adicional
+                            </a>
+                        </div>
+                        <div class="form-group extra_data" hidde>
+                            <label class="control-label">Temperatura:</label>
+                            <input class="form-control" type="number" step="0.01" name="informacion_adicional[0][value]"  default-value="">
+                            <input type="hidden" name="informacion_adicional[0][label]" default-value="Temperatura">
+                            <input type="hidden" name="informacion_adicional[0][name]" default-value="temperatura">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -839,7 +924,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                    <h4 class="modal-title">
+                        Entrega {{ operations.current_delivery.delivery_number }}
+                        <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
+                            Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                        </div>
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -878,7 +968,12 @@
                 <form>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                        <h4 class="modal-title">
+                            Entrega {{ operations.current_delivery.delivery_number }}
+                            <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
+                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -940,7 +1035,12 @@
                 <form>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Entrega {{ operations.current_delivery.delivery_number }}</h4>
+                        <h4 class="modal-title">
+                            Entrega {{ operations.current_delivery.delivery_number }}
+                            <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
+                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                            </div>
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -957,7 +1057,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Guías:</label>
-                            <textarea class="form-control" name="guias" rows="6"></textarea>
+                            <textarea class="form-control" name="guias" rows="6" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

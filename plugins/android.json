@@ -7,6 +7,9 @@
     "files": {}
   },
   "installed_plugins": {
+    "call-number": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
     "cordova-plugin-android-permissions": {
       "PACKAGE_NAME": "savne.courier_app"
     },
@@ -47,9 +50,6 @@
       "PACKAGE_NAME": "savne.courier_app"
     },
     "de.appplant.cordova.plugin.local-notification": {
-      "PACKAGE_NAME": "savne.courier_app"
-    },
-    "call-number": {
       "PACKAGE_NAME": "savne.courier_app"
     }
   },

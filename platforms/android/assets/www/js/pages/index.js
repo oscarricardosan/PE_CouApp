@@ -32,7 +32,7 @@ function initializePage(){
                 element.loading();
                 Operations.synchronize_data_operations({
                     success: function(){element.unloading();},
-                    fail: function(){ element.unloading(); }
+                    fail: function(){ alert('Error al sincronizar');element.unloading(); }
                 });
             }, showPickupModal: function(pickup){
                 this.operations.current_pickup= pickup;
@@ -500,7 +500,10 @@ function initializePage(){
 
         /** ABRE STORE DE EXITOSAS */
         $('#delivery_success_modal, #pickup_success_modal').on('show.bs.modal', function () {
-            $(this).find('[name]').val('');
+            $(this).find('[name]:not([default-value])').val('');
+            $(this).find('[default-value]').each(function(){
+                $(this).val($(this).attr('default-value'));
+            });
             $(this).find('[current_time]').val(
                 MomentUtility_.current_time().substr(0,5)
             );
@@ -520,7 +523,9 @@ function initializePage(){
                 data: data,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
+                        if(typeof form === 'object'){
+                            form.unloading();
+                        }
                         PickupModel.update({id: response.data.id}, response.data, {
                             success: function () {
                                 App.operations.current_pickup = response.data;
@@ -643,9 +648,13 @@ function initializePage(){
         $('#pickup_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            form.loading();
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
+            if($.trim(data.guias)==''){
+                alert('Campo guías es obligatorio');
+                return false;
+            }
+            form.loading();
             AjaxQueue.add({
                 process_name: 'Pickup asociación guías: ',
                 type: 'post',
@@ -697,9 +706,13 @@ function initializePage(){
         $('#delivery_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            form.loading();
             data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
+            if($.trim(data.guias)==''){
+                alert('Campo guías es obligatorio');
+                return false;
+            }
+            form.loading();
             AjaxQueue.add({
                 process_name: 'Delivery asociación guías: ',
                 type: 'post',
@@ -804,7 +817,12 @@ function initializePage(){
     /** Ready on mobiles **/
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-        scanBluetoohtDevices();
+        cordova.plugins.diagnostic.isBluetoothAvailable(function(available) {
+            if (available) {
+                scanBluetoohtDevices();
+            }
+        });
+
     }
 }
 
