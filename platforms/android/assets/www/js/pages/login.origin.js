@@ -18,7 +18,6 @@ $(document).ready(function(){
             Settings.setSettings(settings);
             $('#user_email_domain option').val('@' + settings.domain);
             $('#user_email_domain option').text('@' + settings.domain);
-            $('#user_email_domain').select2();
 
             Login.is_logged_in(function(success, user){
                 if(success){
