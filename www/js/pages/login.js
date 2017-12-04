@@ -5,7 +5,7 @@ $(document).ready(function(){
         if(settings === null){
             do{
                 var domain= prompt("Ingresa el dominio de tu empresa, ejemplo: demo.savne.net");
-                domain= domain.toLowerCase();
+                domain= $.trim(domain.toLowerCase());
                 var domain_data= _.findWhere(CustomerSettings, {domain: domain});
                 if(domain_data === undefined){
                     alert('Lo sentimos el dominio "'+domain+'" no esta registrado en nuestro sistema');
@@ -34,7 +34,7 @@ $(document).ready(function(){
     $('#formLogin').submitWithValidator( function (event, form) {
         form.loading();
         event.preventDefault();
-        var email= $('#username').val().toLowerCase()+$('#user_email_domain').val();
+        var email= $.trim($('#username').val().toLowerCase())+$('#user_email_domain').val();
 
         callback= {
             success: function(response){
