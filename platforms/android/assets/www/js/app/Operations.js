@@ -15,7 +15,7 @@ var Operations= (function () {
             })
         });
         request.done(function(response){
-            ToastrUtility_.info('Conexión exitosa.');
+            ToastrUtility_.success('Conexión exitosa.');
             callback.success(response);
             Event_server.clear_events_in_server();
         });
@@ -37,11 +37,9 @@ var Operations= (function () {
                     }else{
                         DeliveriesModel.remove({}, function(){
                             App.operations.deliveries= [];
-                            ToastrUtility_.warning('Entregas removidas');
                             DeliveriesModel.store(response.deliveries.data, {
                                 success:function(){
                                     App.operations.deliveries= DeliveriesModel.get();
-                                    ToastrUtility_.success('Entregas almacenadas');
                                 }
                             });
 
@@ -53,11 +51,9 @@ var Operations= (function () {
                     }else{
                         PickupModel.remove({}, function(){
                             App.operations.pickups= [];
-                            ToastrUtility_.warning('Recolecciones removidas');
                             PickupModel.store(response.pickups.data, {
                                 success:function(){
                                     App.operations.pickups= PickupModel.get();
-                                    ToastrUtility_.success('Recolecciones almacenadas');
                                 }
                             });
                         });
