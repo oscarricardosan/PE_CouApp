@@ -11,8 +11,8 @@ var Settings= {
     timer_to_gps: 3,//minutes
     timer_check_ajax_queue: 5,//minutes
     timer_get_events_from_server: 6,//minutes
-    timer_run_alert_proximity: 1,//minutes
-    timer_run_alert_time: 1,//minutes
+    timer_run_alert_proximity: 3,//minutes
+    timer_run_alert_time: 5,//minutes
     notification_id: {
         queue_ajax: 10
     },
@@ -25,7 +25,7 @@ var Settings= {
         end_hour: 23
     },
     alert: {
-        minimum_meters: 3000,
+        minimum_meters: 1000,
         minimum_minutes: 10,
         attempt_gps: 1
     }

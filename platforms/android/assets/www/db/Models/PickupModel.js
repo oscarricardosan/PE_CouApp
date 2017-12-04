@@ -8,7 +8,7 @@ var PickupModel= (function () {
     /**
      * Carga los datos si ya estan en localstorage
      */
-    db.collection(collection_name, {capped: true, size: 500}).load(function (err, tableStats, metaStats) {
+    db.collection(collection_name).load(function (err, tableStats, metaStats) {
         if (!err) {
             $.each(loaded_Callback, function(){
                 this();
