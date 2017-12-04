@@ -36,7 +36,7 @@ function initializeIntranet(){
 
         /** BACKGROUND PROCESS**/
         //Override the back button on Android to go to background instead of closing the app.
-        cordova.plugins.backgroundMode.overrideBackButton();
+        //cordova.plugins.backgroundMode.overrideBackButton();
         //active background process
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
