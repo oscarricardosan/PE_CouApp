@@ -46,7 +46,14 @@ var AjaxQueue= (function () {
     };
 
     var check_queue= function(callbacks){
-        var queues= Ajax_queueModel.get();
+        var queues;
+        if(navigator.connection.type === Connection.WIFI){
+            queues= Ajax_queueModel.get();
+        }else{
+            queues= Ajax_queueModel.find({
+                $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+            });
+        }
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
             callbacks.empty();
@@ -54,53 +61,45 @@ var AjaxQueue= (function () {
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
 
-        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===undefined?false:properties.transmit_only_with_WiFi;
-        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===null?false:properties.transmit_only_with_WiFi;
-
-        if( //Si no importa que la conexión no sea wifi o si tiene que ser wifi y no esta conectado por Wifi
-        properties.transmit_only_with_WiFi === false ||
-        (properties.transmit_only_with_WiFi === true && navigator.connection.type === Connection.WIFI)
-        ) {
-            var request = $.ajax({
-                url: Settings.route_api_pasar(properties.url),
-                type: properties.type,
-                dataType: properties.dataType,
-                data: SecurityUtility_.add_user_authenticated(properties.data)
-            });
-            request.done(function (response) {
-                if (properties.dataType === 'json') {
-                    if (response.success) {
-                        properties.success(response, properties);
-                        callbacks.success(response, properties);
-                        LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                        Ajax_queueModel.remove({_id: properties._id}, function () {
-                            AjaxQueue.check_queue(callbacks);
-                        });
-                    } else {
-                        var data = {properties: properties, response: response};
-                        properties.fail(data);
-                        callbacks.fail(data);
-                        LogModel.store_fail(properties.process_name, data);
-                    }
-                } else {
-                    callbacks.success(response, properties);
+        var request = $.ajax({
+            url: Settings.route_api_pasar(properties.url),
+            type: properties.type,
+            dataType: properties.dataType,
+            data: SecurityUtility_.add_user_authenticated(properties.data)
+        });
+        request.done(function (response) {
+            if (properties.dataType === 'json') {
+                if (response.success) {
                     properties.success(response, properties);
+                    callbacks.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     Ajax_queueModel.remove({_id: properties._id}, function () {
                         AjaxQueue.check_queue(callbacks);
                     });
+                } else {
+                    var data = {properties: properties, response: response};
+                    properties.fail(data);
+                    callbacks.fail(data);
+                    LogModel.store_fail(properties.process_name, data);
                 }
-                App.ajax_queue_count = Ajax_queueModel.get().length;
-            });
-            request.fail(function (jqXHR, textStatus) {
-                var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-                LogModel.store_fail(properties.process_name, data);
-                App.ajax_queue_count = Ajax_queueModel.get().length;
-                validate_request_fail(jqXHR);
-                properties.fail(data);
-                callbacks.fail(data);
-            });
-        }
+            } else {
+                callbacks.success(response, properties);
+                properties.success(response, properties);
+                LogModel.store_success(properties.process_name, {response: response, properties: properties});
+                Ajax_queueModel.remove({_id: properties._id}, function () {
+                    AjaxQueue.check_queue(callbacks);
+                });
+            }
+            App.ajax_queue_count = Ajax_queueModel.get().length;
+        });
+        request.fail(function (jqXHR, textStatus) {
+            var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+            LogModel.store_fail(properties.process_name, data);
+            App.ajax_queue_count = Ajax_queueModel.get().length;
+            validate_request_fail(jqXHR);
+            properties.fail(data);
+            callbacks.fail(data);
+        });
     };
 
     function validate_request_fail(jqXHR){
