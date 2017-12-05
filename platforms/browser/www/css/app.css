@@ -3,3 +3,37 @@
     margin-right: 0px!important;
     margin-left: 0px!important;
 }
+.modal .btn-app{
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+}
+.modal{
+    background: #dadada!important;
+}
+.modal .modal-dialog{
+    margin: 0px!important;
+}
+.modal .modal-footer button{
+    width: 48%;
+}
+.modal .modal-header button.close{
+    opacity: .5;
+}
+.modal .modal-header button.close span{
+    font-size: 39px;
+    color: black;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    line-height: 16px;
+    height: 29px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+.extra_data[hidde]{
+    display: none;
+}
+input[type="number"]{
+    text-align: right;
+}

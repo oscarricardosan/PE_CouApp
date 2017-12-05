@@ -171,6 +171,23 @@ module.exports = [
       "cordova.plugins.notification.local.core",
       "plugin.notification.local.core"
     ]
+  },
+  {
+    "id": "cordova-plugin-network-information.network",
+    "file": "plugins/cordova-plugin-network-information/www/network.js",
+    "pluginId": "cordova-plugin-network-information",
+    "clobbers": [
+      "navigator.connection",
+      "navigator.network.connection"
+    ]
+  },
+  {
+    "id": "cordova-plugin-network-information.Connection",
+    "file": "plugins/cordova-plugin-network-information/www/Connection.js",
+    "pluginId": "cordova-plugin-network-information",
+    "clobbers": [
+      "Connection"
+    ]
   }
 ];
 module.exports.metadata = 
@@ -191,7 +208,8 @@ module.exports.metadata =
   "cordova-plugin-vibration": "2.1.5",
   "cordova-plugin-whitelist": "1.3.2",
   "cordova.plugins.diagnostic": "3.7.1",
-  "de.appplant.cordova.plugin.local-notification": "0.8.5"
+  "de.appplant.cordova.plugin.local-notification": "0.8.5",
+  "cordova-plugin-network-information": "1.3.3"
 };
 // BOTTOM OF METADATA
 });

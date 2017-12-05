@@ -3,6 +3,7 @@ var AjaxQueue= (function () {
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
         properties.created_at= MomentUtility_.now();
+        properties.transmit_only_with_WiFi= false;
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,

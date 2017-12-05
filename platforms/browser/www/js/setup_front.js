@@ -1,15 +1,10 @@
-$(document).ready(function(){
-    $('.select2').select2();
+$(function() {
+    FastClick.attach(document.body);
 
-    //Date picker
-    $('.datepicker').datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd'
-    });
+    document.addEventListener("backbutton", onBackKeyDown, false);
 
-    //Timepicker
-    $(".timepicker").timepicker({
-        showInputs: false,
-        showMeridian: false,
-    });
+    function onBackKeyDown(e) {
+        e.preventDefault();
+        $($('.modal:visible')[$('.modal:visible').length-1]).modal('hide')
+    }
 });

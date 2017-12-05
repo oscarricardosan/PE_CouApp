@@ -47,8 +47,16 @@ var GpsModel= (function () {
     };
 
     var drop= function(callback){
-        var coll = db.collection(collection_name);
-        coll.drop(callback());
+        db.collection(collection_name).drop(function(){
+            callback();
+            db.collection(collection_name).save(function (err) {
+                if (!err){
+                    if(typeof(callback) === 'function'){callback();}
+                }else{
+                    alert('Error al eliminar colección '+collection_name);
+                }
+            });
+        });
     };
 
     var loaded= function(callback){

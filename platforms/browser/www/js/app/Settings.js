@@ -11,8 +11,8 @@ var Settings= {
     timer_to_gps: 3,//minutes
     timer_check_ajax_queue: 5,//minutes
     timer_get_events_from_server: 6,//minutes
-    timer_run_alert_proximity: 1,//minutes
-    timer_run_alert_time: 1,//minutes
+    timer_run_alert_proximity: 3,//minutes
+    timer_run_alert_time: 5,//minutes
     notification_id: {
         queue_ajax: 10
     },
@@ -21,8 +21,8 @@ var Settings= {
         danger: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/racingflags-128.png"
     },
     gps:{
-        start_hour: 7,
-        end_hour: 20
+        start_hour: 5,
+        end_hour: 23
     },
     alert: {
         minimum_meters: 1000,

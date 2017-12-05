@@ -15,8 +15,8 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
-                update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 if(optimal_conditions_for_execution_are()) {
+                    update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
                     store_position(position);
                     Process.store_last_attempt('gps_tracking');
                 }
@@ -28,8 +28,8 @@ var Gps= (function () {
     };
 
     function store_position_from_background(location) {
-        update_current_position(location);
         if(optimal_conditions_for_execution_are()) {
+            update_current_position(location);
             store_position({
                 coords: {
                     latitude: location.latitude,

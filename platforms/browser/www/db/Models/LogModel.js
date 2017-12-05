@@ -8,7 +8,7 @@ var LogModel= (function () {
     /**
      * Carga los datos si ya estan en localstorage
      */
-    db.collection(collection_name, {capped: true, size: 500}).load(function (err, tableStats, metaStats) {
+    db.collection(collection_name, {capped: true, size: 15}).load(function (err, tableStats, metaStats) {
         if (!err) {
             $.each(loaded_Callback, function(){
                 this();
@@ -61,8 +61,16 @@ var LogModel= (function () {
     };
 
     var drop= function(callback){
-        var coll = db.collection(collection_name);
-        coll.drop(callback());
+        db.collection(collection_name).drop(function(){
+            callback()
+            db.collection(collection_name).save(function (err) {
+                if (!err){
+                    if(typeof(callback) === 'function'){callback();}
+                }else{
+                    alert('Error al eliminar colección '+collection_name);
+                }
+            });
+        });
     };
 
     var remove= function(where, callback){

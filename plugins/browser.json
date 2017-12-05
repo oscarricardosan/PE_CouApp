@@ -15,6 +15,9 @@
     },
     "call-number": {
       "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "savne.courier_app"
     }
   },
   "dependent_plugins": {

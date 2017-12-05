@@ -3,34 +3,46 @@ var AjaxQueue= (function () {
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
         properties.created_at= MomentUtility_.now();
-        var request = $.ajax({
-            url: Settings.route_api_pasar(properties.url),
-            type: properties.type,
-            dataType: properties.dataType,
-            data: SecurityUtility_.add_user_authenticated(properties.data)
-        });
-        request.done(function(response){
-            if(properties.dataType === 'json'){
-                if(response.success){
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===undefined?false:properties.transmit_only_with_WiFi;
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===null?false:properties.transmit_only_with_WiFi;
+        if( //Si no importa que la conexión no sea wifi o si tiene que ser wifi y no esta conectado por Wifi
+            properties.transmit_only_with_WiFi === false ||
+            (properties.transmit_only_with_WiFi === true && navigator.connection.type === Connection.WIFI)
+        ){
+            var request = $.ajax({
+                url: Settings.route_api_pasar(properties.url),
+                type: properties.type,
+                dataType: properties.dataType,
+                data: SecurityUtility_.add_user_authenticated(properties.data)
+            });
+            request.done(function(response){
+                if(properties.dataType === 'json'){
+                    if(response.success){
+                        properties.success(response, properties);
+                        LogModel.store_success(properties.process_name, {response: response, properties: properties});
+                    }else{
+                        var data= {properties: properties, response: {response: response, properties: properties}};
+                        properties.fail(data);
+                        LogModel.store_fail(properties.process_name, data);
+                    }
+                }else{
                     properties.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                }else{
-                    var data= {properties: properties, response: {response: response, properties: properties}};
-                    properties.fail(data);
-                    LogModel.store_fail(properties.process_name, data);
                 }
-            }else{
-                properties.success(response, properties);
-                LogModel.store_success(properties.process_name, {response: response, properties: properties});
-            }
-        });
-        request.fail(function(jqXHR, textStatus) {
+            });
+            request.fail(function(jqXHR, textStatus) {
+                var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+                LogModel.store_fail(properties.process_name, data);
+                Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
+                App.ajax_queue_count= Ajax_queueModel.get().length;
+                validate_request_fail(jqXHR);
+            });
+        }else{//Solo se puede por wifi y no hay wifi
             var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-            LogModel.store_fail(properties.process_name, data);
+            LogModel.store_fail(properties.process_name+' solo con Wifi', data);
             Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
             App.ajax_queue_count= Ajax_queueModel.get().length;
-            validate_request_fail(jqXHR);
-        });
+        }
     };
 
     var check_queue= function(callbacks){
@@ -41,41 +53,54 @@ var AjaxQueue= (function () {
             return false;
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
-        var request = $.ajax({
-            url: Settings.route_api_pasar(properties.url),
-            type: properties.type,
-            dataType: properties.dataType,
-            data: SecurityUtility_.add_user_authenticated(properties.data)
-        });
-        request.done(function(response){
-            if(properties.dataType === 'json'){
-                if(response.success){
-                    properties.success(response, properties);
+
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===undefined?false:properties.transmit_only_with_WiFi;
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===null?false:properties.transmit_only_with_WiFi;
+
+        if( //Si no importa que la conexión no sea wifi o si tiene que ser wifi y no esta conectado por Wifi
+        properties.transmit_only_with_WiFi === false ||
+        (properties.transmit_only_with_WiFi === true && navigator.connection.type === Connection.WIFI)
+        ) {
+            var request = $.ajax({
+                url: Settings.route_api_pasar(properties.url),
+                type: properties.type,
+                dataType: properties.dataType,
+                data: SecurityUtility_.add_user_authenticated(properties.data)
+            });
+            request.done(function (response) {
+                if (properties.dataType === 'json') {
+                    if (response.success) {
+                        properties.success(response, properties);
+                        callbacks.success(response, properties);
+                        LogModel.store_success(properties.process_name, {response: response, properties: properties});
+                        Ajax_queueModel.remove({_id: properties._id}, function () {
+                            AjaxQueue.check_queue(callbacks);
+                        });
+                    } else {
+                        var data = {properties: properties, response: response};
+                        properties.fail(data);
+                        callbacks.fail(data);
+                        LogModel.store_fail(properties.process_name, data);
+                    }
+                } else {
                     callbacks.success(response, properties);
+                    properties.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                    Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
-                }else{
-                    var data= {properties: properties, response: response};
-                    properties.fail(data);
-                    callbacks.fail(data);
-                    LogModel.store_fail(properties.process_name, data);
+                    Ajax_queueModel.remove({_id: properties._id}, function () {
+                        AjaxQueue.check_queue(callbacks);
+                    });
                 }
-            }else{
-                callbacks.success(response, properties);
-                properties.success(response, properties);
-                LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
-            }
-            App.ajax_queue_count= Ajax_queueModel.get().length;
-        });
-        request.fail(function(jqXHR, textStatus) {
-            var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-            LogModel.store_fail(properties.process_name, data);
-            App.ajax_queue_count= Ajax_queueModel.get().length;
-            validate_request_fail(jqXHR);
-            properties.fail(data);
-            callbacks.fail(data);
-        });
+                App.ajax_queue_count = Ajax_queueModel.get().length;
+            });
+            request.fail(function (jqXHR, textStatus) {
+                var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+                LogModel.store_fail(properties.process_name, data);
+                App.ajax_queue_count = Ajax_queueModel.get().length;
+                validate_request_fail(jqXHR);
+                properties.fail(data);
+                callbacks.fail(data);
+            });
+        }
     };
 
     function validate_request_fail(jqXHR){
