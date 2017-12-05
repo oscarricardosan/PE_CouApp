@@ -38,7 +38,7 @@ var AjaxQueue= (function () {
                 validate_request_fail(jqXHR);
             });
         }else{//Solo se puede por wifi y no hay wifi
-            var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+            var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
             LogModel.store_fail(properties.process_name+' solo con Wifi', data);
             Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
             App.ajax_queue_count= Ajax_queueModel.get().length;
