@@ -39,6 +39,10 @@ var Ajax_queueModel= (function () {
         return records;
     };
 
+    var find = function(where){
+        return db.collection(collection_name).find(where);
+    };
+
     var isEmpty = function(){
         return get() === null;
     };
@@ -82,6 +86,7 @@ var Ajax_queueModel= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get               : get,
+            find              : find,
             store             : store,
             loaded            : loaded,
             isEmpty           : isEmpty,
