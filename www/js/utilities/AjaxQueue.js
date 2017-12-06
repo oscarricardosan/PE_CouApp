@@ -24,6 +24,8 @@ var AjaxQueue= (function () {
                         var data= {properties: properties, response: {response: response, properties: properties}};
                         properties.fail(data);
                         LogModel.store_fail(properties.process_name, data);
+                        Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
+                        App.ajax_queue_count= Ajax_queueModel.get().length;
                     }
                 }else{
                     properties.success(response, properties);
@@ -103,21 +105,20 @@ var AjaxQueue= (function () {
     };
 
     function validate_request_fail(jqXHR){
-        console.log(jqXHR);
         if(jqXHR.status===422){
             if(typeof jqXHR.responseJSON === 'object')
-                Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
+                Alert_('Cola: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
             else
-                Alert_('Queue: Error de validació en campos');
+                Alert_('Cola: Error de validació en campos');
             return false;
         }
         if(jqXHR.status===403){
-            Alert_('Queue: Acceso denegado.');
+            Alert_('Cola: Acceso denegado.');
             Login.logout();
             return false;
         }
         if(jqXHR.status===401){
-            Alert_('Queue: Usuario sin autorización. Revise que la sesión no haya finalizado.');
+            Alert_('Cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
             return false;
         }
     }
@@ -128,12 +129,15 @@ var AjaxQueue= (function () {
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Queue vacía');
+                var wifi_queues= Ajax_queueModel.find({
+                    $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                });
+                Alert_('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
             },
             fail: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Fallo transmisión queue');
+                Alert_('Fallo transmisión de cola');
             },
             success: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

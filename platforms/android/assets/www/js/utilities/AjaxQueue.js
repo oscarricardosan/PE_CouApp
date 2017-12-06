@@ -24,6 +24,8 @@ var AjaxQueue= (function () {
                         var data= {properties: properties, response: {response: response, properties: properties}};
                         properties.fail(data);
                         LogModel.store_fail(properties.process_name, data);
+                        Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
+                        App.ajax_queue_count= Ajax_queueModel.get().length;
                     }
                 }else{
                     properties.success(response, properties);
@@ -38,7 +40,7 @@ var AjaxQueue= (function () {
                 validate_request_fail(jqXHR);
             });
         }else{//Solo se puede por wifi y no hay wifi
-            var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+            var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
             LogModel.store_fail(properties.process_name+' solo con Wifi', data);
             Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
             App.ajax_queue_count= Ajax_queueModel.get().length;
@@ -103,7 +105,6 @@ var AjaxQueue= (function () {
     };
 
     function validate_request_fail(jqXHR){
-        console.log(jqXHR);
         if(jqXHR.status===422){
             if(typeof jqXHR.responseJSON === 'object')
                 Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
@@ -128,7 +129,10 @@ var AjaxQueue= (function () {
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Queue vacía');
+                var wifi_queues= Ajax_queueModel.find({
+                    $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                });
+                Alert_('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
             },
             fail: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

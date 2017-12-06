@@ -53,7 +53,10 @@ var ProcessBackground= (function () {
                     ProcessBackground.set_main_message_notification_bar('QUEUE: Petición transmitida');
                 },
                 empty: function(){
-                    ProcessBackground.set_main_message_notification_bar('Cola vacía');
+                    var wifi_queues= Ajax_queueModel.find({
+                        $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                    });
+                    ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
