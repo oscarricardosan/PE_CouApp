@@ -30,7 +30,3 @@ var Settings= {
         attempt_gps: 1
     }
 };
-
-SettingsModel.loaded(function () {
-    Settings.setSettings(SettingsModel.get());
-});

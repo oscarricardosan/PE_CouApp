@@ -12,11 +12,26 @@ var PolishedUtility_= (function () {
 
     var callback_SQLselect= function (callback){
         if(typeof(callback) !== 'object')
-           return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR: " + e.message);}};
+           return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR Select: " + e.message);}};
         if(callback.success === undefined)
             callback.success= function(tx, results){};
         if(callback.fail === undefined)
-            callback.fail= function(tx, e){alert("ERROR: " + e.message);};
+            callback.fail= function(tx, e){alert("ERROR Select: " + e.message);};
+        callback._success= callback.success;
+        callback.success= function(tx, results){
+            results = PolishedUtility_.callback_SQLresults(results);
+            callback._success(tx, results);
+        };
+        return callback;
+    };
+
+    var callback_SQLinsert= function (callback){
+        if(typeof(callback) !== 'object')
+           return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR insert: " + e.message);}};
+        if(callback.success === undefined)
+            callback.success= function(tx, results){};
+        if(callback.fail === undefined)
+            callback.fail= function(tx, e){alert("ERROR insert: " + e.message);};
         callback._success= callback.success;
         callback.success= function(tx, results){
             results = PolishedUtility_.callback_SQLresults(results);
@@ -26,7 +41,14 @@ var PolishedUtility_= (function () {
     };
 
     var callback_SQLresults= function (results){
-        results._first= results.rows.item(0);
+        results._first= results.rows.item(0);//Si esta vacio _first es undefined
+        results._number_rows= results.rows.length;
+
+        var records= [];
+        for(var x = 0; x < results.rows.length; x++) {
+            records.push(results.rows.item(x));
+        }
+        results._all= records;
         return results;
     };
 
@@ -64,7 +86,8 @@ var PolishedUtility_= (function () {
             ajaxQueueProperties   : ajaxQueueProperties,
             queue                 : queue,
             callback_SQLselect    : callback_SQLselect,
-            callback_SQLresults    : callback_SQLresults,
+            callback_SQLinsert    : callback_SQLinsert,
+            callback_SQLresults   : callback_SQLresults,
         }
     };
 

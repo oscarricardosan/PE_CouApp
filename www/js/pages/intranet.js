@@ -1,9 +1,4 @@
-
-
-//initializeIntranet();
-/** Ready on mobiles **/
-document.addEventListener("deviceready", onDeviceReadyIntranet, false);
-function onDeviceReadyIntranet() {
+function initializeApp(){
     Check_hardware.diagnostic_in_intranet();
 }
 

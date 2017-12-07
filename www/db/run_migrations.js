@@ -2,12 +2,14 @@ var Migrations= (function () {
 
     var run= function(){
         DB.transaction(function(transaction) {
-            transaction.executeSql('CREATE TABLE IF NOT EXISTS migrations (id integer primary key, version int, desc text)', [],
+            transaction.executeSql('CREATE TABLE IF NOT EXISTS migrations (id integer primary key, version integer, desc text)', [],
                 function(tx, result) {
                     MigrationModel.get_version({
                         success: function(tx, results){
-                            switch(results._first.version){
-                                case null:run_migration_0();break;
+                            if(results._first.version === null){
+                                run_migration_0();
+                            }else{
+                                runApp();
                             }
                         }
                     });
@@ -116,7 +118,17 @@ var Migrations= (function () {
                             'state_id integer, consignments text' +
                         ')',
                         [],
-                        function (tx, result) {alert('Migración terminada.')},
+                        function (tx, result) {
+                            MigrationModel.insert({
+                                id: 1,
+                                version: 1,
+                                desc: 'Migracion inicial'
+                            }, {
+                                success: function(){
+                                    runApp();
+                                }
+                            });
+                        },
                         function (error) {alert("Error creando tabla deliveries. " + error.message);}
                     );
                 });
@@ -126,6 +138,18 @@ var Migrations= (function () {
             create_table.user();
         }catch (e){alert(e.message);}
     }
+
+
+    function runApp(){
+        SettingsModel.get({
+            success: function(tx, results){
+                Settings.setSettings(results._first);
+            }
+        });
+        initializeApp();
+    }
+
+
 
     function construct(){//Función que controla cuales son los metodos publicos
         return {

@@ -173,56 +173,49 @@ function initializePage(){
             }
         },
         mounted: function(){
-            accounting.settings = {
-                currency: {
-                    symbol : "$",   // default currency symbol is '$'
-                    format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-                    decimal : ",",  // decimal point separator
-                    thousand: ".",  // thousands separator
-                    precision : 2   // decimal places
-                },
-                number: {
-                    precision : 0,  // default precision on numbers is 0
-                    thousand: ".",
-                    decimal : ","
-                }
-            };
+            try{
+                accounting.settings = {
+                    currency: {
+                        symbol : "$",   // default currency symbol is '$'
+                        format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                        decimal : ",",  // decimal point separator
+                        thousand: ".",  // thousands separator
+                        precision : 2   // decimal places
+                    },
+                    number: {
+                        precision : 0,  // default precision on numbers is 0
+                        thousand: ".",
+                        decimal : ","
+                    }
+                };
+                App_= this;
+                UserModel.get({success: function(tx, results){
+                    App_.user.name= results._first.name;
+                    App_.user.email= results._first.email;
+                }});
+                DeliveriesModel.get({success: function(tx, results){
+                    App_.operations.deliveries= results._all;
+                }});
+                PickupModel.get({success: function(tx, results){
+                    App_.operations.pickups= results._all;
+                }});
+                Ajax_queueModel.get({success: function(tx, results){
+                    App_.ajax_queue_count= results._number_rows;
+                }});
+                PrinterModel.get({success: function(tx, results){
+                    if(results._number_rows === 1)
+                        App_.settings_current_printer= results._first.address;
+                }});
+                GpsModel.get({success: function(tx, results){
+                    App_.current_position= results._first;
+                }});
 
-            App_= this;
-            UserModel.loaded(function(){
-                var user= UserModel.get();
-                if(user !== null){
-                    App_.user.email= user.user_data.email;
-                    App_.user.name= user.user_data.name;
-                }
-            });
-
-            DeliveriesModel.loaded(function(){
-                App_.operations.deliveries= DeliveriesModel.get();
-            });
-
-            PickupModel.loaded(function(){
-                App_.operations.pickups= PickupModel.get();
-            });
-
-            Ajax_queueModel.loaded(function(){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
-            });
-
-            PrinterModel.loaded(function(){
-                var printer= PrinterModel.get();
-                if(printer !== null)
-                    App_.settings_current_printer= printer.address;
-            });
-            GpsModel.loaded(function () {
-                App_.current_position= GpsModel.get();
-            });
-
-            var url_params= UrlUtility_.getParams();
-            if(url_params.filter_date !== undefined)
-                this.date_to_filter= url_params.filter_date;
-            if(url_params.search !== undefined)
-                this.number_search= url_params.search;
+                var url_params= UrlUtility_.getParams();
+                if(url_params.filter_date !== undefined)
+                    this.date_to_filter= url_params.filter_date;
+                if(url_params.search !== undefined)
+                    this.number_search= url_params.search;
+            }catch (e){ alert(e.message); }
         }
     });
 

@@ -17,7 +17,10 @@ var Login= (function () {
         });
         request.done(function(response){
             response.token_generated_at= MomentUtility_.numericDate();
-            callback.success(response);
+            if(response.success)
+                callback.success(response);
+            else
+                callback.failure();
         });
         request.fail(function(jqXHR, textStatus) {
             callback.failure(jqXHR, textStatus);
@@ -26,25 +29,37 @@ var Login= (function () {
     };
 
     var is_logged_in= function (callback) {
-        UserModel.loaded(function(){
-            var user= UserModel.get();
-            var nowadte= MomentUtility_.numericDate();
-            var success= false;
-            if(!UserModel.isEmpty() && user.token_generated_at === nowadte)
-                success= true;
-            callback(success, user)
+        UserModel.get({
+            success: function(tx, results){
+                var success= false;
+                var user= {};
+                if(results._number_rows===0){
+                    success= false;
+                }else{
+                    user= results._first;
+                    var nowadte= MomentUtility_.numericDate();
+                    success= user.token_generated_at === nowadte;
+                }
+                callback(success, user)
+            }
         });
-    }
+    };
 
     var logout= function (callback) {
-        DeliveriesModel.drop(function(){
-            PickupModel.drop(function(){
-                UserModel.drop(function(){
-                    window.location.href= 'login.html';
+        DeliveriesModel.clearTable({
+            success: function(){
+                PickupModel.clearTable({
+                    success: function(){
+                        UserModel.clearTable({
+                            success: function(){
+                                window.location.href= 'login.html';
+                            }
+                        });
+                    }
                 });
-            });
+            }
         });
-    }
+    };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {

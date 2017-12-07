@@ -1,36 +1,20 @@
 var DeliveriesModel= (function () {
 
-    var collection_name= 'deliveries';
+    var table= 'deliveries';
 
-    var loaded_Callback= [];
-    var isLoaded= false;
-
-    /**
-     * Carga los datos si ya estan en localstorage
-     */
-    db.collection(collection_name).load(function (err, tableStats, metaStats) {
-        if (!err) {
-            $.each(loaded_Callback, function(){
-                this();
-            });
-            isLoaded= true;
-        }else{
-            alert('Error al cargar colección '+collection_name)
-        }
-    });
-
-    /**
-     * @param data
-     * @param callback
-     */
-    var store = function(data, callback){
-        callback= PolishedUtility_.callback(callback);
-
-        db.collection(collection_name).insert(data);
-
-        db.collection(collection_name).save(function (err) {
-            if (!err) {callback.success(data);}
-            else{callback.fail(data); alert('Error al guardar en '+collection_name);}
+    var insert= function(data, callback){
+        callback= PolishedUtility_.callback_SQLinsert(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "INSERT INTO "+table+" ("+DB_Utility_.get_keys(data)+") VALUES ("+DB_Utility_.get_interrogations(data)+")",
+                DB_Utility_.get_values(data),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
     };
 
@@ -71,8 +55,15 @@ var DeliveriesModel= (function () {
         update({id: delivery.id}, delivery);
     };
 
-    var get = function(){
-        return db.collection(collection_name).find();
+    var get = function(callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
     var find = function(where){
@@ -83,16 +74,16 @@ var DeliveriesModel= (function () {
         return get() === null;
     };
 
-    var drop= function(callback){
-        db.collection(collection_name).drop(function(){
-            callback()
-            db.collection(collection_name).save(function (err) {
-                if (!err){
-                    if(typeof(callback) === 'function'){callback();}
-                }else{
-                    alert('Error al eliminar colección '+collection_name);
-                }
-            });
+    var clearTable= function(callback){
+        callback= PolishedUtility_.callback(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('DELETE FROM '+table, [], callback.success,
+                function(){alert('Error al eliminar tabla '+table)}
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
     };
 
@@ -112,22 +103,14 @@ var DeliveriesModel= (function () {
         );
     };
 
-    var loaded= function(callback){
-        if(isLoaded)
-            callback();
-        else
-            loaded_Callback.push(callback);
-    };
-
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get                        : get,
             find                       : find,
-            store                      : store,
+            insert                     : insert,
             update                     : update,
-            loaded                     : loaded,
             isEmpty                    : isEmpty,
-            drop                       : drop,
+            clearTable                 : clearTable,
             remove                     : remove,
             insertOrUpdateById         : insertOrUpdateById,
             increment_attemp_gps_alert : increment_attemp_gps_alert
