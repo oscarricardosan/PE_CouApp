@@ -107,18 +107,18 @@ var AjaxQueue= (function () {
     function validate_request_fail(jqXHR){
         if(jqXHR.status===422){
             if(typeof jqXHR.responseJSON === 'object')
-                Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
+                Alert_('Cola: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
             else
-                Alert_('Queue: Error de validació en campos');
+                Alert_('Cola: Error de validació en campos');
             return false;
         }
         if(jqXHR.status===403){
-            Alert_('Queue: Acceso denegado.');
+            Alert_('Cola: Acceso denegado.');
             Login.logout();
             return false;
         }
         if(jqXHR.status===401){
-            Alert_('Queue: Usuario sin autorización. Revise que la sesión no haya finalizado.');
+            Alert_('Cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
             return false;
         }
     }
@@ -137,7 +137,7 @@ var AjaxQueue= (function () {
             fail: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Fallo transmisión queue');
+                Alert_('Fallo transmisión de cola');
             },
             success: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

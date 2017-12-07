@@ -3,76 +3,101 @@ var AjaxQueue= (function () {
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
         properties.created_at= MomentUtility_.now();
-        properties.transmit_only_with_WiFi= false;
-        var request = $.ajax({
-            url: Settings.route_api_pasar(properties.url),
-            type: properties.type,
-            dataType: properties.dataType,
-            data: SecurityUtility_.add_user_authenticated(properties.data)
-        });
-        request.done(function(response){
-            if(properties.dataType === 'json'){
-                if(response.success){
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===undefined?false:properties.transmit_only_with_WiFi;
+        properties.transmit_only_with_WiFi= properties.transmit_only_with_WiFi===null?false:properties.transmit_only_with_WiFi;
+        if( //Si no importa que la conexión no sea wifi o si tiene que ser wifi y no esta conectado por Wifi
+            properties.transmit_only_with_WiFi === false ||
+            (properties.transmit_only_with_WiFi === true && navigator.connection.type === Connection.WIFI)
+        ){
+            var request = $.ajax({
+                url: Settings.route_api_pasar(properties.url),
+                type: properties.type,
+                dataType: properties.dataType,
+                data: SecurityUtility_.add_user_authenticated(properties.data)
+            });
+            request.done(function(response){
+                if(properties.dataType === 'json'){
+                    if(response.success){
+                        properties.success(response, properties);
+                        LogModel.store_success(properties.process_name, {response: response, properties: properties});
+                    }else{
+                        var data= {properties: properties, response: {response: response, properties: properties}};
+                        properties.fail(data);
+                        LogModel.store_fail(properties.process_name, data);
+                        Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
+                        App.ajax_queue_count= Ajax_queueModel.get().length;
+                    }
+                }else{
                     properties.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                }else{
-                    var data= {properties: properties, response: {response: response, properties: properties}};
-                    properties.fail(data);
-                    LogModel.store_fail(properties.process_name, data);
                 }
-            }else{
-                properties.success(response, properties);
-                LogModel.store_success(properties.process_name, {response: response, properties: properties});
-            }
-        });
-        request.fail(function(jqXHR, textStatus) {
-            var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-            LogModel.store_fail(properties.process_name, data);
+            });
+            request.fail(function(jqXHR, textStatus) {
+                var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+                LogModel.store_fail(properties.process_name, data);
+                Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
+                App.ajax_queue_count= Ajax_queueModel.get().length;
+                validate_request_fail(jqXHR);
+            });
+        }else{//Solo se puede por wifi y no hay wifi
+            var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
+            LogModel.store_fail(properties.process_name+' solo con Wifi', data);
             Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
             App.ajax_queue_count= Ajax_queueModel.get().length;
-            validate_request_fail(jqXHR);
-        });
+        }
     };
 
     var check_queue= function(callbacks){
-        var queues= Ajax_queueModel.get();
+        var queues;
+        if(navigator.connection.type === Connection.WIFI){
+            queues= Ajax_queueModel.get();
+        }else{
+            queues= Ajax_queueModel.find({
+                $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+            });
+        }
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
             callbacks.empty();
             return false;
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
             dataType: properties.dataType,
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
-        request.done(function(response){
-            if(properties.dataType === 'json'){
-                if(response.success){
+        request.done(function (response) {
+            if (properties.dataType === 'json') {
+                if (response.success) {
                     properties.success(response, properties);
                     callbacks.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                    Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
-                }else{
-                    var data= {properties: properties, response: response};
+                    Ajax_queueModel.remove({_id: properties._id}, function () {
+                        AjaxQueue.check_queue(callbacks);
+                    });
+                } else {
+                    var data = {properties: properties, response: response};
                     properties.fail(data);
                     callbacks.fail(data);
                     LogModel.store_fail(properties.process_name, data);
                 }
-            }else{
+            } else {
                 callbacks.success(response, properties);
                 properties.success(response, properties);
                 LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                Ajax_queueModel.remove({_id: properties._id}, function(){AjaxQueue.check_queue(callbacks);});
+                Ajax_queueModel.remove({_id: properties._id}, function () {
+                    AjaxQueue.check_queue(callbacks);
+                });
             }
-            App.ajax_queue_count= Ajax_queueModel.get().length;
+            App.ajax_queue_count = Ajax_queueModel.get().length;
         });
-        request.fail(function(jqXHR, textStatus) {
-            var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
+        request.fail(function (jqXHR, textStatus) {
+            var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
             LogModel.store_fail(properties.process_name, data);
-            App.ajax_queue_count= Ajax_queueModel.get().length;
+            App.ajax_queue_count = Ajax_queueModel.get().length;
             validate_request_fail(jqXHR);
             properties.fail(data);
             callbacks.fail(data);
@@ -80,21 +105,20 @@ var AjaxQueue= (function () {
     };
 
     function validate_request_fail(jqXHR){
-        console.log(jqXHR);
         if(jqXHR.status===422){
             if(typeof jqXHR.responseJSON === 'object')
-                Alert_('Queue: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
+                Alert_('Cola: '+_.pluck(jqXHR.responseJSON.errors, '0').join("\n"));
             else
-                Alert_('Queue: Error de validació en campos');
+                Alert_('Cola: Error de validació en campos');
             return false;
         }
         if(jqXHR.status===403){
-            Alert_('Queue: Acceso denegado.');
+            Alert_('Cola: Acceso denegado.');
             Login.logout();
             return false;
         }
         if(jqXHR.status===401){
-            Alert_('Queue: Usuario sin autorización. Revise que la sesión no haya finalizado.');
+            Alert_('Cola: Usuario sin autorización. Revise que la sesión no haya finalizado.');
             return false;
         }
     }
@@ -105,12 +129,15 @@ var AjaxQueue= (function () {
             empty:function(){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Queue vacía');
+                var wifi_queues= Ajax_queueModel.find({
+                    $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                });
+                Alert_('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
             },
             fail: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;
                 element.unloading();
-                Alert_('Fallo transmisión queue');
+                Alert_('Fallo transmisión de cola');
             },
             success: function(data){
                 App.ajax_queue_count= Ajax_queueModel.get().length;

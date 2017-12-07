@@ -52,8 +52,8 @@ var Event_server= (function () {
             }
         }catch (e){ alert(e.message);}
         if(server_events.events.length>0){
-            navigator.vibrate([3000, 2000, 3000]);
-            navigator.notification.beep(3);
+            navigator.vibrate([1000]);
+            navigator.notification.beep(1);
         }
     }
     

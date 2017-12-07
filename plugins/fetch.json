@@ -154,7 +154,15 @@
   "cordova-sqlite-storage": {
     "source": {
       "type": "registry",
-      "id": "cordova-sqlite-storage"
+      "id": "cordova-sqlite-storage@^2.1.2"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-sqlite-evcore-extbuild-free": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-sqlite-evcore-extbuild-free@^0.9.0"
     },
     "is_top_level": true,
     "variables": {}

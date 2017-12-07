@@ -43,7 +43,10 @@ function initializePage() {
                             App_.ajax_queue_count = Ajax_queueModel.get().length;
                         });
                         $('button.submit').unloading();
-                        alert('Cola vacía');
+                        var wifi_queues= Ajax_queueModel.find({
+                            $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                        });
+                        alert('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                     },
                     fail: function () {
                         Ajax_queueModel.loaded(function () {

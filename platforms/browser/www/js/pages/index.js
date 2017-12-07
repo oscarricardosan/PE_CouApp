@@ -16,6 +16,7 @@ function initializePage(){
             bluetooth_devices: [],
             printer_device: null,
             current_photo: 'images/camera.png',
+            transmit_photo_only_with_WiFi: false,
             ajax_queue_count: 0,
             settings_current_printer: null,
             dates_to_filter: [],
@@ -321,6 +322,7 @@ function initializePage(){
                 url: 'delivery/attach_photo',
                 dataType: 'json',
                 data: data,
+                transmit_only_with_WiFi: App.transmit_photo_only_with_WiFi,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);
@@ -352,6 +354,7 @@ function initializePage(){
                 url: 'pickup/attach_photo',
                 dataType: 'json',
                 data: data,
+                transmit_only_with_WiFi: App.transmit_photo_only_with_WiFi,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);

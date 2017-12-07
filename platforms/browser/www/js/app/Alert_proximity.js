@@ -30,8 +30,8 @@ var Alert_proximity= (function () {
             );
         });
         if(deliveries.length>=1){
-            navigator.vibrate([3000, 2000, 3000]);
-            navigator.notification.beep(3);
+            navigator.vibrate([1000]);
+            navigator.notification.beep(1);
         }
     }
 
@@ -51,8 +51,8 @@ var Alert_proximity= (function () {
             );
         });
         if(pickups.length>=1){
-            navigator.vibrate([3000, 2000, 3000]);
-            navigator.notification.beep(3);
+            navigator.vibrate([1000]);
+            navigator.notification.beep(1);
         }
     }
 

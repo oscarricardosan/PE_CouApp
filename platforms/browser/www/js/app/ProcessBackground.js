@@ -41,7 +41,7 @@ var ProcessBackground= (function () {
                             jqXHR: jqXHR, textStatus: textStatus, properties: properties
                         })
                     });
-                    ProcessBackground.set_main_message_notification_bar('QUEUE: Fallo transmisión de peticiones');
+                    ProcessBackground.set_main_message_notification_bar('Cola: Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
                     App_.ajax_queue_count = Ajax_queueModel.get().length;
@@ -50,10 +50,13 @@ var ProcessBackground= (function () {
                         status: 'success',
                         data: {properties: properties, response: response}
                     });
-                    ProcessBackground.set_main_message_notification_bar('QUEUE: Petición transmitida');
+                    ProcessBackground.set_main_message_notification_bar('Cola: Petición transmitida');
                 },
                 empty: function(){
-                    ProcessBackground.set_main_message_notification_bar('Cola vacía');
+                    var wifi_queues= Ajax_queueModel.find({
+                        $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                    });
+                    ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
