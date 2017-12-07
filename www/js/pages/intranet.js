@@ -1,33 +1,27 @@
+
+
 function initializeApp(){
     Check_hardware.diagnostic_in_intranet();
 }
 
 function initializeIntranet(){
-    $(document).ready(function(){
-        Login.is_logged_in(function(success, user){
-            if(!success){
-                alert('Debes iniciar sesión para continuar');
-                window.location.href= 'login.html';
-            }
-        });
-
-        $('.logout').click(function(event){
-            event.preventDefault();
-            Login.logout();
-        });
+    Login.is_logged_in(function(success, user){
+        if(!success){
+            alert('Debes iniciar sesión para continuar');
+            window.location.href= 'login.html';
+        }
     });
 
+    $('.logout').click(function(event){
+        event.preventDefault();
+        Login.logout();
+    });
 
-
-    /** Ready on mobiles **/
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-
+    (function setup_processes(){
         var backgroundProcessTimer= undefined;
         var foreGroundProcessTimer= undefined;
 
         window.open = cordova.InAppBrowser.open;
-
 
         /** BACKGROUND PROCESS**/
         //Override the back button on Android to go to background instead of closing the app.
@@ -127,8 +121,10 @@ function initializeIntranet(){
             });
         }
         /** CLOSE BACKGROUND PROCESS**/
-    }
 
+        /** INITIALIZE UTILITIES **/
+        SecurityUtility_.load_user_data();
+    })();
     $(document).bind("mobileinit", function(){
         $.mobile.allowCrossDomainPages = true;
     });

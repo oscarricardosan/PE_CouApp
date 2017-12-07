@@ -40,6 +40,16 @@ var PolishedUtility_= (function () {
         return callback;
     };
 
+    var callback_SQLinsert_multiple= function (callback){
+        if(typeof(callback) !== 'object')
+           return {success: function(){}, fail: function(e){alert("ERROR insert multiple: " + e.message);}};
+        if(callback.success === undefined)
+            callback.success= function(){};
+        if(callback.fail === undefined)
+            callback.fail= function(e){alert("ERROR insert multiple: " + e.message);};
+        return callback;
+    };
+
     var callback_SQLresults= function (results){
         results._first= results.rows.item(0);//Si esta vacio _first es undefined
         results._number_rows= results.rows.length;
@@ -82,12 +92,13 @@ var PolishedUtility_= (function () {
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            callback              : callback,
-            ajaxQueueProperties   : ajaxQueueProperties,
-            queue                 : queue,
-            callback_SQLselect    : callback_SQLselect,
-            callback_SQLinsert    : callback_SQLinsert,
-            callback_SQLresults   : callback_SQLresults,
+            callback                       : callback,
+            ajaxQueueProperties            : ajaxQueueProperties,
+            queue                          : queue,
+            callback_SQLselect             : callback_SQLselect,
+            callback_SQLinsert             : callback_SQLinsert,
+            callback_SQLinsert_multiple    : callback_SQLinsert_multiple,
+            callback_SQLresults            : callback_SQLresults,
         }
     };
 

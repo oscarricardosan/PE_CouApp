@@ -18,6 +18,22 @@ var PickupModel= (function () {
         });
     };
 
+    var insert_multiple= function(data, callback){
+        callback= PolishedUtility_.callback_SQLinsert_multiple(callback);
+        var inserts= [];
+        $.each(data, function(){
+            inserts.push(
+                ["INSERT INTO "+table+" ("+DB_Utility_.get_keys(this)+") VALUES ("+DB_Utility_.get_interrogations(this)+")",
+                DB_Utility_.get_values(this)]
+            );
+        });
+        DB.sqlBatch(inserts, function() {
+            callback.success();
+        }, function(error) {
+            callback.fail(error);
+        });
+    };
+
     /**
      * @param where condition
      * @param new_values object
@@ -107,6 +123,7 @@ var PickupModel= (function () {
             get                        : get,
             find                       : find,
             insert                     : insert,
+            insert_multiple            : insert_multiple,
             isEmpty                    : isEmpty,
             clearTable                 : clearTable,
             remove                     : remove,

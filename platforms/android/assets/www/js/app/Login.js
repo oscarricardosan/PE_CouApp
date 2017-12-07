@@ -53,6 +53,7 @@ var Login= (function () {
                         UserModel.clearTable({
                             success: function(){
                                 window.location.href= 'login.html';
+                                alert('Cesión cerrada');
                             }
                         });
                     }

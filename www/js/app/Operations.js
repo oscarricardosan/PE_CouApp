@@ -35,31 +35,33 @@ var Operations= (function () {
                     if(!response.deliveries.success){
                         alert(response.deliveries.message);
                     }else{
-                        DeliveriesModel.remove({}, function(){
+                        DeliveriesModel.clearTable({success: function(){
                             App.operations.deliveries= [];
-                            DeliveriesModel.store(response.deliveries.data, {
+                            DeliveriesModel.insert_multiple(response.deliveries.data, {
                                 success:function(){
-                                    App.operations.deliveries= DeliveriesModel.get();
+                                    DeliveriesModel.get({success: function(tx, results){
+                                        App_.operations.deliveries= results._all;
+                                    }});
                                 }
                             });
-
-                        });
+                        }});
                     }
 
                     if(!response.pickups.success){
                         alert(response.deliveries.message);
                     }else{
-                        PickupModel.remove({}, function(){
+                        PickupModel.clearTable({success: function(){
                             App.operations.pickups= [];
-                            PickupModel.store(response.pickups.data, {
+                            PickupModel.insert_multiple(response.pickups.data, {
                                 success:function(){
-                                    App.operations.pickups= PickupModel.get();
+                                    PickupModel.get({success: function(tx, results){
+                                            App_.operations.pickups= results._all;
+                                    }});
                                 }
                             });
-                        });
+                        }});
                     }
-                    external_callbacks.success();
-
+                    setTimeout(function(){ external_callbacks.success(); }, 500);
                 },fail: function(){
                     external_callbacks.fail();
                 }

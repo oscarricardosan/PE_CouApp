@@ -65,12 +65,12 @@
     <!-- UTILITIES -->
     <script src="js/utilities/JqueryUtility_.js" type="text/javascript"></script>
     <script src="js/utilities/MomentUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/PolishedUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/UrlUtility_.js" type="text/javascript"></script>
+    <script src="js/utilities/ToastrUtility_.js" type="text/javascript"></script>
     <script src="js/utilities/SecurityUtility_.js" type="text/javascript"></script>
     <script src="js/utilities/AjaxUtility_.js" type="text/javascript"></script>
     <script src="js/utilities/FormUtility_.js" type="text/javascript"></script>
-    <script src="js/utilities/ToastrUtility_.js" type="text/javascript"></script>
-    <script src="js/utilities/UrlUtility_.js" type="text/javascript"></script>
-    <script src="js/utilities/PolishedUtility_.js" type="text/javascript"></script>
     <script src="js/utilities/AjaxQueue.js" type="text/javascript"></script>
 
     <!-- APP -->
@@ -300,25 +300,25 @@
                                     <a href="#" class="pickup list-group-item"
                                        v-for=" (pickup, index) in pickups_sorted()"
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
-                                       v-if="contains(number_search, pickup.pickup_number) || contains(number_search, pickup.consignments)"
+                                       v-if="contains(number_search, pickup.number) || contains(number_search, pickup.consignments)"
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
-                                            {{ pickup.pickup_start_time.substr(0, 5) }} - {{ pickup.pickup_end_time.substr(0, 5) }}
+                                            {{ pickup.start_time.substr(0, 5) }} - {{ pickup.end_time.substr(0, 5) }}
                                         </span>
-                                        <span :class="['label bg-'+pickup.pickup_state.class]">
-                                            {{ index+1 }}) {{ pickup.pickup_state.name }} - {{ pickup.pickup_number }}
+                                        <span :class="['label bg-'+pickup.state_id]">
+                                            {{ index+1 }}) {{ pickup.state_id }} - {{ pickup.number }}
                                         </span>
                                         <br>
-                                        <b>Empresa:</b> {{ pickup.company_name }}
-                                        <b>{{ pickup.type_of_identity_document.short_name }}</b>: {{ pickup.identity_document }}<br>
+                                        <b>Empresa:</b> {{ pickup.company }}
+                                        <b>{{ pickup.doc }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
                                         <span v-if="pickup.long_address !== null && pickup.long_address !== undefined">
                                             {{ pickup.long_address }}<br>
                                         </span>
-                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact_name }}<br>
-                                        <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments.join(', ') }}<br>
+                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact }}<br>
+                                        <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
                                             {{ current_position | distance_to_pickup(pickup) }}
@@ -331,24 +331,24 @@
                                     <a href="#" class="delivery list-group-item"
                                        v-for="(delivery, index) in deliveries_sorted()"
                                        @click.prevent="showDeliveryModal(delivery)" data-picked="1"
-                                       v-if="contains(number_search, delivery.delivery_number) || contains(number_search, delivery.consignments)"
+                                       v-if="contains(number_search, delivery.number) || contains(number_search, delivery.consignments)"
                                     >
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-clock-o"></i>
-                                            {{ delivery.delivery_start_time.substr(0, 5) }} - {{ delivery.delivery_end_time.substr(0, 5) }}
+                                            {{ delivery.start_time.substr(0, 5) }} - {{ delivery.end_time.substr(0, 5) }}
                                         </span>
                                         <span :class="['label bg-'+delivery.delivery_state.class]">
-                                            {{ index+1 }}) {{ delivery.delivery_state.name }}- {{ delivery.delivery_number }}
+                                            {{ index+1 }}) {{ delivery.state_id }}- {{ delivery.number }}
                                         </span>
                                         <br>
-                                        <b>Empresa:</b> {{ delivery.company_name }}
-                                        <b>{{ delivery.type_of_identity_document.short_name }}</b>: {{ delivery.identity_document }}<br>
+                                        <b>Empresa:</b> {{ delivery.company }}
+                                        <b>{{ delivery.doc }}<br>
 
                                         <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
                                         <span v-if="delivery.long_address !== null && delivery.long_address !== undefined">
                                             {{ delivery.long_address }}<br>
                                         </span>
-                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact_name }}<br>
+                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact }}<br>
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments.join(', ') }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>

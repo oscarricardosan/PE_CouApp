@@ -29,11 +29,11 @@ function initializePage(){
         },
         methods: {
             synchronize_data_operations: function(e) {
-                var element= $(e.target);
-                element.loading();
+                var App_= this;
+                App_.ready= false;
                 Operations.synchronize_data_operations({
-                    success: function(){element.unloading();},
-                    fail: function(){ alert('Error al sincronizar');element.unloading(); }
+                    success: function(){App_.ready= true;},
+                    fail: function(){ alert('Error al sincronizar');App_.ready= true; }
                 });
             }, showPickupModal: function(pickup){
                 this.operations.current_delivery= {};
@@ -74,12 +74,12 @@ function initializePage(){
                 App_= this;
                 var response= [];
                 var pickups_states_date= _(App_.operations.pickups).chain()
-                    .where({pickup_date: App_.date_to_filter})
-                    .groupBy('pickup_state_id')
+                    .where({date: App_.date_to_filter})
+                    .groupBy('state_id')
                     .keys().value();
                 $.each(pickups_states_date, function(index, pickup_state_id){
                     var sorted_pickups= _(App_.operations.pickups).chain()
-                        .where({pickup_state_id: pickup_state_id*1, pickup_date: App_.date_to_filter})
+                        .where({state_id: pickup_state_id*1, date: App_.date_to_filter})
                         .sortBy('distance_in_mts')
                         //.reverse()
                         .value();
@@ -91,13 +91,13 @@ function initializePage(){
                 App_= this;
                 var response= [];
                 var deliveries_states_date= _(App_.operations.deliveries).chain()
-                    .where({delivery_date: App_.date_to_filter})
-                    .groupBy('delivery_state_id')
+                    .where({date: App_.date_to_filter})
+                    .groupBy('state_id')
                     .keys().value();
 
                 $.each(deliveries_states_date, function(index, delivery_state_id){
                     var sorted_deliveries= _(App_.operations.deliveries).chain()
-                        .where({delivery_state_id: delivery_state_id*1, delivery_date: App_.date_to_filter})
+                        .where({state_id: delivery_state_id*1, date: App_.date_to_filter})
                         .sortBy('distance_in_mts')
                         //.reverse()
                         .value();
@@ -149,8 +149,8 @@ function initializePage(){
         watch: {
             "operations.deliveries": function(newVal, oldVal){
                 App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
@@ -158,8 +158,8 @@ function initializePage(){
             },
             "operations.pickups": function(newVal, oldVal){
                 App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var pickup_dates= _(App.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
@@ -207,10 +207,7 @@ function initializePage(){
                         App_.settings_current_printer= results._first.address;
                 }});
                 GpsModel.get({success: function(tx, results){
-                    alert('>>>');
-                    alert(results._first);
-                    alert('<<<');
-                    App_.current_position= results;
+                    App_.current_position= results._first;
                 }});
 
                 var url_params= UrlUtility_.getParams();

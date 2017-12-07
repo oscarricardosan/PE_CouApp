@@ -99,8 +99,8 @@ var Migrations= (function () {
                         'CREATE TABLE IF NOT EXISTS pickups ' +
                             '(id integer primary key, date text, start_time text, end_time text, number text, ' +
                             'company text, address text, long_address text, doc text, contact text, phone text, ' +
-                            'obs text, state text, city text, val text, content text, lat text, long text' +
-                            'state_id integer, consignments text' +
+                            'obs text, state text, city text, val text, content text, lat text, long text, ' +
+                            'state_id integer, consignments text, distance_in_mts real' +
                         ')',
                         [],
                         function (tx, result) {create_table.deliveries();},
@@ -114,8 +114,8 @@ var Migrations= (function () {
                         'CREATE TABLE IF NOT EXISTS deliveries ' +
                             '(id integer primary key, date text, start_time text, end_time text, number text, ' +
                             'company text, address text, long_address text, doc text, contact text, phone text, ' +
-                            'obs text, state text, city text, val text, content text, lat text, long text' +
-                            'state_id integer, consignments text' +
+                            'obs text, state text, city text, val text, content text, lat text, long text, ' +
+                            'state_id integer, consignments text, distance_in_mts real' +
                         ')',
                         [],
                         function (tx, result) {
