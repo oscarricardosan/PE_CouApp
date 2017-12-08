@@ -29,11 +29,12 @@ function initializePage(){
         },
         methods: {
             synchronize_data_operations: function(e) {
-                var App_= this;
-                App_.ready= false;
+                var element= $(e.target);
+                element.loading();
+                App.ready= false;
                 Operations.synchronize_data_operations({
-                    success: function(){App_.ready= true;},
-                    fail: function(){ alert('Error al sincronizar');App_.ready= true; }
+                    success: function(){element.unloading(); App.ready= true; alert('Sincronización finalizada');},
+                    fail: function(){ element.unloading(); App.ready= true; alert('Error al sincronizar');}
                 });
             }, showPickupModal: function(pickup){
                 this.operations.current_delivery= {};
