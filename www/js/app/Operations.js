@@ -58,7 +58,7 @@ var Operations= (function () {
                                     }});
                                 }});
                             }
-                            setTimeout(function(){ external_callbacks.success(); }, 500);
+                            external_callbacks.success();
                         },fail: function(){
                             external_callbacks.fail();
                         }
