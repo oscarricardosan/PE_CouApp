@@ -99,8 +99,9 @@ function initializePage(){
                 distance= Haversine.distance_in_text(current_position, pickup);
                 if(distance.success){
                     if(pickup.distance_in_mts !== distance.distance_in_mts){
-                        pickup.distance_in_mts= distance.distance_in_mts;
-                        PickupModel.update({id: pickup.id}, pickup, {
+                        var field_to_save= [];
+                        field_to_save['distance_in_mts']= distance.distance_in_mts;
+                        PickupModel.update({id: pickup.id}, field_to_save, {
                             success: function(){
                                 App.operations.pickups= PickupModel.get();
                             }
@@ -113,8 +114,9 @@ function initializePage(){
                 distance= Haversine.distance_in_text(current_position, delivery);
                 if(distance.success){
                     if(delivery.distance_in_mts !== distance.distance_in_mts){
-                        delivery.distance_in_mts= distance.distance_in_mts;
-                        DeliveriesModel.update({id: delivery.id}, delivery, {
+                        var field_to_save= [];
+                        field_to_save['distance_in_mts']= distance.distance_in_mts;
+                        DeliveriesModel.update({id: delivery.id}, field_to_save, {
                             success: function(){
                                 App.operations.deliveries= DeliveriesModel.get();
                             }

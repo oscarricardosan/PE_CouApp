@@ -11,18 +11,22 @@ var ProcessBackground= (function () {
 
     var run= function (){
 
-        if(Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue)){
+        Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue, {yes: function(){
             check_ajax_queue();
-        }
-        if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
+        }});
+
+        Process.it_can_be_executed('get_events', Settings.timer_get_events_from_server, {yes: function(){
             Event_server.get_events_from_server();
-        }
-        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alert_proximity)){
+        }});
+
+        Process.it_can_be_executed('proximity_alert', Settings.timer_run_alert_proximity, {yes: function(){
             Alert_proximity.run();
-        }
-        if(Process.it_can_be_executed('alert_by_time', Settings.timer_run_alert_time)){
+        }});
+
+        Process.it_can_be_executed('time_alert', Settings.timer_run_alert_time, {yes: function(){
             Alert_time.run();
-        }
+        }});
+
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;
@@ -73,13 +77,13 @@ var ProcessBackground= (function () {
         var sin_entregar= 0;
         var sin_recoger= 0;
         try {
-            DeliveriesModel.loaded(function(){
-                sin_entregar= DeliveriesModel.find({delivery_state_id: 100}).length + DeliveriesModel.find({delivery_state_id: 50}).length;
+            DeliveriesModel.get({success: function(tx, results){
+                sin_entregar= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
                 notify_message.deliveries =
                     (sin_entregar>0)?'Sin Entregar ' + sin_entregar:'Todo entregado';
 
-                PickupModel.loaded(function(){
-                    sin_recoger= PickupModel.find({pickup_state_id: 100}).length + PickupModel.find({pickup_state_id: 50}).length;
+                PickupModel.get({success: function(tx, results){
+                    sin_recoger= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
                     notify_message.pickups=
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 
@@ -91,10 +95,10 @@ var ProcessBackground= (function () {
                         notify_message.icon= 'warning';
 
                     callback();
-                });
-            });
+                }});
+            }});
         }catch (error){
-            alert(error.message);
+            alert('ProcessBackground: '+error.message);
         }
     }
 

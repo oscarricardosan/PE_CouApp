@@ -88,7 +88,11 @@ var Migrations= (function () {
                         'CREATE TABLE IF NOT EXISTS processes ' +
                         '(id integer primary key, get_events text, proximity_alert text, time_alert text, check_ajax_queue text, gps_tracking text)',
                         [],
-                        function (tx, result) {create_table.pickups();},
+                        function (tx, result) {
+                            ProcessModel.insert({id: 1}, {success: function () {
+                                create_table.pickups();
+                            }});
+                        },
                         function (error) {alert("Error creando tabla processes. " + error.message);}
                     );
                 });
@@ -100,7 +104,7 @@ var Migrations= (function () {
                             '(id integer primary key, date text, start_time text, end_time text, number text, ' +
                             'company text, address text, long_address text, doc text, contact text, phone text, ' +
                             'obs text, state text, city text, val text, content text, lat text, long text, ' +
-                            'state_id integer, consignments text, distance_in_mts real' +
+                            'state_id integer, consignments text, distance_in_mts real, attemp_gps_alert integer' +
                         ')',
                         [],
                         function (tx, result) {create_table.deliveries();},
@@ -115,7 +119,7 @@ var Migrations= (function () {
                             '(id integer primary key, date text, start_time text, end_time text, number text, ' +
                             'company text, address text, long_address text, doc text, contact text, phone text, ' +
                             'obs text, state text, city text, val text, content text, lat text, long text, ' +
-                            'state_id integer, consignments text, distance_in_mts real' +
+                            'state_id integer, consignments text, distance_in_mts real, attemp_gps_alert integer' +
                         ')',
                         [],
                         function (tx, result) {
@@ -141,12 +145,14 @@ var Migrations= (function () {
 
 
     function runApp(){
+        try{
         SettingsModel.get({
             success: function(tx, results){
                 Settings.setSettings(results._first);
             }
         });
         initializeApp();
+        }catch (e){ alert('RunApp:  '+e.message); }
     }
 
 

@@ -25,6 +25,21 @@ var PolishedUtility_= (function () {
         return callback;
     };
 
+    var callback_SQUpdate= function (callback){
+        if(typeof(callback) !== 'object')
+           return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR update: " + e.message);}};
+        if(callback.success === undefined)
+            callback.success= function(tx, results){};
+        if(callback.fail === undefined)
+            callback.fail= function(tx, e){alert("ERROR update: " + e.message);};
+        callback._success= callback.success;
+        callback.success= function(tx, results){
+            results = PolishedUtility_.callback_SQLresults(results);
+            callback._success(tx, results);
+        };
+        return callback;
+    };
+
     var callback_SQLinsert= function (callback){
         if(typeof(callback) !== 'object')
            return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR insert: " + e.message);}};
@@ -96,6 +111,7 @@ var PolishedUtility_= (function () {
             ajaxQueueProperties            : ajaxQueueProperties,
             queue                          : queue,
             callback_SQLselect             : callback_SQLselect,
+            callback_SQUpdate              : callback_SQUpdate,
             callback_SQLinsert             : callback_SQLinsert,
             callback_SQLinsert_multiple    : callback_SQLinsert_multiple,
             callback_SQLresults            : callback_SQLresults,

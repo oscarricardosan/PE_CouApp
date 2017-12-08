@@ -1,5 +1,22 @@
 var DB_Utility_= (function () {
 
+    var get_set_to_update = function (obj){
+        var set= [];
+        Object.keys(obj).forEach(function(key) {
+            set.push(key+' = ? ');
+        });
+        return set.join(', ');
+    };
+
+    var get_where = function (obj){
+        var set= [];
+        Object.keys(obj).forEach(function(key) {
+            set.push(key+' = ? ');
+        });
+        if(set.length > 0) return ' WHERE '+set.join(' and ');
+        return '';
+    };
+
     var get_keys= function (obj){
         var keys= [];
         Object.keys(obj).forEach(function(key) {
@@ -28,7 +45,9 @@ var DB_Utility_= (function () {
         return {
             get_values            : get_values,
             get_keys              : get_keys,
-            get_interrogations    : get_interrogations
+            get_interrogations    : get_interrogations,
+            get_set_to_update     : get_set_to_update,
+            get_where             : get_where
         }
     };
     return {construct:construct};//retorna los metodos publicos

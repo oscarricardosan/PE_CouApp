@@ -17,7 +17,7 @@ var Event_server= (function () {
                 Event_server.process_server_events(server_events);
             }
         });
-        Process.store_last_attempt('get_events_from_server');
+        Process.store_last_attempt('get_events');
     }
     
     function process_server_events(server_events) {

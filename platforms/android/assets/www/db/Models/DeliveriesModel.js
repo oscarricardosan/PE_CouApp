@@ -35,13 +35,18 @@ var DeliveriesModel= (function () {
     };
 
     var update = function(where, new_values, callback){
-        callback= PolishedUtility_.callback(callback);
-
-        db.collection(collection_name).update(where, new_values);
-
-        db.collection(collection_name).save(function (err) {
-            if (!err) {callback.success(new_values);}
-            else{callback.fail(new_values); alert('Error al guardar en '+collection_name);}
+        callback= PolishedUtility_.callback_SQUpdate(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "UPDATE "+table+" SET "+DB_Utility_.get_set_to_update(new_values)+' '+DB_Utility_.get_where(where),
+                DB_Utility_.get_values(new_values).concat(DB_Utility_.get_values(where)),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
     };
 
@@ -59,11 +64,9 @@ var DeliveriesModel= (function () {
     };
 
     var increment_attemp_gps_alert= function(delivery){
-        if(delivery.attempt_gps_alert === undefined)
-            delivery.attempt_gps_alert= 1;
-        else
-            delivery.attempt_gps_alert= delivery.attempt_gps_alert+1;
-        update({id: delivery.id}, delivery);
+        var newVal= delivery.attemp_gps_alert===null?1:delivery.attemp_gps_alert;
+        newVal['attemp_gps_alert']= attemp_gps_alert;
+        update({id: delivery.id}, newVal);
     };
 
     var get = function(callback){
@@ -77,12 +80,26 @@ var DeliveriesModel= (function () {
         });
     };
 
-    var find = function(where){
-        return db.collection(collection_name).find(where);
+    var find = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' '+DB_Utility_.get_where(where), [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
-    var isEmpty = function(){
-        return get() === null;
+    var findRaw = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' WHERE '+where, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
     var clearTable= function(callback){
@@ -118,10 +135,10 @@ var DeliveriesModel= (function () {
         return {
             get                        : get,
             find                       : find,
+            findRaw                    : findRaw,
             insert                     : insert,
             insert_multiple            : insert_multiple,
             update                     : update,
-            isEmpty                    : isEmpty,
             clearTable                 : clearTable,
             remove                     : remove,
             insertOrUpdateById         : insertOrUpdateById,

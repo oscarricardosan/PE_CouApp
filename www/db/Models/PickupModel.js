@@ -34,19 +34,19 @@ var PickupModel= (function () {
         });
     };
 
-    /**
-     * @param where condition
-     * @param new_values object
-     * @param callback
-     */
     var update = function(where, new_values, callback){
-        callback= PolishedUtility_.callback(callback);
-
-        db.collection(collection_name).update(where, new_values);
-
-        db.collection(collection_name).save(function (err) {
-            if (!err) {callback.success(new_values);}
-            else{callback.fail(new_values); alert('Error al guardar en '+collection_name);}
+        callback= PolishedUtility_.callback_SQUpdate(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "UPDATE "+table+" SET "+DB_Utility_.get_set_to_update(new_values)+' '+DB_Utility_.get_where(where),
+                DB_Utility_.get_values(new_values).concat(DB_Utility_.get_values(where)),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
     };
 
@@ -63,11 +63,9 @@ var PickupModel= (function () {
     };
 
     var increment_attemp_gps_alert= function(pickup){
-        if(pickup.attempt_gps_alert === undefined)
-            pickup.attempt_gps_alert = 1;
-        else
-            pickup.attempt_gps_alert= pickup.attempt_gps_alert+1;
-        update({id: pickup.id}, pickup);
+        var newVal= pickup.attemp_gps_alert===null?1:pickup.attemp_gps_alert;
+        newVal['attemp_gps_alert']= attemp_gps_alert;
+        update({id: pickup.id}, newVal);
     };
 
     var get = function(callback){
@@ -81,12 +79,26 @@ var PickupModel= (function () {
         });
     };
 
-    var find = function(where){
-        return db.collection(collection_name).find(where);
+    var find = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' '+DB_Utility_.get_where(where), [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
-    var isEmpty = function(){
-        return get() === null;
+    var findRaw = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' WHERE '+where, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
     var clearTable= function(callback){
@@ -122,12 +134,12 @@ var PickupModel= (function () {
         return {
             get                        : get,
             find                       : find,
+            findRaw                    : findRaw,
             insert                     : insert,
             insert_multiple            : insert_multiple,
-            isEmpty                    : isEmpty,
+            update                     : update,
             clearTable                 : clearTable,
             remove                     : remove,
-            update                     : update,
             insertOrUpdateById         : insertOrUpdateById,
             increment_attemp_gps_alert : increment_attemp_gps_alert,
         }
