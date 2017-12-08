@@ -94,7 +94,7 @@ var ProcessBackground= (function () {
                 });
             });
         }catch (error){
-            alert(JSON.stringify(error));
+            alert(error.message);
         }
     }
 

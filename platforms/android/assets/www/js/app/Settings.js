@@ -28,5 +28,19 @@ var Settings= {
         minimum_meters: 1000,
         minimum_minutes: 10,
         attempt_gps: 1
+    },
+    delivery_state: {
+        50: {name: 'Sin coordenadas', "class": 'fuchsia'},
+        100: {name: 'Sin entregar', "class": 'yellow'},
+        200: {name: 'Realizada', "class": 'green'},
+        300: {name: 'Excepción', "class": 'red'},
+        400: {name: 'Cancelada', "class": 'gray'}
+    },
+    pickup_state: {
+        50: {name: 'Sin coordenadas', "class": 'fuchsia'},
+        100: {name: 'Sin recoger', "class": 'yellow'},
+        200: {name: 'Realizada', "class": 'green'},
+        300: {name: 'Excepción', "class": 'red'},
+        400: {name: 'Cancelada', "class": 'gray'}
     }
 };

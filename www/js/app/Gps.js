@@ -13,15 +13,20 @@ var Gps= (function () {
 
     var start_tracking= function(){
         clear_watches();
+        alert('start_tracking');
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
+                alert('start_tracking 1');
                 if(optimal_conditions_for_execution_are()) {
                     update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
                     store_position(position);
                     Process.store_last_attempt('gps_tracking');
                 }
             },
-            function (error) {ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message); },
+            function (error) {
+                alert('GPS: Error '+error.message);
+                ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message);
+            },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);
@@ -42,13 +47,13 @@ var Gps= (function () {
     }
 
     function update_current_position(position){
-        GpsModel.loaded(function(){
+        GpsModel.clearTable({success: function(){
             App.current_position= {
                 latitude: position.latitude,
                 longitude: position.longitude
             };
-            GpsModel.store(App.current_position);
-        });
+            GpsModel.insert(App.current_position)
+        }});
     }
 
     function store_position(position) {
@@ -66,8 +71,11 @@ var Gps= (function () {
     }
 
     function optimal_conditions_for_execution_are() {
+        alert('GPS: optimal_conditions_for_execution_are');
+        try{
         return Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
             (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.end_hour);
+        }catch(e){ alert(e.message); }
     }
     
     var clear_watches= function(){

@@ -53,7 +53,7 @@ var Migrations= (function () {
             setting_gps: function(){
                 DB.transaction(function(transaction) {
                     transaction.executeSql(
-                        'CREATE TABLE IF NOT EXISTS setting_gps (id integer primary key, lat text, long text)', [],
+                        'CREATE TABLE IF NOT EXISTS setting_gps (id integer primary key, latitude text, longitude text)', [],
                         function (tx, result) {create_table.log();},
                         function (error) {alert("Error creando tabla setting_gps. " + error.message);}
                     );

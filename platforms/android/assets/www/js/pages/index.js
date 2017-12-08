@@ -64,51 +64,29 @@ function initializePage(){
                     if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
                     if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
 
-                }, 200);
-                setTimeout(function(){
-                    App_.pickups_in_list= $('.list-group.pickups>.pickup').length;
-                    App_.deliveries_in_list= $('.list-group.deliveries>.delivery').length;
-                }, 500);
-            },
-            pickups_sorted: function(){
-                App_= this;
-                var response= [];
-                var pickups_states_date= _(App_.operations.pickups).chain()
-                    .where({date: App_.date_to_filter})
-                    .groupBy('state_id')
-                    .keys().value();
-                $.each(pickups_states_date, function(index, pickup_state_id){
-                    var sorted_pickups= _(App_.operations.pickups).chain()
-                        .where({state_id: pickup_state_id*1, date: App_.date_to_filter})
-                        .sortBy('distance_in_mts')
-                        //.reverse()
-                        .value();
-                    response= _.union(response, sorted_pickups);
-                });
-                return response;
-            },
-            deliveries_sorted: function(){
-                App_= this;
-                var response= [];
-                var deliveries_states_date= _(App_.operations.deliveries).chain()
-                    .where({date: App_.date_to_filter})
-                    .groupBy('state_id')
-                    .keys().value();
-
-                $.each(deliveries_states_date, function(index, delivery_state_id){
-                    var sorted_deliveries= _(App_.operations.deliveries).chain()
-                        .where({state_id: delivery_state_id*1, date: App_.date_to_filter})
-                        .sortBy('distance_in_mts')
-                        //.reverse()
-                        .value();
-                    response= _.union(response, sorted_deliveries);
-                });
-                return response;
+                }, 220);
             },
             set_number_search: function(search){
                 this.number_search= search;
             }
-
+        },
+        computed: {
+            pickups_sorted: function(){
+                var pickups= this.operations.pickups;
+                return _(pickups).chain()
+                    .where({date: App_.date_to_filter})
+                    .sortBy('distance_in_mts')
+                    //.reverse()
+                    .value();
+            },
+            deliveries_sorted: function(){
+                var deliveries= this.operations.deliveries;
+                return  _(deliveries).chain()
+                    .where({date: App_.date_to_filter})
+                    .sortBy('distance_in_mts')
+                    //.reverse()
+                    .value();
+            }
         },
         filters: {
             formatMoney: function (value) {

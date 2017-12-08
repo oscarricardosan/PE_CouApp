@@ -5,7 +5,7 @@ var Operations= (function () {
         if(date === undefined)
             date= MomentUtility_.current_date();
 
-        ToastrUtility_.info('Conecatando a servidor, espere por favor.');
+        ToastrUtility_.info('Conectando a servidor, espere por favor.');
         var request = $.ajax({
             url: Settings.route_api_pasar("operations_data"),
             type: 'post',
@@ -29,43 +29,38 @@ var Operations= (function () {
     var synchronize_data_operations= function (external_callbacks){
         var external_callbacks= PolishedUtility_.callback(external_callbacks);
         try{
-            Operations.get_data(MomentUtility_.current_date(), {
-                success: function(response){
-                    App.date_to_filter= null;
-                    if(!response.deliveries.success){
-                        alert(response.deliveries.message);
-                    }else{
-                        DeliveriesModel.clearTable({success: function(){
-                            App.operations.deliveries= [];
-                            DeliveriesModel.insert_multiple(response.deliveries.data, {
-                                success:function(){
-                                    DeliveriesModel.get({success: function(tx, results){
-                                        App_.operations.deliveries= results._all;
+            DeliveriesModel.clearTable({success: function(){
+                App.operations.deliveries= [];
+                PickupModel.clearTable({success: function(){
+                    App.operations.pickups= [];
+                    Operations.get_data(MomentUtility_.current_date(), {
+                        success: function(response){
+                            App.date_to_filter= null;
+                            if(!response.deliveries.success){
+                                alert(response.deliveries.message);
+                            }else {
+                                DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
+                                    DeliveriesModel.get({success: function (tx, results) {
+                                        App_.operations.deliveries = results._all;
                                     }});
-                                }
-                            });
-                        }});
-                    }
-
-                    if(!response.pickups.success){
-                        alert(response.deliveries.message);
-                    }else{
-                        PickupModel.clearTable({success: function(){
-                            App.operations.pickups= [];
-                            PickupModel.insert_multiple(response.pickups.data, {
-                                success:function(){
+                                }});
+                            }
+                            if(!response.pickups.success){
+                                alert(response.deliveries.message);
+                            }else{
+                                PickupModel.insert_multiple(response.pickups.data, {success:function(){
                                     PickupModel.get({success: function(tx, results){
-                                            App_.operations.pickups= results._all;
+                                        App_.operations.pickups= results._all;
                                     }});
-                                }
-                            });
-                        }});
-                    }
-                    setTimeout(function(){ external_callbacks.success(); }, 500);
-                },fail: function(){
-                    external_callbacks.fail();
-                }
-            });
+                                }});
+                            }
+                            setTimeout(function(){ external_callbacks.success(); }, 500);
+                        },fail: function(){
+                            external_callbacks.fail();
+                        }
+                    });
+                }});
+            }});
         }catch(e){alert(e.message);}
     };
 

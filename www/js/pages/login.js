@@ -5,6 +5,7 @@ function initializeApp(){
             if(results._number_rows === 0){
                 do{
                     var domain= prompt("Ingresa el dominio de tu empresa, ejemplo: demo.savne.net");
+                    domain= domain===null?'':domain;
                     domain= $.trim(domain.toLowerCase());
                     var domain_data= _.findWhere(CustomerSettings, {domain: domain});
                     if(domain_data === undefined){

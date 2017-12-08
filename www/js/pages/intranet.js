@@ -30,6 +30,7 @@ function initializeIntranet(){
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
 
+
         initializeBackgroundProcess();
         initializeGpsBackground();
         initializeActionsInLocalNotifications();
@@ -106,20 +107,21 @@ function initializeIntranet(){
 
         function initializeActionsInLocalNotifications() {
             cordova.plugins.notification.local.on("click", function (notification) {
-                var data= notification.data;
-                if(typeof notification.data === 'string') data= JSON.parse(data);
-                switch(data.action){
+                var data = notification.data;
+                if (typeof notification.data === 'string') data = JSON.parse(data);
+                switch (data.action) {
                     case "show_delivery":
-                        var delivery= data.delivery;
-                        window.location= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
+                        var delivery = data.delivery;
+                        window.location = 'index.html?filter_date=' + delivery.delivery_date + '&search=' + delivery.delivery_number + '&tab=tab_deliveries';
                         break;
                     case "show_pickup":
-                        var pickup= data.pickup;
-                        window.location= 'index.html?filter_date='+pickup.pickup_date+'&search='+pickup.pickup_number+'&tab=tab_pickups';
+                        var pickup = data.pickup;
+                        window.location = 'index.html?filter_date=' + pickup.pickup_date + '&search=' + pickup.pickup_number + '&tab=tab_pickups';
                         break;
                 }
             });
         }
+
         /** CLOSE BACKGROUND PROCESS**/
 
         /** INITIALIZE UTILITIES **/

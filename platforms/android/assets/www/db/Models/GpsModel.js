@@ -29,11 +29,6 @@ var GpsModel= (function () {
             //alert('transaction ok');
         });
     };
-
-    var isEmpty = function(){
-        return get() === null;
-    };
-
     var clearTable= function(callback){
         callback= PolishedUtility_.callback(callback);
         DB.transaction(function(transaction) {
@@ -51,7 +46,6 @@ var GpsModel= (function () {
         return {
             get               : get,
             insert            : insert,
-            isEmpty           : isEmpty,
             clearTable        : clearTable
         }
     }
