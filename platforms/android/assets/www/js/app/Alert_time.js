@@ -13,11 +13,6 @@ var Alert_time= (function () {
     }
 
     function alerts_by_proximity_deliveries(){
-        alert(
-            "start_time in ("+conditional_of_time+") and " +
-            "state_id in (100, 50) and " +
-            "date= '"+MomentUtility_.current_date()+"'"
-        );
         DeliveriesModel.findRaw(
             "start_time in ("+conditional_of_time+") and " +
             "state_id in (100, 50) and " +
