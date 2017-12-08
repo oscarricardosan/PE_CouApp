@@ -29,6 +29,9 @@ var Haversine= (function () {
     var distance_in_text= function(point_a, point_b){
         var error= undefined;
 
+        if(point_a === undefined || point_a === null)point_a= {};
+        if(point_b === undefined || point_b === null)point_b= {};
+
         if(point_a.long!==undefined && point_a.longitude===undefined)point_a.longitude=point_a.long;
         if(point_a.lat!==undefined && point_a.latitude===undefined)point_a.latitude=point_a.lat;
 

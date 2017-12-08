@@ -15,9 +15,13 @@ var Operations= (function () {
             })
         });
         request.done(function(response){
-            ToastrUtility_.success('Conexión exitosa.');
-            callback.success(response);
-            Event_server.clear_events_in_server();
+            try{
+                ToastrUtility_.success('Conexión exitosa.');
+                callback.success(response);
+                Event_server.clear_events_in_server();
+            }catch (e){
+                alert('Operations get_data: '+e.message);
+            }
         });
         request.fail(function(jqXHR, textStatus) {
             callback.fail(jqXHR, textStatus);
@@ -54,7 +58,7 @@ var Operations= (function () {
                                     }});
                                 }});
                             }
-                            setTimeout(function(){ external_callbacks.success(); }, 500);
+                            external_callbacks.success();
                         },fail: function(){
                             external_callbacks.fail();
                         }

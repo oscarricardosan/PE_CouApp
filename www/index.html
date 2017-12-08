@@ -389,21 +389,21 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        Recolección {{ operations.current_pickup.pickup_number }}
+                        Recolección {{ operations.current_pickup.number }}
                         <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
-                            Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                            Guía(s): {{ operations.current_pickup.consignments }}
                         </div>
                     </h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.state_id == 100 || operations.current_pickup.state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#pickup_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar recolección
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id == 100 || operations.current_pickup.pickup_state_id == 50">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.state_id == 100 || operations.current_pickup.state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#pickup_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -423,7 +423,7 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_pickup.pickup_state_id != 50">
+                            <div class=" col-xs-6" v-if="operations.current_pickup.state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_pickup_id='+operations.current_pickup.id">
                                     <i class="fa fa-globe"></i>
                                     Ver en mapa
@@ -452,9 +452,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Recolección {{ operations.current_pickup.pickup_number }}
+                            Recolección {{ operations.current_pickup.number }}
                             <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
-                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_pickup.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -462,14 +462,14 @@
                         <div class="form-group">
                             <div class="callout callout-warning" style="text-align: center;">
                                 <p>
-                                    VALOR: {{ operations.current_pickup.value | formatMoney }}
+                                    VALOR: {{ operations.current_pickup.val | formatMoney }}
                                 </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}<br>
+                                    <b>Observaciones: </b> {{ operations.current_pickup.obs }}<br>
                                     <b>Contenido: </b> {{ operations.current_pickup.content }}
                                 </p>
                             </div>
@@ -528,7 +528,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Label para recolección {{ operations.current_pickup.pickup_number }}</h4>
+                        <h4 class="modal-title">Label para recolección {{ operations.current_pickup.number }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -568,9 +568,9 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        Recolección {{ operations.current_pickup.pickup_number }}
+                        Recolección {{ operations.current_pickup.number }}
                         <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
-                            Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                            Guía(s): {{ operations.current_pickup.consignments }}
                         </div>
                     </h4>
                 </div>
@@ -618,9 +618,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Recolección {{ operations.current_pickup.pickup_number }}
+                            Recolección {{ operations.current_pickup.number }}
                             <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
-                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_pickup.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -628,7 +628,7 @@
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones para recolección: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    <b>Observaciones para recolección: </b> {{ operations.current_pickup.obs }}
                                 </p>
                             </div>
                         </div>
@@ -686,9 +686,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Recolección {{ operations.current_pickup.pickup_number }}
+                            Recolección {{ operations.current_pickup.number }}
                             <div v-if="operations.current_pickup.consignments !== null && $.trim(operations.current_pickup.consignments) != ''">
-                                Guía(s): {{ operations.current_pickup.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_pickup.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -696,7 +696,7 @@
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_pickup.observation_to_pickup }}
+                                    <b>Observaciones: </b> {{ operations.current_pickup.obs }}
                                 </p>
                             </div>
                         </div>
@@ -727,21 +727,21 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        Entrega {{ operations.current_delivery.delivery_number }}
+                        Entrega {{ operations.current_delivery.number }}
                         <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
-                            Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                            Guía(s): {{ operations.current_delivery.consignments }}
                         </div>
                     </h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12 no-padding">
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id == 100 || operations.current_delivery.delivery_state_id == 50">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.state_id == 100 || operations.current_delivery.state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#delivery_success_modal">
                                     <i class="fa fa-check-circle"></i> Registrar entrega
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id  == 100 || operations.current_delivery.delivery_state_id == 50">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.state_id  == 100 || operations.current_delivery.state_id == 50">
                                 <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#delivery_exception_modal">
                                     <i class="fa fa-ban"></i> Registrar excepción
                                 </button>
@@ -761,7 +761,7 @@
                                     <i class="fa fa-bars"></i> Asociar guías
                                 </button>
                             </div>
-                            <div class=" col-xs-6" v-if="operations.current_delivery.delivery_state_id != 50">
+                            <div class=" col-xs-6" v-if="operations.current_delivery.state_id != 50">
                                 <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_delivery_id='+operations.current_delivery.id">
                                     <i class="fa fa-globe"></i> Ver en mapa
                                 </a>
@@ -788,7 +788,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Label para entrega {{ operations.current_delivery.delivery_number }}</h4>
+                        <h4 class="modal-title">Label para entrega {{ operations.current_delivery.number }}</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -829,9 +829,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Entrega {{ operations.current_delivery.delivery_number }}
+                            Entrega {{ operations.current_delivery.number }}
                             <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
-                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_delivery.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -839,14 +839,14 @@
                         <div class="form-group">
                             <div class="callout callout-warning" style="text-align: center;">
                                 <p>
-                                    VALOR: {{ operations.current_delivery.value | formatMoney }}
+                                    VALOR: {{ operations.current_delivery.val | formatMoney }}
                                 </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}<br>
+                                    <b>Observaciones: </b> {{ operations.current_delivery.obs }}<br>
                                     <b>Contenido: </b> {{ operations.current_delivery.content }}
                                 </p>
                             </div>
@@ -905,9 +905,9 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        Entrega {{ operations.current_delivery.delivery_number }}
+                        Entrega {{ operations.current_delivery.number }}
                         <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
-                            Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                            Guía(s): {{ operations.current_delivery.consignments }}
                         </div>
                     </h4>
                 </div>
@@ -955,9 +955,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Entrega {{ operations.current_delivery.delivery_number }}
+                            Entrega {{ operations.current_delivery.number }}
                             <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
-                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_delivery.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -965,7 +965,7 @@
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}
+                                    <b>Observaciones: </b> {{ operations.current_delivery.obs }}
                                 </p>
                             </div>
                         </div>
@@ -1022,9 +1022,9 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Entrega {{ operations.current_delivery.delivery_number }}
+                            Entrega {{ operations.current_delivery.number }}
                             <div v-if="operations.current_delivery.consignments !== null && $.trim(operations.current_delivery.consignments) != ''">
-                                Guía(s): {{ operations.current_delivery.consignments.join(', ') }}
+                                Guía(s): {{ operations.current_delivery.consignments }}
                             </div>
                         </h4>
                     </div>
@@ -1032,7 +1032,7 @@
                         <div class="form-group">
                             <div class="callout callout-info">
                                 <p>
-                                    <b>Observaciones: </b> {{ operations.current_delivery.observation_to_delivery }}
+                                    <b>Observaciones: </b> {{ operations.current_delivery.obs }}
                                 </p>
                             </div>
                         </div>

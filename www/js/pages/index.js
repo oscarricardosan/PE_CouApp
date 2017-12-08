@@ -25,7 +25,9 @@ function initializePage(){
             pickups_in_list: 0,
             deliveries_in_list: 0,
             current_position: undefined,
-            ready: true
+            ready: true,
+            pickups_sorted: [],
+            deliveries_sorted: []
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -43,6 +45,7 @@ function initializePage(){
             }, showDeliveryModal: function(delivery){
                 this.operations.current_pickup= {};
                 this.operations.current_delivery= delivery;
+                alert(JSON.stringify(delivery));
                 $('#delivery_action_modal').modal('show');
             },
             check_ajax_queue: function(e) {
@@ -50,43 +53,34 @@ function initializePage(){
                 AjaxQueue.check_queue_from_element(element);
             },
             contains: function(search, value) {
-                if(typeof value === 'object')
-                    value= JSON.stringify(value);
-                return value.toUpperCase().indexOf(search.toUpperCase()) >= 0;
+                try{
+                    if(typeof value === 'object')
+                        value= JSON.stringify(value);
+                    return value.toUpperCase().indexOf(search.toUpperCase()) >= 0;
+                }catch(e){
+                    alert('contains: '+e.message);
+                }
             },
             refresh_counters_in_list: function(){
-                App_= this;
-                setTimeout(function(){
-                    var pickups= $('.list-group.pickups>.pickup').length;
-                    var deliveries= $('.list-group.deliveries>.delivery').length;
-                    App_.pickups_in_list= pickups;
-                    App_.deliveries_in_list= deliveries;
+                try{
+                    var refresh= function(){
+                        var pickups= $('.list-group.pickups>.pickup').length;
+                        var deliveries= $('.list-group.deliveries>.delivery').length;
+                        App.pickups_in_list= pickups;
+                        App.deliveries_in_list= deliveries;
 
-                    if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
-                    if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+                        if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
+                        if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+                    };
 
-                }, 220);
+                    setTimeout(refresh, 220);
+                    setTimeout(refresh, 500);
+                }catch (e){
+                    alert('date_to_filter: '+e.message);
+                }
             },
             set_number_search: function(search){
                 this.number_search= search;
-            }
-        },
-        computed: {
-            pickups_sorted: function(){
-                var pickups= this.operations.pickups;
-                return _(pickups).chain()
-                    .where({date: App_.date_to_filter})
-                    .sortBy('distance_in_mts')
-                    //.reverse()
-                    .value();
-            },
-            deliveries_sorted: function(){
-                var deliveries= this.operations.deliveries;
-                return  _(deliveries).chain()
-                    .where({date: App_.date_to_filter})
-                    .sortBy('distance_in_mts')
-                    //.reverse()
-                    .value();
             }
         },
         filters: {
@@ -97,34 +91,38 @@ function initializePage(){
                 return accounting.formatNumber(value);
             },
             distance_to_pickup: function (current_position, pickup) {
-                distance= Haversine.distance_in_text(current_position, pickup);
-                if(distance.success){
-                    if(pickup.distance_in_mts !== distance.distance_in_mts){
-                        var field_to_save= [];
-                        field_to_save['distance_in_mts']= distance.distance_in_mts;
-                        PickupModel.update({id: pickup.id}, field_to_save, {
-                            success: function(){
-                                App.operations.pickups= PickupModel.get();
-                            }
-                        });
+                try{
+                    distance= Haversine.distance_in_text(current_position, pickup);
+                    if(distance.success){
+                        if(pickup.distance_in_mts !== distance.distance_in_mts){
+                            var field_to_save= [];
+                            field_to_save['distance_in_mts']= distance.distance_in_mts;
+                            PickupModel.update({id: pickup.id}, field_to_save, {
+                                success: function(){
+                                    App.operations.pickups= PickupModel.get();
+                                }
+                            });
+                        }
                     }
-                }
-                return distance.message;
+                    return distance.message;
+                }catch(e){ alert('distance_to_pickup: '+e.message); }
             },
             distance_to_delivery: function (current_position, delivery) {
-                distance= Haversine.distance_in_text(current_position, delivery);
-                if(distance.success){
-                    if(delivery.distance_in_mts !== distance.distance_in_mts){
-                        var field_to_save= [];
-                        field_to_save['distance_in_mts']= distance.distance_in_mts;
-                        DeliveriesModel.update({id: delivery.id}, field_to_save, {
-                            success: function(){
-                                App.operations.deliveries= DeliveriesModel.get();
-                            }
-                        });
+                try{
+                    distance= Haversine.distance_in_text(current_position, delivery);
+                    if(distance.success){
+                        if(delivery.distance_in_mts !== distance.distance_in_mts){
+                            var field_to_save= [];
+                            field_to_save['distance_in_mts']= distance.distance_in_mts;
+                            DeliveriesModel.update({id: delivery.id}, field_to_save, {
+                                success: function(){
+                                    App.operations.deliveries= DeliveriesModel.get();
+                                }
+                            });
+                        }
                     }
-                }
-                return distance.message;
+                    return distance.message;
+                }catch(e){ alert('distance_to_delivery: '+e.message); }
             }
         },
         watch: {
@@ -147,7 +145,27 @@ function initializePage(){
                 this.refresh_counters_in_list();
             },
             date_to_filter: function(){
-                this.refresh_counters_in_list();
+                try{
+                    this.pickups_sorted= _(this.operations.pickups).chain()
+                        .where({date: App_.date_to_filter})
+                        .sortBy('distance_in_mts')
+                        //.reverse()
+                        .value();
+
+                    this.deliveries_sorted= _(this.operations.deliveries).chain()
+                        .where({date: App_.date_to_filter})
+                        .sortBy('distance_in_mts')
+                        //.reverse()
+                        .value();
+
+                    this.pickups_in_list= this.pickups_sorted.length;
+                    this.deliveries_in_list= this.deliveries_sorted.length;
+
+                    if(this.deliveries_in_list === 0 && this.pickups_in_list>0) $('[href="#tab_pickups"]').click();
+                    if(this.pickups_in_list === 0 && this.deliveries_in_list>0) $('[href="#tab_deliveries"]').click();
+                }catch (e){
+                    alert('date_to_filter: '+e.message);
+                }
             },
             number_search: function(){
                 this.refresh_counters_in_list();
@@ -603,14 +621,20 @@ function initializePage(){
 
         /** ABRE ASOCIAR GUIAS */
         $('#pickup_consignments_modal').on('show.bs.modal', function () {
-            $('#pickup_consignments_modal [name="guias"]').val(
-                App.operations.current_pickup.consignments.join("\n")
-            );
+            try{
+                var consignments= App.operations.current_pickup.consignments.split(",");
+                $('#pickup_consignments_modal [name="guias"]').val(
+                    consignments.join("\n")
+                );
+            }catch (e){ alert('Show-delivery_consignments_modal: '+e.message); }
         });
         $('#delivery_consignments_modal').on('show.bs.modal', function () {
-            $('#delivery_consignments_modal [name="guias"]').val(
-                App.operations.current_delivery.consignments.join("\n")
-            );
+            try{
+                var consignments= App.operations.current_delivery.consignments.split(",");
+                $('#delivery_consignments_modal [name="guias"]').val(
+                    consignments.join("\n")
+                );
+            }catch (e){ alert('Show-delivery_consignments_modal: '+e.message); }
         });
         $('#pickup_consignments_modal form').submit(function (event) {
             event.preventDefault();
