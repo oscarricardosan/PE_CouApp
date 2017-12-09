@@ -53,7 +53,17 @@ var Gps= (function () {
                 latitude: position.latitude,
                 longitude: position.longitude
             };
-            GpsModel.insert(App.current_position)
+            GpsModel.insert(App.current_position);
+            DeliveriesModel.update_distances_in_mtrs(App.current_position, {success: function(){
+                DeliveriesModel.get({success: function(tx, results){
+                    App.operations.deliveries= results._all;
+                }});
+            }});
+            PickupModel.update_distances_in_mtrs(App.current_position, {success: function(){
+                PickupModel.get({success: function(tx, results){
+                    App.operations.pickups= results._all;
+                }});
+            }});
         }});
     }
 

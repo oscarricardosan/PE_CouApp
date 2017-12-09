@@ -29,14 +29,27 @@ var Ajax_queueModel= (function () {
         });
     };
 
-    var find = function(where){
-        return db.collection(collection_name).find(where);
+    var find = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' '+DB_Utility_.get_where(where), [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
-    var isEmpty = function(){
-        return get() === null;
+    var findRaw = function(where, callback){
+        callback= PolishedUtility_.callback_SQLselect(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT * FROM '+table+' WHERE '+where, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
-
     var clearTable= function(callback){
         callback= PolishedUtility_.callback(callback);
         DB.transaction(function(transaction) {
@@ -70,8 +83,8 @@ var Ajax_queueModel= (function () {
         return {
             get               : get,
             find              : find,
+            findRaw           : findRaw,
             insert            : insert,
-            isEmpty           : isEmpty,
             clearTable        : clearTable,
             remove            : remove
         }

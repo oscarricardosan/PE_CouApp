@@ -14,8 +14,8 @@ var Haversine= (function () {
     var distance= function (a, b) {
         var aLat = a.latitude || a.lat;
         var bLat = b.latitude || b.lat;
-        var aLng = a.longitude || a.lng || a.lon;
-        var bLng = b.longitude || b.lng || b.lon;
+        var aLng = a.longitude || a.lng || a.lon || a.long;
+        var bLng = b.longitude || b.lng || b.lon || b.long;
 
         var dLat = toRad(bLat - aLat);
         var dLon = toRad(bLng - aLng);

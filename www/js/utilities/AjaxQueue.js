@@ -47,22 +47,30 @@ var AjaxQueue= (function () {
         }
     };
 
-    var check_queue= function(callbacks){
-        var queues;
+    var check_queue= function(callbacks_first){
         if(navigator.connection.type === Connection.WIFI){
-            queues= Ajax_queueModel.get();
+            Ajax_queueModel.get({success:function(tx, results) {
+                process_quee(callbacks_first, results._all);
+            }});
         }else{
-            queues= Ajax_queueModel.find({
-                $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+            Ajax_queueModel.findRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
+                success:function(tx, results) {
+                    console.log(results._all);
+                    process_quee(callbacks_first, results._all);
+                }
             });
         }
+    };
+
+    function process_quee(callbacks, queues){
+        console.log(queues);
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
+            console.log('empty');
             callbacks.empty();
             return false;
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
-
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
@@ -102,7 +110,8 @@ var AjaxQueue= (function () {
             properties.fail(data);
             callbacks.fail(data);
         });
-    };
+
+    }
 
     function validate_request_fail(jqXHR){
         if(jqXHR.status===422){

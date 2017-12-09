@@ -45,7 +45,7 @@ var Operations= (function () {
                             }else {
                                 DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
                                     DeliveriesModel.get({success: function (tx, results) {
-                                        App_.operations.deliveries = results._all;
+                                        App.operations.deliveries = results._all;
                                     }});
                                 }});
                             }
@@ -54,7 +54,7 @@ var Operations= (function () {
                             }else{
                                 PickupModel.insert_multiple(response.pickups.data, {success:function(){
                                     PickupModel.get({success: function(tx, results){
-                                        App_.operations.pickups= results._all;
+                                        App.operations.pickups= results._all;
                                     }});
                                 }});
                             }

@@ -130,6 +130,25 @@ var PickupModel= (function () {
         );
     };
 
+    var update_distances_in_mtrs= function(current_position, callback){
+        var callback_first= PolishedUtility_.callback_SQUpdate(callback);
+        var updates= ["UPDATE "+table+" SET distance_in_mts = 0 where (lat is null or long is null) and distance_in_mts != 0"];
+        findRaw('lat is not null and long is not null', {success: function(tx, results){
+            $.each(results._all, function(index, pickup){
+                var distance= Haversine.distance(current_position, pickup);
+                distance= distance | 0;
+                updates.push(
+                    "UPDATE "+table+" SET distance_in_mts = "+distance+" where id="+pickup.id
+                );
+            });
+            DB.sqlBatch(updates, function() {
+                callback_first.success();
+            }, function(error) {
+                callback_first.fail(error);
+            });
+        }});
+    };
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             get                        : get,
@@ -142,6 +161,7 @@ var PickupModel= (function () {
             remove                     : remove,
             insertOrUpdateById         : insertOrUpdateById,
             increment_attemp_gps_alert : increment_attemp_gps_alert,
+            update_distances_in_mtrs   : update_distances_in_mtrs
         }
     };
     return {construct:construct};//retorna los metodos publicos

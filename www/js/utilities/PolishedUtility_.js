@@ -32,11 +32,6 @@ var PolishedUtility_= (function () {
             callback.success= function(tx, results){};
         if(callback.fail === undefined)
             callback.fail= function(tx, e){alert("ERROR update: " + e.message);};
-        callback._success= callback.success;
-        callback.success= function(tx, results){
-            results = PolishedUtility_.callback_SQLresults(results);
-            callback._success(tx, results);
-        };
         return callback;
     };
 

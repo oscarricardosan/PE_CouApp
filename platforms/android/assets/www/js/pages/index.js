@@ -81,6 +81,26 @@ function initializePage(){
             },
             set_number_search: function(search){
                 this.number_search= search;
+            },
+            reload_lists: function(){
+                var App_=this;
+                this.pickups_sorted= _(this.operations.pickups).chain()
+                    .where({date: App_.date_to_filter})
+                    .sortBy('distance_in_mts')
+                    //.reverse()
+                    .value();
+
+                this.deliveries_sorted= _(this.operations.deliveries).chain()
+                    .where({date: App_.date_to_filter})
+                    .sortBy('distance_in_mts')
+                    //.reverse()
+                    .value();
+
+                this.pickups_in_list= this.pickups_sorted.length;
+                this.deliveries_in_list= this.deliveries_sorted.length;
+
+                if(this.deliveries_in_list === 0 && this.pickups_in_list>0) $('[href="#tab_pickups"]').click();
+                if(this.pickups_in_list === 0 && this.deliveries_in_list>0) $('[href="#tab_deliveries"]').click();
             }
         },
         filters: {
@@ -96,42 +116,28 @@ function initializePage(){
         },
         watch: {
             "operations.deliveries": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
+                this.reload_lists();
                 this.refresh_counters_in_list();
             },
             "operations.pickups": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
+                this.reload_lists();
                 this.refresh_counters_in_list();
             },
             date_to_filter: function(){
                 try{
-                    this.pickups_sorted= _(this.operations.pickups).chain()
-                        .where({date: App_.date_to_filter})
-                        .sortBy('distance_in_mts')
-                        //.reverse()
-                        .value();
-
-                    this.deliveries_sorted= _(this.operations.deliveries).chain()
-                        .where({date: App_.date_to_filter})
-                        .sortBy('distance_in_mts')
-                        //.reverse()
-                        .value();
-
-                    this.pickups_in_list= this.pickups_sorted.length;
-                    this.deliveries_in_list= this.deliveries_sorted.length;
-
-                    if(this.deliveries_in_list === 0 && this.pickups_in_list>0) $('[href="#tab_pickups"]').click();
-                    if(this.pickups_in_list === 0 && this.deliveries_in_list>0) $('[href="#tab_deliveries"]').click();
+                    this.reload_lists();
                 }catch (e){
                     alert('date_to_filter: '+e.message);
                 }
@@ -156,7 +162,7 @@ function initializePage(){
                         decimal : ","
                     }
                 };
-                App_= this;
+                var App_= this;
                 UserModel.get({success: function(tx, results){
                     App_.user.name= results._first.name;
                     App_.user.email= results._first.email;
