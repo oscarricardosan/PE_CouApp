@@ -63,6 +63,9 @@ var Haversine= (function () {
     };
 
     var mtrs_to_text= function(mts){
+        if(isNaN(mts))
+            return '0 mts';
+
         if(mts>1000)
             return accounting.formatNumber(mts/1000, 2, '.', ',')+' km';
         else

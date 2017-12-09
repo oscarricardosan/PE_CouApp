@@ -69,8 +69,8 @@ function initializePage(){
                         App.pickups_in_list= pickups;
                         App.deliveries_in_list= deliveries;
 
-                        if(deliveries == 0 && pickups>0) $('[href="#tab_pickups"]').click();
-                        if(pickups == 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+                        if(deliveries === 0 && pickups>0) $('[href="#tab_pickups"]').click();
+                        if(pickups === 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
                     };
 
                     setTimeout(refresh, 220);
@@ -90,39 +90,8 @@ function initializePage(){
             formatNumber: function (value) {
                 return accounting.formatNumber(value);
             },
-            distance_to_pickup: function (current_position, pickup) {
-                try{
-                    distance= Haversine.distance_in_text(current_position, pickup);
-                    if(distance.success){
-                        if(pickup.distance_in_mts !== distance.distance_in_mts){
-                            var field_to_save= [];
-                            field_to_save['distance_in_mts']= distance.distance_in_mts;
-                            PickupModel.update({id: pickup.id}, field_to_save, {
-                                success: function(){
-                                    App.operations.pickups= PickupModel.get();
-                                }
-                            });
-                        }
-                    }
-                    return distance.message;
-                }catch(e){ alert('distance_to_pickup: '+e.message); }
-            },
-            distance_to_delivery: function (current_position, delivery) {
-                try{
-                    distance= Haversine.distance_in_text(current_position, delivery);
-                    if(distance.success){
-                        if(delivery.distance_in_mts !== distance.distance_in_mts){
-                            var field_to_save= [];
-                            field_to_save['distance_in_mts']= distance.distance_in_mts;
-                            DeliveriesModel.update({id: delivery.id}, field_to_save, {
-                                success: function(){
-                                    App.operations.deliveries= DeliveriesModel.get();
-                                }
-                            });
-                        }
-                    }
-                    return distance.message;
-                }catch(e){ alert('distance_to_delivery: '+e.message); }
+            mtrs_to_text: function (mts) {
+                return Haversine.mtrs_to_text(mts);
             }
         },
         watch: {

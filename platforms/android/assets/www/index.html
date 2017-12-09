@@ -320,7 +320,7 @@
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ current_position | distance_to_pickup(pickup) }}
+                                            {{ pickup.distance_in_mts | mtrs_to_text }}
                                         </div>
                                     </a>
                                 </div>
@@ -350,7 +350,7 @@
                                         <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments }}<br>
                                         <div class="text-muted" style="text-align: right">
                                             <i class="fa fa-globe"></i>
-                                            {{ current_position | distance_to_delivery(delivery) }}
+                                            {{ delivery.distance_in_mts | mtrs_to_text }}
                                         </div>
                                     </a>
                                 </div>
