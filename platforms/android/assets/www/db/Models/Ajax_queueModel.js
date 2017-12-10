@@ -4,7 +4,7 @@ var Ajax_queueModel= (function () {
 
     var insert= function(data, callback){
         callback= PolishedUtility_.callback_SQLinsert(callback);
-        data.data= JSON.stringify(data);
+        data.data= JSON.stringify(data.data);
         DB.transaction(function (tx) {
             tx.executeSql(
                 "INSERT INTO "+table+" ("+DB_Utility_.get_keys(data)+") VALUES ("+DB_Utility_.get_interrogations(data)+")",
@@ -79,19 +79,19 @@ var Ajax_queueModel= (function () {
     };
 
     var remove= function(where, callback){
-        var where= where===undefined?{}:where;
-        db.collection(collection_name).remove(
-            where,
-            function(){
-                db.collection(collection_name).save(function (err) {
-                    if (!err){
-                        if(typeof(callback) === 'function'){callback();}
-                    }else{
-                        alert('Error al borrar en colección '+collection_name);
-                    }
-                });
-            }
-        );
+        callback= PolishedUtility_.callback_SQUpdate(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "DELETE from "+table+DB_Utility_.get_where(where),
+                DB_Utility_.get_values(where),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos

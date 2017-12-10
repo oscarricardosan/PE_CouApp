@@ -173,8 +173,8 @@ function initializePage(){
                 PickupModel.get({success: function(tx, results){
                     App_.operations.pickups= results._all;
                 }});
-                Ajax_queueModel.get({success: function(tx, results){
-                    App_.ajax_queue_count= results._number_rows;
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
                 }});
                 PrinterModel.get({success: function(tx, results){
                     if(results._number_rows === 1)
@@ -409,7 +409,7 @@ function initializePage(){
             event.preventDefault();
             var form= $(this);
             form.loading();
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
                 process_name: 'Delivery guardar excepción: ',
@@ -479,7 +479,7 @@ function initializePage(){
             event.preventDefault();
             var form= $(this);
             form.loading();
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
                 process_name: 'Pickup exitoso: ',
@@ -538,7 +538,7 @@ function initializePage(){
             event.preventDefault();
             var form= $(this);
             form.loading();
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
             AjaxQueue.add({
                 process_name: 'Delivery exitoso: ',
@@ -614,7 +614,7 @@ function initializePage(){
         $('#pickup_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
             if($.trim(data.guias)==''){
                 alert('Campo guías es obligatorio');
@@ -669,7 +669,7 @@ function initializePage(){
         $('#delivery_consignments_modal form').submit(function (event) {
             event.preventDefault();
             var form= $(this);
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.entrega_id= App.operations.current_delivery.id;
             if($.trim(data.guias)==''){
                 alert('Campo guías es obligatorio');
@@ -688,7 +688,9 @@ function initializePage(){
                         DeliveriesModel.update({id: response.data.id}, response.data, {
                             success: function () {
                                 App.operations.current_delivery = response.data;
-                                App.operations.deliveries = DeliveriesModel.get();
+                                DeliveriesModel.get({success: function(tx, results){
+                                    App.operations.deliveries= results._all;
+                                }});
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_consignments_modal').modal('hide');
                             }
@@ -702,20 +704,26 @@ function initializePage(){
                         });
                     }
                 },
-                fail: function(){
-                    App.operations.current_delivery.consignments= data.guias.split("\n");
+                fail: function(_data){
+                    App.operations.current_delivery.consignments= _data.guias.split(",");
                     if(!cordova.plugins.backgroundMode.isActive()) {
                         if(typeof form === 'object')form.unloading();
                         ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                         DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
                             success: function () {
                                 $('#delivery_consignments_modal').modal('hide');
-                                App.operations.deliveries = DeliveriesModel.get();
+                                DeliveriesModel.get({success:function(tx, results){
+                                    App.operations.deliveries= results._all;
+                                }});
                             }
                         });
                     }else{
                         DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {App.operations.deliveries = DeliveriesModel.get();}
+                            success: function () {
+                                DeliveriesModel.get({success:function(tx, results){
+                                    App.operations.deliveries= results._all;
+                                }});
+                            }
                         });
                     }
                 },
