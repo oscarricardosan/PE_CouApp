@@ -72,6 +72,27 @@ var PolishedUtility_= (function () {
         return results;
     };
 
+    var callback_SQLcount= function (callback){
+        if(typeof(callback) !== 'object')
+            return {success: function(tx, results){}, fail: function(tx, e){alert("ERROR Select: " + e.message);}};
+        if(callback.success === undefined)
+            callback.success= function(tx, results){};
+        if(callback.fail === undefined)
+            callback.fail= function(tx, e){alert("ERROR Select: " + e.message);};
+        callback._success= callback.success;
+        callback.success= function(tx, results){
+            results = callback_SQLresult_count(results);
+            callback._success(tx, results);
+        };
+        return callback;
+    };
+
+    var callback_SQLresult_count= function (results){
+        results._count= results.rows.item(0).count;//Si esta vacio _first es undefined
+        results._number_rows= results.rows.length;
+        return results;
+    };
+
     var queue= function (callback){
         callback.success= eval(callback, 'success', function(){});
         callback.fail= eval(callback, 'fail', function(){});
@@ -106,6 +127,7 @@ var PolishedUtility_= (function () {
             ajaxQueueProperties            : ajaxQueueProperties,
             queue                          : queue,
             callback_SQLselect             : callback_SQLselect,
+            callback_SQLcount              : callback_SQLcount,
             callback_SQUpdate              : callback_SQUpdate,
             callback_SQLinsert             : callback_SQLinsert,
             callback_SQLinsert_multiple    : callback_SQLinsert_multiple,

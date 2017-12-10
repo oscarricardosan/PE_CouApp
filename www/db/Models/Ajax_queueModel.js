@@ -4,6 +4,7 @@ var Ajax_queueModel= (function () {
 
     var insert= function(data, callback){
         callback= PolishedUtility_.callback_SQLinsert(callback);
+        data.data= JSON.stringify(data);
         DB.transaction(function (tx) {
             tx.executeSql(
                 "INSERT INTO "+table+" ("+DB_Utility_.get_keys(data)+") VALUES ("+DB_Utility_.get_interrogations(data)+")",
@@ -50,6 +51,20 @@ var Ajax_queueModel= (function () {
             //alert('transaction ok');
         });
     };
+
+    var countRaw = function(where, callback){
+        if(where != '')
+            where= ' WHERE '+where;
+        callback= PolishedUtility_.callback_SQLcount(callback);
+        DB.transaction(function(transaction) {
+            transaction.executeSql('SELECT count(*) as count FROM '+table+where, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
+    };
+
     var clearTable= function(callback){
         callback= PolishedUtility_.callback(callback);
         DB.transaction(function(transaction) {
@@ -83,6 +98,7 @@ var Ajax_queueModel= (function () {
         return {
             get               : get,
             find              : find,
+            countRaw          : countRaw,
             findRaw           : findRaw,
             insert            : insert,
             clearTable        : clearTable,

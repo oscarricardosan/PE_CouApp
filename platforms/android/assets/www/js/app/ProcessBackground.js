@@ -12,19 +12,35 @@ var ProcessBackground= (function () {
     var run= function (){
 
         Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue, {yes: function(){
-            check_ajax_queue();
+            try{
+                check_ajax_queue();
+            }catch (e){
+                alert('Background check_ajax_queue: '+e.message);
+            }
         }});
 
         Process.it_can_be_executed('get_events', Settings.timer_get_events_from_server, {yes: function(){
-            Event_server.get_events_from_server();
+            try{
+                Event_server.get_events_from_server();
+            }catch (e){
+                alert('Background get_events: '+e.message);
+            }
         }});
 
         Process.it_can_be_executed('proximity_alert', Settings.timer_run_alert_proximity, {yes: function(){
-            Alert_proximity.run();
+            try{
+                Alert_proximity.run();
+            }catch (e){
+                alert('Background proximity_alert: '+e.message);
+            }
         }});
 
         Process.it_can_be_executed('time_alert', Settings.timer_run_alert_time, {yes: function(){
-            Alert_time.run();
+            try{
+                Alert_time.run();
+            }catch (e){
+                alert('Background time_alert: '+e.message);
+            }
         }});
 
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});

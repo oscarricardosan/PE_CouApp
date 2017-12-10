@@ -4,6 +4,8 @@ var LogModel= (function () {
 
     var insert= function(data, callback){
         callback= PolishedUtility_.callback_SQLinsert(callback);
+        data.created_at= MomentUtility_.now();
+        data.data= JSON.stringify(data);
         DB.transaction(function (tx) {
             tx.executeSql(
                 "INSERT INTO "+table+" ("+DB_Utility_.get_keys(data)+") VALUES ("+DB_Utility_.get_interrogations(data)+")",
@@ -19,7 +21,7 @@ var LogModel= (function () {
     };
 
     var store_success= function(message, data, callback){
-        store({
+        insert({
             message: message,
             data: data,
             status: 'success'
@@ -27,7 +29,7 @@ var LogModel= (function () {
     };
 
     var store_fail= function(message, data, callback){
-        store({
+        insert({
             message: message,
             data: data,
             status: 'danger'

@@ -24,8 +24,10 @@ var AjaxQueue= (function () {
                         var data= {properties: properties, response: {response: response, properties: properties}};
                         properties.fail(data);
                         LogModel.store_fail(properties.process_name, data);
-                        Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
+                        Ajax_queueModel.insert(properties, {success: function(data){properties.fail(data);}});
+                        Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                            App.ajax_queue_count= results._count;
+                        }});
                     }
                 }else{
                     properties.success(response, properties);
@@ -35,15 +37,19 @@ var AjaxQueue= (function () {
             request.fail(function(jqXHR, textStatus) {
                 var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
                 LogModel.store_fail(properties.process_name, data);
-                Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-                App.ajax_queue_count= Ajax_queueModel.get().length;
+                Ajax_queueModel.insert(properties, {success: function(data){properties.fail(data);}});
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                }});
                 validate_request_fail(jqXHR);
             });
         }else{//Solo se puede por wifi y no hay wifi
             var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
             LogModel.store_fail(properties.process_name+' solo con Wifi', data);
-            Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-            App.ajax_queue_count= Ajax_queueModel.get().length;
+            Ajax_queueModel.insert(properties, {success: function(data){properties.fail(data);}});
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App.ajax_queue_count= results._count;
+            }});
         }
     };
 
@@ -55,7 +61,6 @@ var AjaxQueue= (function () {
         }else{
             Ajax_queueModel.findRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
                 success:function(tx, results) {
-                    console.log(results._all);
                     process_quee(callbacks_first, results._all);
                 }
             });
@@ -63,10 +68,8 @@ var AjaxQueue= (function () {
     };
 
     function process_quee(callbacks, queues){
-        console.log(queues);
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
-            console.log('empty');
             callbacks.empty();
             return false;
         }
@@ -78,37 +81,51 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function (response) {
+            var data= properties.data= JSON.parse(properties.data);
             if (properties.dataType === 'json') {
                 if (response.success) {
-                    properties.success(response, properties);
+                    properties.success= eval("false||"+properties.success)(response, properties);
                     callbacks.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     Ajax_queueModel.remove({_id: properties._id}, function () {
                         AjaxQueue.check_queue(callbacks);
                     });
                 } else {
-                    var data = {properties: properties, response: response};
-                    properties.fail(data);
+                    properties.fail= eval("false||"+properties.fail)(data);
                     callbacks.fail(data);
-                    LogModel.store_fail(properties.process_name, data);
+                    LogModel.store_fail(properties.process_name, {properties: properties, response: response});
                 }
             } else {
                 callbacks.success(response, properties);
-                properties.success(response, properties);
+                properties.success= eval("false||"+properties.success)(response, properties);
                 LogModel.store_success(properties.process_name, {response: response, properties: properties});
                 Ajax_queueModel.remove({_id: properties._id}, function () {
                     AjaxQueue.check_queue(callbacks);
                 });
             }
-            App.ajax_queue_count = Ajax_queueModel.get().length;
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App.ajax_queue_count= results._count;
+            }});
         });
         request.fail(function (jqXHR, textStatus) {
-            var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-            LogModel.store_fail(properties.process_name, data);
-            App.ajax_queue_count = Ajax_queueModel.get().length;
+            alert(0);
+            LogModel.store_fail(properties.process_name, {
+                properties: properties, textStatus: textStatus, jqXHR: jqXHR
+            });
+            alert(1);
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App.ajax_queue_count= results._count;
+            }});
+            alert(2);
             validate_request_fail(jqXHR);
-            properties.fail(data);
+            alert(3);
+            console.log(properties.data);
+            console.log(JSON.parse(properties.data));
+            console.log(properties.fail);
+            properties.fail= eval("false||"+properties.fail)(JSON.parse(properties.data));
+            alert(4);
             callbacks.fail(data);
+            alert(5);
         });
 
     }
@@ -136,20 +153,28 @@ var AjaxQueue= (function () {
         element.loading();
         AjaxQueue.check_queue({
             empty:function(){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
-                element.unloading();
-                var wifi_queues= Ajax_queueModel.find({
-                    $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                    element.unloading();
+                }});
+
+                Ajax_queueModel.countRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
+                    success:function(tx, results) {
+                        Alert_('Cola vacía. Peticiones pendientes por wifi '+results._count);
+                    }
                 });
-                Alert_('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
             },
             fail: function(data){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
-                element.unloading();
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                    element.unloading();
+                }});
                 Alert_('Fallo transmisión de cola');
             },
             success: function(data){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                }});
             }
         });
     }

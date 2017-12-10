@@ -74,7 +74,7 @@ var Migrations= (function () {
                     transaction.executeSql(
                         'CREATE TABLE IF NOT EXISTS ajax_queue(' +
                         'id integer primary key, process_name text, type text, url text, dataType text, ' +
-                        'data text, created_at text, transmit_only_with_wifi text' +
+                        'data text, success text, fail text, created_at text, transmit_only_with_wifi text' +
                         ')',
                         [],
                         function (tx, result) {create_table.processes();},
