@@ -22,9 +22,10 @@ var AjaxQueue= (function () {
                         LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     }else{
                         var data= {properties: properties, response: {response: response, properties: properties}};
-                        properties.fail(data);
                         LogModel.store_fail(properties.process_name, data);
-                        Ajax_queueModel.insert(properties, {success: function(data){properties.fail(data);}});
+                        Ajax_queueModel.insert(properties, {success: function(data){
+                            properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
+                        }});
                         Ajax_queueModel.countRaw("", {success:function(tx, results) {
                             App.ajax_queue_count= results._count;
                         }});
@@ -39,7 +40,7 @@ var AjaxQueue= (function () {
                 LogModel.store_fail(properties.process_name, data);
                 Ajax_queueModel.insert(properties, {
                     success: function(tx, results){
-                        properties.fail(JSON.parse(properties.data));
+                        properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
                     }
                 });
                 Ajax_queueModel.countRaw("", {success:function(tx, results) {
@@ -50,7 +51,9 @@ var AjaxQueue= (function () {
         }else{//Solo se puede por wifi y no hay wifi
             var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
             LogModel.store_fail(properties.process_name+' solo con Wifi', data);
-            Ajax_queueModel.insert(properties, {success: function(data){properties.fail(data);}});
+            Ajax_queueModel.insert(properties, {success: function(data){
+                properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
+            }});
             Ajax_queueModel.countRaw("", {success:function(tx, results) {
                 App.ajax_queue_count= results._count;
             }});
@@ -89,7 +92,7 @@ var AjaxQueue= (function () {
             var data= (typeof properties.data === 'string')?JSON.parse(properties.data):properties.data;
             if (properties.dataType === 'json') {
                 if (response.success) {
-                    properties.success= eval("false||"+properties.success)(response, properties);
+                    eval("false||"+properties.success)(response, properties);
                     callbacks.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     Ajax_queueModel.remove({id: properties.id}, {success: function () {
@@ -99,17 +102,20 @@ var AjaxQueue= (function () {
                         AjaxQueue.check_queue(callbacks);
                     }});
                 } else {
-                    properties.fail= eval("false||"+properties.fail)(data);
+                    eval("false||"+properties.fail)(data);
                     callbacks.fail(data);
                     LogModel.store_fail(properties.process_name, {properties: properties, response: response});
                 }
             } else {
+                eval("false||"+properties.success)(response, properties);
                 callbacks.success(response, properties);
-                properties.success= eval("false||"+properties.success)(response, properties);
                 LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                Ajax_queueModel.remove({_id: properties._id}, function () {
+                Ajax_queueModel.remove({id: properties.id}, {success: function () {
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
                     AjaxQueue.check_queue(callbacks);
-                });
+                }});
             }
         });
         request.fail(function (jqXHR, textStatus) {
@@ -120,7 +126,7 @@ var AjaxQueue= (function () {
                 App.ajax_queue_count= results._count;
             }});
             validate_request_fail(jqXHR);
-            properties.fail= eval("false||"+properties.fail)(properties.data);
+            eval("false||"+properties.fail)(properties.data);
             callbacks.fail(properties.data);
         });
 
