@@ -352,7 +352,7 @@ function initializePage(){
             event.preventDefault();
             var form= $(this);
             form.loading();
-            data= FormUtility_.serialized_data_to_json(form.serializeArray());
+            var data= FormUtility_.serialized_data_to_json(form.serializeArray());
             data.recoleccion_id= App.operations.current_pickup.id;
             AjaxQueue.add({
                 process_name: 'Pickup guardar excepción: ',
@@ -361,53 +361,36 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        PickupModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_pickup = response.data;
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                                ToastrUtility_.success(response.message);
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_pickup = response.data;
+                            PickupModel.get({success: function (tx, results) {
+                                App.operations.pickups = results._all;
+                            }});
+                            if (!cordova.plugins.backgroundMode.isActive()) {
                                 $('#pickup_exception_modal').modal('hide');
+                                ToastrUtility_.success(response.message);
                             }
-                        });
-                    }else{
-                        PickupModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_pickup = response.data;
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(_data){
                     App.operations.current_pickup.state_id = 300;
                     App.operations.current_pickup.state = "Excepción";
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        if(typeof form === 'object')form.unloading();
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function () {
+                            PickupModel.get({success: function(tx, results){
+                                App.operations.pickups= results._all;
+                            }});
+                            if (!cordova.plugins.backgroundMode.isActive()) {
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                                 $('#pickup_exception_modal').modal('hide');
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
                             }
-                        });
-                    }else{
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                            }
-                        });
-                    }
-                },
+                        }
+                    });
+                }
             });
         });
         $('#delivery_exception_modal form').submit(function (event) {
@@ -423,52 +406,35 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_delivery = response.data;
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_delivery = response.data;
+                            DeliveriesModel.get({success: function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_exception_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_delivery = response.data;
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(_data){
                     App.operations.current_delivery.state_id = 300;
                     App.operations.current_delivery.state = "Excepción";
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        if(typeof form === 'object')form.unloading();
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function () {
+                            DeliveriesModel.get({success: function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                                 $('#delivery_exception_modal').modal('hide');
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
                             }
-                        });
-                    }else{
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
             });
         });
@@ -498,56 +464,35 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object'){
-                            form.unloading();
-                        }
-                        PickupModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_pickup = response.data;
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_pickup = response.data;
+                            PickupModel.get({success: function(tx, results){
+                                App.operations.pickups= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
                                 $('#pickup_success_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        App.operations.current_pickup.state = "Realizada";
-                        App.operations.current_pickup.state_id = 200;
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                                $('#pickup_success_modal').modal('hide');
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(_data){
                     App.operations.current_pickup.state = "Realizada";
                     App.operations.current_pickup.state_id = 200;
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        if(typeof form === 'object')form.unloading();
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
+                        success: function () {
+                            PickupModel.get({success: function(tx, results){
+                                App.operations.pickups= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                                 $('#pickup_success_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
             });
         });
@@ -564,54 +509,35 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_delivery = response.data;
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_delivery = response.data;
+                            DeliveriesModel.get({success: function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_success_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        App.operations.current_delivery.state = "Realizada";
-                        App.operations.current_delivery.state_id = 200;
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
-                                App.operations.current_delivery = response.data;
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(){
                     App.operations.current_delivery.state = "Realizada";
                     App.operations.current_delivery.state_id = 200;
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
+                        success: function () {
+                            DeliveriesModel.get({success: function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                                 $('#delivery_success_modal').modal('hide');
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
                             }
-                        });
-                    }else{
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
             });
         });
@@ -652,52 +578,34 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        PickupModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_pickup = response.data;
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_pickup = response.data;
+                            PickupModel.get({success: function(tx, results){
+                                App.operations.pickups= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
                                 $('#pickup_consignments_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        App.operations.current_pickup.consignments= data.guias.split("\n");
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(_data){
-                    App.operations.current_pickup.consignments= _data.guias.split("\n");
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
+                    if(typeof form === 'object')form.unloading();
+                    PickupModel.update({id: _data.recoleccion_id}, {consignments: _data.guias.split("\n")}, {
+                        success: function () {
+                            PickupModel.get({success: function(tx, results){
+                                App.operations.pickups= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 $('#pickup_consignments_modal').modal('hide');
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                             }
-                        });
-                    }else{
-                        PickupModel.update({id: App.operations.current_pickup.id}, App.operations.current_pickup, {
-                            success: function () {
-                                PickupModel.get({success: function(tx, results){
-                                    App.operations.pickups= results._all;
-                                }});
-                            }
-                        });
-                    }
-                },
+                        }
+                    });
+                }
             });
         });
         $('#delivery_consignments_modal form').submit(function (event) {
@@ -717,52 +625,34 @@ function initializePage(){
                 dataType: 'json',
                 data: data,
                 success: function(response){
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        DeliveriesModel.update({id: response.data.id}, response.data, {
-                            success: function () {
-                                App.operations.current_delivery = response.data;
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: response.data.id}, response.data, {
+                        success: function () {
+                            App.operations.current_delivery = response.data;
+                            DeliveriesModel.get({success: function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
                                 $('#delivery_consignments_modal').modal('hide');
                             }
-                        });
-                    }else{
-                        App.operations.current_delivery.consignments= data.guias.split("\n");
-                        PickupModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
-                                DeliveriesModel.get({success: function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
+                        }
+                    });
                 },
                 fail: function(_data){
-                    App.operations.current_delivery.consignments= _data.guias.split(",");
-                    if(!cordova.plugins.backgroundMode.isActive()) {
-                        if(typeof form === 'object')form.unloading();
-                        ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
+                    if(typeof form === 'object')form.unloading();
+                    DeliveriesModel.update({id: _data.recoleccion_id}, {consignments: _data.guias.split("\n")}, {
+                        success: function () {
+                            DeliveriesModel.get({success:function(tx, results){
+                                App.operations.deliveries= results._all;
+                            }});
+                            if(!cordova.plugins.backgroundMode.isActive()) {
                                 $('#delivery_consignments_modal').modal('hide');
-                                DeliveriesModel.get({success:function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
+                                ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
                             }
-                        });
-                    }else{
-                        DeliveriesModel.update({id: App.operations.current_delivery.id}, App.operations.current_delivery, {
-                            success: function () {
-                                DeliveriesModel.get({success:function(tx, results){
-                                    App.operations.deliveries= results._all;
-                                }});
-                            }
-                        });
-                    }
-                },
+                        }
+                    });
+                }
             });
         });
         /** <!-- CIERRA ASOCIAR GUIAS */
