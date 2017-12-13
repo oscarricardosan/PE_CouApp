@@ -45,7 +45,6 @@ function initializePage(){
             }, showDeliveryModal: function(delivery){
                 this.operations.current_pickup= {};
                 this.operations.current_delivery= delivery;
-                alert(JSON.stringify(delivery));
                 $('#delivery_action_modal').modal('show');
             },
             check_ajax_queue: function(e) {
