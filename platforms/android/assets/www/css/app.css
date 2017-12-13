@@ -9,6 +9,7 @@
 }
 .modal{
     background: #dadada!important;
+    min-height!important;: 100vh;
 }
 .modal .modal-dialog{
     margin: 0px!important;

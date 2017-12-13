@@ -45,7 +45,6 @@ function initializePage(){
             }, showDeliveryModal: function(delivery){
                 this.operations.current_pickup= {};
                 this.operations.current_delivery= delivery;
-                alert(JSON.stringify(delivery));
                 $('#delivery_action_modal').modal('show');
             },
             check_ajax_queue: function(e) {
@@ -293,7 +292,7 @@ function initializePage(){
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);
-                        if(respon.data.id == App.operations.current_delivery.id)
+                        if(response.data.id == App.operations.current_delivery.id)
                             $('#delivery_attach_photo').modal('hide');
                     }
                     if(typeof form === 'object')form.unloading();
@@ -327,7 +326,7 @@ function initializePage(){
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);
-                        if(respon.data.id == App.operations.current_pickup.id)
+                        if(response.data.id == App.operations.current_pickup.id)
                             $('#pickup_attach_photo').modal('hide');
                     }
                     if(typeof form === 'object')form.unloading();
@@ -374,7 +373,7 @@ function initializePage(){
                             }});
                             if (!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.success(response.message);
-                                if(respon.data.id == App.operations.current_pickup.id)
+                                if(response.data.id == App.operations.current_pickup.id)
                                     $('#pickup_exception_modal').modal('hide');
                             }
                         }
@@ -555,7 +554,9 @@ function initializePage(){
         /** ABRE ASOCIAR GUIAS */
         $('#pickup_consignments_modal').on('show.bs.modal', function () {
             try{
-                var consignments= App.operations.current_pickup.consignments.split(",");
+                var consignments= [];
+                if(App.operations.current_pickup.consignments !== undefined)
+                    consignments= App.operations.current_pickup.consignments.split(",");
                 $('#pickup_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
@@ -563,7 +564,9 @@ function initializePage(){
         });
         $('#delivery_consignments_modal').on('show.bs.modal', function () {
             try{
-                var consignments= App.operations.current_delivery.consignments.split(",");
+                var consignments= [];
+                if(App.operations.current_delivery.consignments !== undefined)
+                    consignments= App.operations.current_delivery.consignments.split(",");
                 $('#delivery_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
