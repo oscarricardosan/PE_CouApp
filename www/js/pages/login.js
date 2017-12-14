@@ -39,6 +39,8 @@ function initializeApp(){
             if(success){
                 alert(("Bienvenido "+user.name));
                 window.location.href= 'index.html';
+            }else{
+                LogModel.clearTable();
             }
         });
     }

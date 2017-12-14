@@ -16,7 +16,6 @@ var Operations= (function () {
         });
         request.done(function(response){
             try{
-                ToastrUtility_.success('Conexión exitosa.');
                 callback.success(response);
                 Event_server.clear_events_in_server();
             }catch (e){

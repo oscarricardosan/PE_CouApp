@@ -38,29 +38,30 @@ function initializePage() {
                 $('button.submit').loading();
                 AjaxQueue.check_queue({
                     empty: function () {
-                        Ajax_queueModel.loaded(function () {
-                            App_.ajax_queues = Ajax_queueModel.get();
-                            App_.ajax_queue_count = Ajax_queueModel.get().length;
-                        });
+                        Ajax_queueModel.get({success: function (tx, results) {
+                            App_.ajax_queues = results._all;
+                            App_.ajax_queue_count = results._all.length;
+                        }});
                         $('button.submit').unloading();
-                        var wifi_queues= Ajax_queueModel.find({
-                            $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                        Ajax_queueModel.countRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
+                            success:function(tx, results) {
+                                Alert_('Cola vacía. Peticiones pendientes por wifi '+results._count);
+                            }
                         });
-                        alert('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                     },
                     fail: function () {
-                        Ajax_queueModel.loaded(function () {
-                            App_.ajax_queues = Ajax_queueModel.get();
-                            App_.ajax_queue_count = Ajax_queueModel.get().length;
-                        });
+                        Ajax_queueModel.get({success: function (tx, results) {
+                            App_.ajax_queues = results._all;
+                            App_.ajax_queue_count = results._all.length;
+                        }});
                         $('button.submit').unloading();
                         alert('Fallo transmisión');
                     },
                     success: function () {
-                        Ajax_queueModel.loaded(function () {
-                            App_.ajax_queues = Ajax_queueModel.get();
-                            App_.ajax_queue_count = Ajax_queueModel.get().length;
-                        });
+                        Ajax_queueModel.get({success: function (tx, results) {
+                            App_.ajax_queues = results._all;
+                            App_.ajax_queue_count = results._all.length;
+                        }});
                     }
                 });
             }
@@ -93,28 +94,22 @@ function initializePage() {
                     decimal: ","
                 }
             };
-
             App_ = this;
-            UserModel.loaded(function () {
-                var user = UserModel.get();
-                if (user !== null) {
-                    App_.user.email = user.user_data.email;
-                    App_.user.name = user.user_data.name;
-                }
-            });
+            UserModel.get({success: function(tx, results){
+                App_.user.name= results._first.name;
+                App_.user.email= results._first.email;
+            }});
+            DeliveriesModel.get({success: function(tx, results){
+                App_.operations.deliveries= results._all;
+            }});
+            PickupModel.get({success: function(tx, results){
+                App_.operations.pickups= results._all;
+            }});
 
-            DeliveriesModel.loaded(function () {
-                App_.operations.deliveries = DeliveriesModel.get();
-            });
-
-            PickupModel.loaded(function () {
-                App_.operations.pickups = PickupModel.get();
-            });
-
-            Ajax_queueModel.loaded(function () {
-                App_.ajax_queues = Ajax_queueModel.get();
-                App_.ajax_queue_count = Ajax_queueModel.get().length;
-            });
+            Ajax_queueModel.get({success: function(tx, results){
+                App_.ajax_queues = results._all;
+                App_.ajax_queue_count = results._all.length;
+            }});
         }
     });
 }

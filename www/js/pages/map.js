@@ -26,15 +26,12 @@ function initializePage() {
         },
         methods: {
             synchronize_data_operations: function (e) {
-                var element = $(e.target);
+                var element= $(e.target);
                 element.loading();
+                App.ready= false;
                 Operations.synchronize_data_operations({
-                    success: function () {
-                        element.unloading();
-                    },
-                    fail: function () {
-                        element.unloading();
-                    }
+                    success: function(){element.unloading(); App.ready= true; alert('Sincronización finalizada');},
+                    fail: function(){ element.unloading(); App.ready= true; alert('Error al sincronizar');}
                 });
             },
             check_ajax_queue: function(e) {
@@ -58,56 +55,30 @@ function initializePage() {
                     shadowSize: [41, 41]
                 });
             },
-            distance_to_pickup: function (App, pickup){
-                var App_= this;
-                var distance= Haversine.distance_in_text(App_.current_position, pickup);
-                if(distance.success){
-                    if(pickup.distance_in_mts !== distance.distance_in_mts){
-                        pickup.distance_in_mts= distance.distance_in_mts;
-                        PickupModel.update({id: pickup.id}, pickup, {
-                            success: function(){
-                                App_.operations.pickups= PickupModel.get();
-                            }
-                        });
-                    }
-                }
-                return distance.message;
-            },
-            distance_to_delivery: function (App, delivery){
-                var App_= this;
-                var distance= Haversine.distance_in_text(App_.current_position, delivery);
-                if(distance.success){
-                    if(delivery.distance_in_mts !== distance.distance_in_mts){
-                        delivery.distance_in_mts= distance.distance_in_mts;
-                        DeliveriesModel.update({id: delivery.id}, delivery, {
-                            success: function(){
-                                App_.operations.deliveries= DeliveriesModel.get();
-                            }
-                        });
-                    }
-                }
-                return distance.message;
-            },
             centerLeafletMapOnMarker: function (marker) {
                 var latLngs = [ marker.getLatLng() ];
                 var markerBounds = L.latLngBounds(latLngs);
                 App_.map.fitBounds(markerBounds);
+            },
+        },
+        filters: {
+            mtrs_to_text: function (mts) {
+                return Haversine.mtrs_to_text(mts);
             }
         },
-        filters: { },
         watch: {
             "operations.deliveries": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
             },
             "operations.pickups": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
