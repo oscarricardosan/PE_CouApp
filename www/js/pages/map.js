@@ -97,15 +97,15 @@ function initializePage() {
                         var icon = App_.new_icon('images/map_icons/pickup_' + pickup.pickup_state.class + '.png?1');
 
                         var marker = new L.marker().setLatLng({
-                            lng: pickup.longitude,
-                            lat: pickup.latitude
+                            lng: pickup.long,
+                            lat: pickup.lat
                         }).setIcon(icon).addTo(App_.map).bindPopup(
                             "<div style='text-align:center;'>Recolección <span class='label bg-" + pickup.pickup_state.class + "'>" + pickup.pickup_state.name + "</span></div>" +
                             "<i class='fa fa-user'></i>" + pickup.courier.email + " - <b>" + pickup.pickup_number + "</b><br>" +
                             "<b>Dirección: </b> " + pickup.address + " <br>" +
                             "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
                             "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>" +
-                            "<i class='fa fa-globe'></i> A " + Haversine.mtrs_to_text(pickup.distance_in_mts) + "  <br>" +
+                            "<i class='fa fa-globe'></i> A " + pickup.distance_in_mts + "  <br>" +
                             "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date=" + pickup.pickup_date + "&search=" + pickup.pickup_number + "&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>" +
                             "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
                         );
@@ -133,7 +133,7 @@ function initializePage() {
                             "<b>Dirección: </b> " + delivery.address + " <br>" +
                             "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
                             "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
-                            "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(delivery.distance_in_mts)+"  <br>"+
+                            "<i class='fa fa-globe'></i> A "+delivery.distance_in_mts+"  <br>"+
                             "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"+
                             "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
                         );
@@ -168,31 +168,27 @@ function initializePage() {
             App_.map.on('locationfound', onLocationFound);
             App_.map.on('locationerror', onLocationError);
 
-            GpsModel.loaded(function () {
-                App_.current_position= GpsModel.get();
-            });
-            UserModel.loaded(function () {
-                var user = UserModel.get();
-                if (user !== null) {
-                    App_.user.email = user.user_data.email;
-                    App_.user.name = user.user_data.name;
-                }
-            });
-
-            Ajax_queueModel.loaded(function(){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
-            });
+            GpsModel.get({success: function(tx, results){
+                App_.current_position= results._first;
+            }});
+            UserModel.get({success: function(tx, results){
+                App_.user.name= results._first.name;
+                App_.user.email= results._first.email;
+            }});
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App_.ajax_queue_count= results._count;
+            }});
 
 
             /**
              * CARGA MARCAS
              */
-            DeliveriesModel.loaded(function () {
-                App_.operations.deliveries = DeliveriesModel.get();
-                PickupModel.loaded(function () {
-                    App_.operations.pickups = PickupModel.get();
-                });
-            });
+            DeliveriesModel.get({success: function (tx, results) {
+                App_.operations.deliveries = results._all;
+                DeliveriesModel.get({success: function (tx, results) {
+                    App_.operations.pickups = results._all;
+                }});
+            }});
 
 
         }
