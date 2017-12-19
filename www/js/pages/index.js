@@ -555,8 +555,11 @@ function initializePage(){
         $('#pickup_consignments_modal').on('show.bs.modal', function () {
             try{
                 var consignments= [];
-                if(App.operations.current_pickup.consignments !== undefined)
+                if(typeof App.operations.current_pickup.consignments === 'object')
+                    consignments= App.operations.current_pickup.consignments;
+                else if(App.operations.current_pickup.consignments !== undefined)
                     consignments= App.operations.current_pickup.consignments.split(",");
+
                 $('#pickup_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
@@ -565,8 +568,11 @@ function initializePage(){
         $('#delivery_consignments_modal').on('show.bs.modal', function () {
             try{
                 var consignments= [];
-                if(App.operations.current_delivery.consignments !== undefined)
+                if(typeof App.operations.current_delivery.consignments === 'object')
+                    consignments= App.operations.current_delivery.consignments;
+                else if(App.operations.current_delivery.consignments !== undefined)
                     consignments= App.operations.current_delivery.consignments.split(",");
+
                 $('#delivery_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
