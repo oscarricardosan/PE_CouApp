@@ -10,10 +10,17 @@ var Process= (function () {
         ProcessModel.update({id: 1}, process_, callback);
     };
 
+
+    var reset_last_attempt = function(process, callback){
+        var process_= {};
+        process_[process]= null;
+        ProcessModel.update({id: 1}, process_, callback);
+    };
+
     function it_can_be_executed(process, minutes, callback) {
         ProcessModel.get({success:function(tx, results){
             var last_execution= minutes_since_last_execution(results._first[process]);
-            if(last_execution>=minutes || last_execution === undefined){
+            if(last_execution>=minutes || last_execution === undefined || last_execution === null){
                 callback.yes();
             }else{
                 if(callback.no !== undefined)
@@ -39,6 +46,7 @@ var Process= (function () {
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             store_last_attempt             : store_last_attempt,
+            reset_last_attempt             : reset_last_attempt,
             seconds_since_last_execution   : seconds_since_last_execution,
             minutes_since_last_execution   : minutes_since_last_execution,
             it_can_be_executed             : it_can_be_executed

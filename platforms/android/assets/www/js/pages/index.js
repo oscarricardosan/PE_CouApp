@@ -282,6 +282,7 @@ function initializePage(){
             var data= FormUtility_.serialized_data_to_json(form.find('form').serializeArray());
             data.data_uri_photo= App.current_photo;
             data.entrega_id= App.operations.current_delivery.id;
+            setTimeout(function(){form.unloading();}, 3000);
             AjaxQueue.add({
                 process_name: 'Adjunto foto delivery: ',
                 type: 'post',
@@ -316,6 +317,7 @@ function initializePage(){
             var data= FormUtility_.serialized_data_to_json(form.find('form').serializeArray());
             data.data_uri_photo= App.current_photo;
             data.recoleccion_id= App.operations.current_pickup.id;
+            setTimeout(function(){form.unloading();}, 3000);
             AjaxQueue.add({
                 process_name: 'Adjunto foto pickup: ',
                 type: 'post',
@@ -555,8 +557,11 @@ function initializePage(){
         $('#pickup_consignments_modal').on('show.bs.modal', function () {
             try{
                 var consignments= [];
-                if(App.operations.current_pickup.consignments !== undefined)
+                if(typeof App.operations.current_pickup.consignments === 'object')
+                    consignments= App.operations.current_pickup.consignments;
+                else if(App.operations.current_pickup.consignments !== undefined)
                     consignments= App.operations.current_pickup.consignments.split(",");
+
                 $('#pickup_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
@@ -565,8 +570,11 @@ function initializePage(){
         $('#delivery_consignments_modal').on('show.bs.modal', function () {
             try{
                 var consignments= [];
-                if(App.operations.current_delivery.consignments !== undefined)
+                if(typeof App.operations.current_delivery.consignments === 'object')
+                    consignments= App.operations.current_delivery.consignments;
+                else if(App.operations.current_delivery.consignments !== undefined)
                     consignments= App.operations.current_delivery.consignments.split(",");
+
                 $('#delivery_consignments_modal [name="guias"]').val(
                     consignments.join("\n")
                 );
@@ -684,7 +692,7 @@ function initializePage(){
                     }
                 });
             }catch (error){
-                alert('Error al imprimir '+JSON.stringify(error));
+                alert('Error al imprimir '+error.message);
             }
         });
         $('#print_delivery_label form').submit(function (event) {
@@ -698,7 +706,7 @@ function initializePage(){
                     }
                 });
             }catch (error){
-                alert('Error al imprimir '+JSON.stringify(error));
+                alert('Error al imprimir '+error.message);
             }
         });
         /** <!-- CIERRA IMPRESION DE LABELS */
@@ -711,10 +719,10 @@ function initializePage(){
                         callbacks.success();
                         PrinterModel.store({address:printer_address});
                     },
-                    function(error) {alert('Error al conectar con impresora: '+JSON.stringify(error)); callbacks.fail();}
+                    function(error) {alert('Error al conectar con impresora: '+error.message); callbacks.fail();}
                 );
             }catch (error){
-                alert('Error al conectar con impresora_: '+JSON.stringify(error));
+                alert('Error al conectar con impresora_: '+error.message);
             }
         }
 
@@ -741,7 +749,7 @@ function scanBluetoohtDevices(){
             App.bluetooth_devices= devices;
         },
         function (error) {
-            alert('Error: '+JSON.stringify(error));
+            alert('Error: '+error.message);
         }
     );
 }
@@ -757,7 +765,7 @@ function printText() {
         69, //here goes the barcode type code
         text, //your barcode data
         function() {},
-        function() {alert(JSON.stringify(error));}
+        function() {alert(error.message);}
     );
     window.DatecsPrinter.feedPaper(1);*/
 }

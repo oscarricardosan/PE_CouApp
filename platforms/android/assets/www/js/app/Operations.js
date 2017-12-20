@@ -42,6 +42,7 @@ var Operations= (function () {
                             if(!response.deliveries.success){
                                 alert(response.deliveries.message);
                             }else {
+                                Process.reset_last_attempt('gps_tracking');
                                 DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
                                     DeliveriesModel.get({success: function (tx, results) {
                                         App.operations.deliveries = results._all;
@@ -51,6 +52,7 @@ var Operations= (function () {
                             if(!response.pickups.success){
                                 alert(response.deliveries.message);
                             }else{
+                                Process.reset_last_attempt('gps_tracking');
                                 PickupModel.insert_multiple(response.pickups.data, {success:function(){
                                     PickupModel.get({success: function(tx, results){
                                         App.operations.pickups= results._all;

@@ -53,7 +53,9 @@ var ProcessBackground= (function () {
             //navigator.vibrate(1000);
             AjaxQueue.check_queue({
                 fail: function (properties, jqXHR, textStatus) {
-                    App_.ajax_queue_count = Ajax_queueModel.get().length;
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
                     LogModel.store({
                         message: 'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
                         status: 'danger',
@@ -64,7 +66,9 @@ var ProcessBackground= (function () {
                     ProcessBackground.set_main_message_notification_bar('Cola: Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
-                    App_.ajax_queue_count = Ajax_queueModel.get().length;
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
                     LogModel.store({
                         message: 'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
                         status: 'success',
@@ -73,10 +77,11 @@ var ProcessBackground= (function () {
                     ProcessBackground.set_main_message_notification_bar('Cola: Petición transmitida');
                 },
                 empty: function(){
-                    var wifi_queues= Ajax_queueModel.find({
-                        $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                    Ajax_queueModel.countRaw("transmit_only_with_wifi= 'true' or transmit_only_with_wifi is null", {
+                        success:function(tx, results) {
+                            ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+results._count);
+                        }
                     });
-                    ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                 }
             });
             Process.store_last_attempt('check_ajax_queue');

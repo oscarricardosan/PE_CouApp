@@ -160,7 +160,7 @@ var AjaxQueue= (function () {
                     element.unloading();
                 }});
 
-                Ajax_queueModel.countRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
+                Ajax_queueModel.countRaw("transmit_only_with_wifi= 'true' or transmit_only_with_wifi is null", {
                     success:function(tx, results) {
                         Alert_('Cola vacía. Peticiones pendientes por wifi '+results._count);
                     }
