@@ -46,7 +46,7 @@ function initializeIntranet(){
                 //Ejecuta proceso de fondo cada 5 segundos
                 backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
             }catch(e){
-                Notification.event_server_pickup_message('Background 2 '+e.message);
+                Notification.event_server_pickup_message('Background 1 '+e.message);
             }
         });
 

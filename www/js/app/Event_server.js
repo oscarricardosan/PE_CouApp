@@ -6,6 +6,7 @@ var Event_server= (function () {
     var delivery_noti_new= [];
 
     function get_events_from_server() {
+        Ajax_queueModel.remove({url: 'courier_event/get_all'});
         AjaxQueue.add({
             process_name: 'Get events of courier',
             type: 'post',
@@ -13,7 +14,7 @@ var Event_server= (function () {
             dataType: 'json',
             data: {},
             success: function(server_events){
-                Ajax_queueModel.remove({url: 'courier_event/get_all'}, function(){});
+                Ajax_queueModel.remove({url: 'courier_event/get_all'});
                 Event_server.process_server_events(server_events);
             }
         });

@@ -56,24 +56,20 @@ var ProcessBackground= (function () {
                     Ajax_queueModel.countRaw("", {success:function(tx, results) {
                         App.ajax_queue_count= results._count;
                     }});
-                    LogModel.store({
-                        message: 'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
-                        status: 'danger',
-                        data: JSON.stringify({
-                            jqXHR: jqXHR, textStatus: textStatus, properties: properties
-                        })
-                    });
+                    LogModel.store_fail(
+                        'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
+                        {jqXHR: jqXHR, textStatus: textStatus, properties: properties}
+                    );
                     ProcessBackground.set_main_message_notification_bar('Cola: Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
                     Ajax_queueModel.countRaw("", {success:function(tx, results) {
                         App.ajax_queue_count= results._count;
                     }});
-                    LogModel.store({
-                        message: 'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
-                        status: 'success',
-                        data: {properties: properties, response: response}
-                    });
+                    LogModel.store_success(
+                        'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
+                        {properties: properties, response: response}
+                    );
                     ProcessBackground.set_main_message_notification_bar('Cola: Petición transmitida');
                 },
                 empty: function(){
