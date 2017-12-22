@@ -717,7 +717,9 @@ function initializePage(){
                 window.DatecsPrinter.connect(printer_address,
                     function() {
                         callbacks.success();
-                        PrinterModel.insert({address:printer_address});
+                        PrinterModel.clearTable({success:function(){
+                            PrinterModel.insert({address:printer_address});
+                        }});
                     },
                     function(error) {alert('Error al conectar con impresora: '+error.message); callbacks.fail();}
                 );
