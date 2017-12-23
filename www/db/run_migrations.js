@@ -35,7 +35,7 @@ var Migrations= (function () {
             settings: function(){
                 DB.transaction(function(transaction) {
                     transaction.executeSql(
-                        'CREATE TABLE IF NOT EXISTS settings (id integer primary key, domain text, url_server text)', [],
+                        'CREATE TABLE IF NOT EXISTS settings (id integer primary key, domain text, url_server text, transmit_pickup_photos_only_wifi text, transmit_delivery_photos_only_wifi text )', [],
                         function (tx, result) {create_table.setting_printer();},
                         function (error) {alert("Error creando tabla settings. " + error.message);}
                     );
@@ -44,8 +44,12 @@ var Migrations= (function () {
             setting_printer: function(){
                 DB.transaction(function(transaction) {
                     transaction.executeSql(
-                        'CREATE TABLE IF NOT EXISTS setting_printer (id integer primary key, address text, type text)', [],
-                        function (tx, result) {create_table.setting_gps();},
+                        'CREATE TABLE IF NOT EXISTS setting_printer (id integer primary key, address text, code text, type text)', [],
+                        function (tx, result) {
+                            PrinterModel.insert({id: 1}, {success: function () {
+                                create_table.setting_gps();
+                            }});
+                        },
                         function (error) {alert("Error creando tabla setting_printer. " + error.message);}
                     );
                 });

@@ -115,6 +115,9 @@
             padding-left: 15px;
             padding-right: 15px;
         }
+        .isnt_in_viewport .concealable{
+            display: none;
+        }
     </style>
     <script src="js/pages/index.js"></script>
 </head>
@@ -301,7 +304,7 @@
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
                                        v-if="contains(number_search, pickup.number) || contains(number_search, pickup.consignments)"
                                     >
-                                        <span class="text-muted pull-right">
+                                        <span class="text-muted pull-right concealable">
                                             <i class="fa fa-clock-o"></i>
                                             {{ pickup.start_time.substr(0, 5) }} - {{ pickup.end_time.substr(0, 5) }}
                                         </span>
@@ -309,17 +312,21 @@
                                             {{ index+1 }}) {{ Settings.pickup_state[pickup.state_id].name }} - {{ pickup.number }}
                                         </span>
                                         <br>
-                                        <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
-                                        <span v-if="pickup.long_address != ''">
-                                            {{ pickup.long_address }}<br>
-                                        </span>
-                                        <i class="fa fa-id-badge"></i>
-                                        <span v-if="pickup.company!=''"> <b>Empresa:</b> {{ pickup.company }} </span> <b> {{ pickup.doc }}</b><br>
-                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact }}<br>
-                                        <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments }}<br>
-                                        <div class="text-muted" style="text-align: right">
-                                            <i class="fa fa-globe"></i>
-                                            {{ pickup.distance_in_mts | mtrs_to_text }}
+                                        <div class="concealable">
+                                            <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ pickup.address }}<br>
+                                            <span v-if="pickup.long_address != ''">
+                                                {{ pickup.long_address }}<br>
+                                            </span>
+                                            <i class="fa fa-id-badge"></i>
+                                            <span v-if="pickup.company!=''"> <b>Empresa:</b> {{ pickup.company }} </span> <b> {{ pickup.doc }}</b><br>
+                                            <i class="fa fa-user"></i> <b>Contacto:</b> {{ pickup.contact }}<br>
+                                        </div>
+                                        <div class="concealable">
+                                            <i class="fa fa-bars"></i> <b>Guías:</b> {{ pickup.consignments }}<br>
+                                            <div class="text-muted" style="text-align: right">
+                                                <i class="fa fa-globe"></i>
+                                                {{ pickup.distance_in_mts | mtrs_to_text }}
+                                            </div>
                                         </div>
                                     </a>
                                 </div>
@@ -331,7 +338,7 @@
                                        @click.prevent="showDeliveryModal(delivery)" data-picked="1"
                                        v-if="contains(number_search, delivery.number) || contains(number_search, delivery.consignments)"
                                     >
-                                        <span class="text-muted pull-right">
+                                        <span class="text-muted pull-right concealable">
                                             <i class="fa fa-clock-o"></i>
                                             {{ delivery.start_time.substr(0, 5) }} - {{ delivery.end_time.substr(0, 5) }}
                                         </span>
@@ -339,17 +346,21 @@
                                             {{ index+1 }}) {{ Settings.delivery_state[delivery.state_id].name }}- {{ delivery.number }}
                                         </span>
                                         <br>
-                                        <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
-                                        <span v-if="delivery.long_address != ''">
-                                            {{ delivery.long_address }}<br>
-                                        </span>
-                                        <i class="fa fa-id-badge"></i>
-                                        <span v-if="delivery.company!=''"> <b>Empresa:</b> {{ delivery.company }}</span> <b> {{ delivery.doc }}</b><br>
-                                        <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact }}<br>
-                                        <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments }}<br>
-                                        <div class="text-muted" style="text-align: right">
-                                            <i class="fa fa-globe"></i>
-                                            {{ delivery.distance_in_mts | mtrs_to_text }}
+                                        <div class="concealable">
+                                            <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ delivery.address }}<br>
+                                            <span v-if="delivery.long_address != ''">
+                                                {{ delivery.long_address }}<br>
+                                            </span>
+                                            <i class="fa fa-id-badge"></i>
+                                            <span v-if="delivery.company!=''"> <b>Empresa:</b> {{ delivery.company }}</span> <b> {{ delivery.doc }}</b><br>
+                                            <i class="fa fa-user"></i> <b>Contacto:</b> {{ delivery.contact }}<br>
+                                        </div>
+                                            <i class="fa fa-bars"></i> <b>Guías:</b> {{ delivery.consignments }}<br>
+                                        <div class="concealable">
+                                            <div class="text-muted" style="text-align: right">
+                                                <i class="fa fa-globe"></i>
+                                                {{ delivery.distance_in_mts | mtrs_to_text }}
+                                            </div>
                                         </div>
                                     </a>
                                 </div>
@@ -545,8 +556,8 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Tipo:</label>
-                            <select class="form-control type_print" required>
-                                <option value="">Seleccione tipo</option>
+                            <select class="form-control type_print" v-model="settings_current_printer_code" required>
+                                <option :value="null">Seleccione tipo</option>
                                 <option value="ZPL">Código ZPL</option>
                                 <option value="TXT">Texto</option>
                             </select>
@@ -592,7 +603,7 @@
                         </div>
                         <div class="checkbox" style="text-align: center;">
                             <label>
-                                <input type="checkbox" v-model="transmit_photo_only_with_WiFi">
+                                <input type="checkbox" v-model="transmit_pickup_photos_only_wifi">
                                 Transmitir foto solo con Wifi
                             </label>
                         </div>
@@ -929,7 +940,7 @@
                         </div>
                         <div class="checkbox" style="text-align: center;">
                             <label>
-                                <input type="checkbox" v-model="transmit_photo_only_with_WiFi">
+                                <input type="checkbox" v-model="transmit_delivery_photos_only_wifi">
                                 Transmitir foto solo con Wifi
                             </label>
                         </div>

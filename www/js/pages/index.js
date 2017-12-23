@@ -16,9 +16,11 @@ function initializePage(){
             bluetooth_devices: [],
             printer_device: null,
             current_photo: 'images/camera.png',
-            transmit_photo_only_with_WiFi: false,
+            transmit_delivery_photos_only_wifi: false,
+            transmit_pickup_photos_only_wifi: false,
             ajax_queue_count: 0,
             settings_current_printer: null,
+            settings_current_printer_code: null,
             dates_to_filter: [],
             date_to_filter: undefined,
             number_search: '',
@@ -70,6 +72,8 @@ function initializePage(){
 
                         if(deliveries === 0 && pickups>0) $('[href="#tab_pickups"]').click();
                         if(pickups === 0 && deliveries>0) $('[href="#tab_deliveries"]').click();
+
+                        $(document).scroll();
                     };
 
                     setTimeout(refresh, 220);
@@ -100,6 +104,9 @@ function initializePage(){
 
                 if(this.deliveries_in_list === 0 && this.pickups_in_list>0) $('[href="#tab_pickups"]').click();
                 if(this.pickups_in_list === 0 && this.deliveries_in_list>0) $('[href="#tab_deliveries"]').click();
+
+                setTimeout(function(){ $(document).scroll(); }, 100);
+                setTimeout(function(){ $(document).scroll(); }, 220);
             }
         },
         filters: {
@@ -143,6 +150,13 @@ function initializePage(){
             },
             number_search: function(){
                 this.refresh_counters_in_list();
+            },
+
+            transmit_delivery_photos_only_wifi: function(newVal, oldVal){
+                SettingsModel.update({id: 1}, {transmit_delivery_photos_only_wifi: newVal});
+            },
+            transmit_pickup_photos_only_wifi: function(newVal, oldVal){
+                SettingsModel.update({id: 1}, {transmit_pickup_photos_only_wifi: newVal});
             }
         },
         mounted: function(){
@@ -176,11 +190,17 @@ function initializePage(){
                     App_.ajax_queue_count= results._count;
                 }});
                 PrinterModel.get({success: function(tx, results){
-                    if(results._number_rows === 1)
-                        App_.settings_current_printer= results._first.address;
+                    if(results._number_rows === 1) {
+                        App_.settings_current_printer = results._first.address;
+                        App_.settings_current_printer_code = results._first.code;
+                    }
                 }});
                 GpsModel.get({success: function(tx, results){
                     App_.current_position= results._first;
+                }});
+                SettingsModel.get({success: function(tx, results){
+                    App_.transmit_delivery_photos_only_wifi= results._first.transmit_delivery_photos_only_wifi == 'true';
+                    App_.transmit_pickup_photos_only_wifi= results._first.transmit_pickup_photos_only_wifi == 'true';
                 }});
 
                 var url_params= UrlUtility_.getParams();
@@ -684,7 +704,7 @@ function initializePage(){
         $('#print_pickup_label form').submit(function (event) {
             event.preventDefault();
             try{
-                var type_print= $(this).find('.type_print').val();
+                var type_print= App.settings_current_printer_code;
                 connectPrinter(App.settings_current_printer, {
                     success: function(){
                         PrinterFormat.pickup_label(type_print);
@@ -698,7 +718,7 @@ function initializePage(){
         $('#print_delivery_label form').submit(function (event) {
             event.preventDefault();
             try{
-                var type_print= $(this).find('.type_print').val();
+                var type_print= App.settings_current_printer_code;
                 connectPrinter(App.settings_current_printer, {
                     success: function(){
                         PrinterFormat.delivery_label(type_print);
@@ -717,9 +737,7 @@ function initializePage(){
                 window.DatecsPrinter.connect(printer_address,
                     function() {
                         callbacks.success();
-                        PrinterModel.clearTable({success:function(){
-                            PrinterModel.insert({address:printer_address});
-                        }});
+                        PrinterModel.update({id: 1}, {address:printer_address, code:App.settings_current_printer_code});
                     },
                     function(error) {alert('Error al conectar con impresora: '+error.message); callbacks.fail();}
                 );
@@ -728,6 +746,19 @@ function initializePage(){
             }
         }
 
+
+        /** ABRE OCULTAR ELEMENTOS FUERA DE LA PÁGINA*/
+        $(document).scroll(function() {
+            $('.tab-pane.active>.list-group>a').each(function(){
+                if($(this).isOnScreen()){
+                    $(this).removeClass('isnt_in_viewport');
+                }else{
+                    $(this).addClass('isnt_in_viewport');
+                }
+            })
+        });
+
+        /** <!-- CIERRA OCULTAR ELEMENTOS FUERA DE LA PÁGINA */
     });
 
 

@@ -19,6 +19,22 @@ var PrinterModel= (function () {
         });
     };
 
+    var update = function(where, new_values, callback){
+        callback= PolishedUtility_.callback_SQUpdate(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "UPDATE "+table+" SET "+DB_Utility_.get_set_to_update(new_values)+' '+DB_Utility_.get_where(where),
+                DB_Utility_.get_values(new_values).concat(DB_Utility_.get_values(where)),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
+        });
+    };
+
     var get = function(callback){
         callback= PolishedUtility_.callback_SQLselect(callback);
         DB.transaction(function(transaction) {
@@ -51,6 +67,7 @@ var PrinterModel= (function () {
         return {
             get               : get,
             insert            : insert,
+            update            : update,
             isEmpty           : isEmpty,
             clearTable        : clearTable
         }
