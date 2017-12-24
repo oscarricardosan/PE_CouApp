@@ -29,7 +29,8 @@ function initializePage(){
             current_position: undefined,
             ready: true,
             pickups_sorted: [],
-            deliveries_sorted: []
+            deliveries_sorted: [],
+            visible_states: {}
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -144,6 +145,7 @@ function initializePage(){
             date_to_filter: function(){
                 try{
                     this.reload_lists();
+                    this.refresh_counters_in_list();
                 }catch (e){
                     alert('date_to_filter: '+e.message);
                 }
@@ -759,6 +761,19 @@ function initializePage(){
         });
 
         /** <!-- CIERRA OCULTAR ELEMENTOS FUERA DE LA PÁGINA */
+
+
+        /** ABRE FILTRO ELEMENTOS*/
+        $("#filter_by_state_modal .state_filter").click(function() {
+            var val= $(this).val();
+            App.visible_states[val]= $(this).is(':checked');
+            App.reload_lists();
+            App.refresh_counters_in_list();
+        });
+        $("#filter_by_state_modal .state_filter[value='50']").click();
+        $("#filter_by_state_modal .state_filter[value='100']").click();
+
+        /** <!-- CIERRA FILTRO ELEMENTOS */
     });
 
 
@@ -772,7 +787,6 @@ function initializePage(){
                 scanBluetoohtDevices();
             }
         });
-
     }
 }
 

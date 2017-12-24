@@ -6,19 +6,22 @@ var Event_server= (function () {
     var delivery_noti_new= [];
 
     function get_events_from_server() {
-        Ajax_queueModel.remove({url: 'courier_event/get_all'});
-        AjaxQueue.add({
-            process_name: 'Get events of courier',
-            type: 'post',
-            url: 'courier_event/get_all',
-            dataType: 'json',
-            data: {},
-            success: function(server_events){
-                Ajax_queueModel.remove({url: 'courier_event/get_all'});
-                Event_server.process_server_events(server_events);
+        Ajax_queueModel.remove({url: 'courier_event/get_all'}, {
+            success: function(){
+                AjaxQueue.add({
+                    process_name: 'Get events of courier',
+                    type: 'post',
+                    url: 'courier_event/get_all',
+                    dataType: 'json',
+                    data: {},
+                    success: function(server_events){
+                        Ajax_queueModel.remove({url: 'courier_event/get_all'});
+                        Event_server.process_server_events(server_events);
+                    }
+                });
+                Process.store_last_attempt('get_events');
             }
         });
-        Process.store_last_attempt('get_events');
     }
     
     function process_server_events(server_events) {

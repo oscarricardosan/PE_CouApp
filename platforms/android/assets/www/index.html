@@ -272,9 +272,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <select class="form-control" v-model="date_to_filter">
-                            <option v-for="date in dates_to_filter" :value="date">{{ date }}</option>
-                        </select>
+                        <div class="input-group">
+                            <select class="form-control" v-model="date_to_filter">
+                                <option v-for="date in dates_to_filter" :value="date">{{ date }}</option>
+                            </select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#filter_by_state_modal">
+                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-12" style="padding: 0">
@@ -302,7 +309,7 @@
                                     <a href="#" class="pickup list-group-item"
                                        v-for=" (pickup, index) in pickups_sorted"
                                        @click.prevent="showPickupModal(pickup)" data-picked="1"
-                                       v-if="contains(number_search, pickup.number) || contains(number_search, pickup.consignments)"
+                                       v-if="($.trim(number_search)!='' && (contains(number_search, pickup.number) || contains(number_search, pickup.consignments))) || ($.trim(number_search)=='' && visible_states[pickup.state_id] === true)"
                                     >
                                         <span class="text-muted pull-right concealable">
                                             <i class="fa fa-clock-o"></i>
@@ -336,7 +343,7 @@
                                     <a href="#" class="delivery list-group-item"
                                        v-for="(delivery, index) in deliveries_sorted"
                                        @click.prevent="showDeliveryModal(delivery)" data-picked="1"
-                                       v-if="contains(number_search, delivery.number) || contains(number_search, delivery.consignments)"
+                                       v-if="($.trim(number_search)!='' && (contains(number_search, delivery.number) || contains(number_search, delivery.consignments))) || ($.trim(number_search)=='' && visible_states[delivery.state_id] === true)"
                                     >
                                         <span class="text-muted pull-right concealable">
                                             <i class="fa fa-clock-o"></i>
@@ -392,6 +399,45 @@
 
 
     <!--  MODALS -->
+
+
+    <!-- MODAL FILTER BY STATES-->
+    <div class="modal" id="filter_by_state_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        Estados visibles
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="50" class="state_filter"> Sin coordenadas</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="100" class="state_filter"> Sin entregar/recoger</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="200" class="state_filter"> Realizada</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="300" class="state_filter"> Excepción</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="400" class="state_filter"> Cancelada</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- MODAL ACTION PICKUP -->
     <div class="modal" id="pickup_action_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
