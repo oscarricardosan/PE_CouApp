@@ -112,11 +112,11 @@ function initializeIntranet(){
                 switch (data.action) {
                     case "show_delivery":
                         var delivery = data.delivery;
-                        window.location = 'index.html?filter_date=' + delivery.delivery_date + '&search=' + delivery.delivery_number + '&tab=tab_deliveries';
+                        window.location = 'index.html?filter_date=' + delivery.date + '&search=' + delivery.number+ '&tab=tab_deliveries';
                         break;
                     case "show_pickup":
                         var pickup = data.pickup;
-                        window.location = 'index.html?filter_date=' + pickup.pickup_date + '&search=' + pickup.pickup_number + '&tab=tab_pickups';
+                        window.location = 'index.html?filter_date=' + pickup.date + '&search=' + pickup.number + '&tab=tab_pickups';
                         break;
                 }
             });

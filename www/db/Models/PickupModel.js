@@ -54,12 +54,14 @@ var PickupModel= (function () {
      * @param data object
      * @param callback
      */
-    var insertOrUpdateById = function(data, callback){
-        callback= PolishedUtility_.callback(callback);
-        if(data.id !== undefined && find({id: data.id}).length === 1)
-            update({id: data.id}, data, callback);
-        else
-            store(data, callback);
+    var insertOrUpdateById = function(data_, callback_){
+        callback_= PolishedUtility_.callback(callback_);
+        find({id: data_.id}, {success: function(tx, results){
+            if(results._number_rows ===1)
+                update({id: data_.id}, data_, callback_);
+            else
+                insert(data_, callback_);
+        }});
     };
 
     var increment_attemp_gps_alert= function(pickup){
@@ -82,7 +84,7 @@ var PickupModel= (function () {
     var find = function(where, callback){
         callback= PolishedUtility_.callback_SQLselect(callback);
         DB.transaction(function(transaction) {
-            transaction.executeSql('SELECT * FROM '+table+' '+DB_Utility_.get_where(where), [], callback.success, callback.fail);
+            transaction.executeSql('SELECT * FROM '+table+' '+DB_Utility_.get_where(where), DB_Utility_.get_values(where), callback.success, callback.fail);
         }, function(error) {
             alert('Transaction '+table+' :' + error.message);
         }, function() {

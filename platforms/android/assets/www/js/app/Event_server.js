@@ -64,22 +64,24 @@ var Event_server= (function () {
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
             success: function(){
-                App.operations.pickups= PickupModel.get();
+                PickupModel.get({success: function(tx, results){
+                    App.operations.pickups= results._all;
+                }});
                 Event_server.delete_event_in_server(event.id);
             },
             fail: function(){
-                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.pickup_number);
+                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
             }
         });
         if(event.event === 'creation')
             pickup_noti_new.push({
-                'message': 'Creada número '+event.data.pickup_number+' / '+event.data.pickup_date,
+                'message': 'Creada número '+event.data.number+' / '+event.data.date,
                 'title': undefined,
                 'data': {action: 'show_pickup', pickup: event.data}
             });
         if(event.event === 'actualization')
             pickup_noti_update.push({
-                'message': event.data.pickup_number+' actualizada'+' / '+event.data.pickup_date,
+                'message': event.data.number+' actualizada'+' / '+event.data.date,
                 'title': undefined,
                 'data': {action: 'show_pickup', pickup: event.data}
             });
@@ -88,22 +90,24 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(){
-                App.operations.deliveries= DeliveriesModel.get();
+                DeliveriesModel.get({success: function(tx, results){
+                    App.operations.deliveries= results._all;
+                }});
                 Event_server.delete_event_in_server(event.id);
             },
             fail: function(){
-                Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.delivery_number);
+                Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
             }
         });
         if(event.event === 'creation')
             delivery_noti_new.push({
-                'message': 'Creada número '+event.data.delivery_number+' / '+event.data.delivery_date,
+                'message': 'Creada número '+event.data.number+' / '+event.data.date,
                 'title': undefined,
                 'data': {action: 'show_delivery', delivery: event.data}
             });
         if(event.event === 'actualization')
             delivery_noti_update.push({
-                'message': event.data.delivery_number+' actualizada'+' / '+event.data.delivery_date,
+                'message': event.data.number+' actualizada'+' / '+event.data.date,
                 'title': undefined,
                 'data': {action: 'show_delivery', delivery: event.data}
             });

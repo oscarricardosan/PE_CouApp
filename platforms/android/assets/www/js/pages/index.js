@@ -129,6 +129,13 @@ function initializePage(){
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
+
+                var url_params= UrlUtility_.getParams();
+                if((url_params.filter_date !== undefined && url_params.filter_date !== '') && url_params.tab === 'tab_deliveries'){
+                    this.date_to_filter= url_params.filter_date;
+                    UrlUtility_.setParam('filter_date', '');
+                }
+
                 this.reload_lists();
                 this.refresh_counters_in_list();
             },
@@ -139,6 +146,13 @@ function initializePage(){
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
                 if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
                     this.date_to_filter= this.dates_to_filter[0];
+
+                var url_params= UrlUtility_.getParams();
+                if((url_params.filter_date !== undefined && url_params.filter_date !== '') && url_params.tab === 'tab_pickups'){
+                    this.date_to_filter= url_params.filter_date;
+                    UrlUtility_.setParam('filter_date', '');
+                }
+
                 this.reload_lists();
                 this.refresh_counters_in_list();
             },
@@ -177,7 +191,10 @@ function initializePage(){
                         decimal : ","
                     }
                 };
+
+                var url_params= UrlUtility_.getParams();
                 var App_= this;
+
                 UserModel.get({success: function(tx, results){
                     App_.user.name= results._first.name;
                     App_.user.email= results._first.email;
@@ -205,11 +222,9 @@ function initializePage(){
                     App_.transmit_pickup_photos_only_wifi= results._first.transmit_pickup_photos_only_wifi == 'true';
                 }});
 
-                var url_params= UrlUtility_.getParams();
-                if(url_params.filter_date !== undefined)
-                    this.date_to_filter= url_params.filter_date;
                 if(url_params.search !== undefined)
                     this.number_search= url_params.search;
+
             }catch (e){ alert(e.message); }
         }
     });
