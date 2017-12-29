@@ -5,6 +5,13 @@ var Event_server= (function () {
     var delivery_noti_update= [];
     var delivery_noti_new= [];
 
+    function reset_vars(){
+        pickup_noti_update= [];
+        pickup_noti_new= [];
+        delivery_noti_update= [];
+        delivery_noti_new= [];
+    }
+
     function get_events_from_server() {
         Ajax_queueModel.remove({url: 'courier_event/get_all'}, {
             success: function(){
@@ -25,6 +32,8 @@ var Event_server= (function () {
     }
     
     function process_server_events(server_events) {
+        reset_vars();
+
         $.each(server_events.events, function(index, event){
             if(event.collection === "pickups")process_pickups(event);
             if(event.collection === "deliveries")process_deliveries(event);
@@ -54,6 +63,9 @@ var Event_server= (function () {
             }else if(pickup_noti_update > 1){
                 Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
             }
+
+            reset_vars();
+
         }catch (e){ alert(e.message);}
         if(server_events.events.length>0){
             navigator.vibrate([1000]);
