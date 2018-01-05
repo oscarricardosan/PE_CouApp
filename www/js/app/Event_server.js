@@ -5,6 +5,7 @@ var Event_server= (function () {
     var delivery_noti_update= [];
     var delivery_noti_new= [];
     var is_process_runing= false;
+    var total_processed_events= 0;
 
     function reset_vars(){
         pickup_noti_update= [];
@@ -42,6 +43,84 @@ var Event_server= (function () {
             if(event.collection === "deliveries")process_deliveries(event);
         });
 
+        show_notifications(server_events.events.length);
+    }
+    
+    function process_pickups(event) {
+        PickupModel.insertOrUpdateById(event.data, {
+            success: function(){
+                Event_server.delete_event_in_server(event.id);
+                if(event.event === 'creation')
+                    pickup_noti_new.push({
+                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_pickup', pickup: event.data}
+                    });
+                if(event.event === 'actualization')
+                    pickup_noti_update.push({
+                        'message': event.data.number+' actualizada'+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_pickup', pickup: event.data}
+                    });
+                total_processed_events++;
+            },
+            fail: function(){
+                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
+                total_processed_events++;
+            }
+        });
+    }
+
+    function process_deliveries(event){
+        DeliveriesModel.insertOrUpdateById(event.data, {
+            success: function(){
+                Event_server.delete_event_in_server(event.id);
+                if(event.event === 'creation')
+                    delivery_noti_new.push({
+                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_delivery', delivery: event.data}
+                    });
+                if(event.event === 'actualization')
+                    delivery_noti_update.push({
+                        'message': event.data.number+' actualizada'+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_delivery', delivery: event.data}
+                    });
+                total_processed_events++;
+            },
+            fail: function(){
+                Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
+                total_processed_events++;
+            }
+        });
+    }
+
+    function delete_event_in_server(id){
+        AjaxQueue.add({
+            process_name: 'Eliminar evento en servidor',
+            type: 'post',
+            url: 'courier_event/delete',
+            dataType: 'text',
+            data: {evento_id: id}
+        });
+    }
+
+    function clear_events_in_server(){
+        AjaxQueue.add({
+            process_name: 'Limpiar enventos para courier en servidor. ',
+            type: 'post',
+            url: 'courier_event/clear',
+            dataType: 'text',
+            data: {}
+        });
+    }
+
+    function show_notifications(total_events){
+        if(total_events !== total_processes){
+            setTimeout(function(){ show_notifications(total_events); }, 300);
+            return false;
+        }
         DeliveriesModel.get({success: function(tx, results){
             App.operations.deliveries= results._all;
         }});
@@ -49,6 +128,7 @@ var Event_server= (function () {
         PickupModel.get({success: function(tx, results){
             App.operations.pickups= results._all;
         }});
+
         try{
             if(delivery_noti_new.length === 1){
                 Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
@@ -84,72 +164,6 @@ var Event_server= (function () {
             navigator.vibrate([1000]);
             navigator.notification.beep(1);
         }
-    }
-    
-    function process_pickups(event) {
-        PickupModel.insertOrUpdateById(event.data, {
-            success: function(){
-                Event_server.delete_event_in_server(event.id);
-                if(event.event === 'creation')
-                    pickup_noti_new.push({
-                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_pickup', pickup: event.data}
-                    });
-                if(event.event === 'actualization')
-                    pickup_noti_update.push({
-                        'message': event.data.number+' actualizada'+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_pickup', pickup: event.data}
-                    });
-            },
-            fail: function(){
-                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
-            }
-        });
-    }
-
-    function process_deliveries(event){
-        DeliveriesModel.insertOrUpdateById(event.data, {
-            success: function(){
-                Event_server.delete_event_in_server(event.id);
-                if(event.event === 'creation')
-                    delivery_noti_new.push({
-                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_delivery', delivery: event.data}
-                    });
-                if(event.event === 'actualization')
-                    delivery_noti_update.push({
-                        'message': event.data.number+' actualizada'+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_delivery', delivery: event.data}
-                    });
-            },
-            fail: function(){
-                Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
-            }
-        });
-    }
-
-    function delete_event_in_server(id){
-        AjaxQueue.add({
-            process_name: 'Eliminar evento en servidor',
-            type: 'post',
-            url: 'courier_event/delete',
-            dataType: 'text',
-            data: {evento_id: id}
-        });
-    }
-
-    function clear_events_in_server(){
-        AjaxQueue.add({
-            process_name: 'Limpiar enventos para courier en servidor. ',
-            type: 'post',
-            url: 'courier_event/clear',
-            dataType: 'text',
-            data: {}
-        });
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
