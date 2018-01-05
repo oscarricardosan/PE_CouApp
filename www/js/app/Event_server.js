@@ -53,61 +53,63 @@ var Event_server= (function () {
     }
     
     function process_pickups(pickups, index) {
-        if(index === pickups.length)return false;
-        var event= pickups[index];
-        PickupModel.insertOrUpdateById(event.data, {
-            success: function(){
-                Event_server.delete_event_in_server(event.id);
-                if(event.event === 'creation')
-                    pickup_noti_new.push({
-                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_pickup', pickup: event.data}
-                    });
-                if(event.event === 'actualization')
-                    pickup_noti_update.push({
-                        'message': event.data.number+' actualizada'+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_pickup', pickup: event.data}
-                    });
-                total_processed_events++;
-                process_pickups(pickups, index+1);
-            },
-            fail: function(){
-                Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
-                total_processed_events++;
-                process_pickups(pickups, index+1);
-            }
-        });
+        if(index !== pickups.length){
+            var event= pickups[index];
+            PickupModel.insertOrUpdateById(event.data, {
+                success: function(){
+                    Event_server.delete_event_in_server(event.id);
+                    if(event.event === 'creation')
+                        pickup_noti_new.push({
+                            'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_pickup', pickup: event.data}
+                        });
+                    if(event.event === 'actualization')
+                        pickup_noti_update.push({
+                            'message': event.data.number+' actualizada'+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_pickup', pickup: event.data}
+                        });
+                    total_processed_events++;
+                    process_pickups(pickups, index+1);
+                },
+                fail: function(){
+                    Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
+                    total_processed_events++;
+                    process_pickups(pickups, index+1);
+                }
+            });
+        }
     }
 
     function process_deliveries(deliveries, index){
-        if(index === deliveries.length)return false;
-        var event= deliveries[index];
-        DeliveriesModel.insertOrUpdateById(event.data, {
-            success: function(){
-                Event_server.delete_event_in_server(event.id);
-                if(event.event === 'creation')
-                    delivery_noti_new.push({
-                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_delivery', delivery: event.data}
-                    });
-                if(event.event === 'actualization')
-                    delivery_noti_update.push({
-                        'message': event.data.number+' actualizada'+' / '+event.data.date,
-                        'title': undefined,
-                        'data': {action: 'show_delivery', delivery: event.data}
-                    });
-                total_processed_events++;
-                process_deliveries(deliveries, index+1);
-            },
-            fail: function(){
-                Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
-                total_processed_events++;
-                process_deliveries(deliveries, index+1);
-            }
-        });
+        if(index !== deliveries.length){
+            var event= deliveries[index];
+            DeliveriesModel.insertOrUpdateById(event.data, {
+                success: function(){
+                    Event_server.delete_event_in_server(event.id);
+                    if(event.event === 'creation')
+                        delivery_noti_new.push({
+                            'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_delivery', delivery: event.data}
+                        });
+                    if(event.event === 'actualization')
+                        delivery_noti_update.push({
+                            'message': event.data.number+' actualizada'+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_delivery', delivery: event.data}
+                        });
+                    total_processed_events++;
+                    process_deliveries(deliveries, index+1);
+                },
+                fail: function(){
+                    Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
+                    total_processed_events++;
+                    process_deliveries(deliveries, index+1);
+                }
+            });
+        }
     }
 
     function delete_event_in_server(id){
@@ -131,8 +133,7 @@ var Event_server= (function () {
     }
 
     function show_notifications(total_events){
-        //console.log(total_events +"<"+ total_processed_events);
-        if(total_events < total_processed_events){
+        if(total_processed_events < total_events){
             setTimeout(function(){ show_notifications(total_events); }, 300);
             return false;
         }
@@ -157,6 +158,7 @@ var Event_server= (function () {
                 Notification.event_server_pickup_message(delivery_noti_update.length+' entregas actualizadas.');
             }
 
+
             if(pickup_noti_new.length === 1){
                 Notification.event_server_pickup_message(pickup_noti_new[0].message, pickup_noti_new[0].title, pickup_noti_new[0].data);
             }else if(pickup_noti_new.length > 1){
@@ -165,7 +167,7 @@ var Event_server= (function () {
 
             if(pickup_noti_update.length === 1){
                 Notification.event_server_pickup_message(pickup_noti_update[0].message, pickup_noti_update[0].title, pickup_noti_update[0].data);
-            }else if(pickup_noti_update > 1){
+            }else if(pickup_noti_update.length > 1){
                 Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
             }
         }catch (e){
