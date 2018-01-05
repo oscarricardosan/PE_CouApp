@@ -12,9 +12,11 @@ function initializeIntranet(){
         }
     });
 
-    $('.logout').click(function(event){
-        event.preventDefault();
-        Login.logout();
+    $(document).ready(function(){
+        $('.logout').click(function(event){
+            event.preventDefault();
+            Login.logout();
+        });
     });
 
     (function setup_processes(){
