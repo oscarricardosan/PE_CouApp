@@ -39,15 +39,22 @@ var Event_server= (function () {
         is_process_runing= true;
         reset_vars();
 
+        var pickups= [];
+        var deliveries= [];
         $.each(server_events.events, function(index, event){
-            if(event.collection === "pickups")process_pickups(event);
-            if(event.collection === "deliveries")process_deliveries(event);
+            if(event.collection === "pickups")pickups.push(event);
+            if(event.collection === "deliveries")deliveries.push(event);
         });
+
+        if(pickups.length > 0)process_pickups(pickups, 0);
+        if(deliveries.length > 0)process_deliveries(deliveries, 0);
 
         show_notifications(server_events.events.length);
     }
     
-    function process_pickups(event) {
+    function process_pickups(pickups, index) {
+        if(index === pickups.length)return false;
+        var event= pickups[index];
         PickupModel.insertOrUpdateById(event.data, {
             success: function(){
                 Event_server.delete_event_in_server(event.id);
@@ -64,15 +71,19 @@ var Event_server= (function () {
                         'data': {action: 'show_pickup', pickup: event.data}
                     });
                 total_processed_events++;
+                process_pickups(pickups, index+1);
             },
             fail: function(){
                 Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
                 total_processed_events++;
+                process_pickups(pickups, index+1);
             }
         });
     }
 
-    function process_deliveries(event){
+    function process_deliveries(deliveries, index){
+        if(index === deliveries.length)return false;
+        var event= deliveries[index];
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(){
                 Event_server.delete_event_in_server(event.id);
@@ -89,10 +100,12 @@ var Event_server= (function () {
                         'data': {action: 'show_delivery', delivery: event.data}
                     });
                 total_processed_events++;
+                process_deliveries(deliveries, index+1);
             },
             fail: function(){
                 Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
                 total_processed_events++;
+                process_deliveries(deliveries, index+1);
             }
         });
     }

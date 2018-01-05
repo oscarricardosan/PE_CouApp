@@ -57,12 +57,9 @@ var DeliveriesModel= (function () {
     var insertOrUpdateById = function(data_, callback_){
         callback_= PolishedUtility_.callback(callback_);
         find({id: data_.id}, {success: function(tx, results){
-            alert(JSON.stringify(results));
             if(results._number_rows > 0){
-                alert(results._number_rows+' update');
                 update({id: data_.id}, data_, callback_);
             }else{
-                alert(results._number_rows+' insert');
                 insert(data_, callback_);
             }
         }});
