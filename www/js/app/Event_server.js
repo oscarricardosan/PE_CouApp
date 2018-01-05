@@ -12,6 +12,7 @@ var Event_server= (function () {
         pickup_noti_new= [];
         delivery_noti_update= [];
         delivery_noti_new= [];
+        total_processed_events= 0;
     }
 
     function get_events_from_server() {
@@ -117,7 +118,8 @@ var Event_server= (function () {
     }
 
     function show_notifications(total_events){
-        if(total_events !== total_processes){
+        //console.log(total_events +"<"+ total_processed_events);
+        if(total_events < total_processed_events){
             setTimeout(function(){ show_notifications(total_events); }, 300);
             return false;
         }
@@ -160,7 +162,7 @@ var Event_server= (function () {
         reset_vars();
         is_process_runing= false;
 
-        if(server_events.events.length>0){
+        if(total_events>0){
             navigator.vibrate([1000]);
             navigator.notification.beep(1);
         }

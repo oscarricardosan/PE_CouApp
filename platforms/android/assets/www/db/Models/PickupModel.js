@@ -51,13 +51,13 @@ var PickupModel= (function () {
     };
 
     /**
-     * @param data object
-     * @param callback
+     * @param data_ object
+     * @param callback_
      */
     var insertOrUpdateById = function(data_, callback_){
         callback_= PolishedUtility_.callback(callback_);
         find({id: data_.id}, {success: function(tx, results){
-            if(results._number_rows ===1)
+            if(results._number_rows > 0)
                 update({id: data_.id}, data_, callback_);
             else
                 insert(data_, callback_);

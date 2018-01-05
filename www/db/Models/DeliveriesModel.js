@@ -57,6 +57,7 @@ var DeliveriesModel= (function () {
     var insertOrUpdateById = function(data_, callback_){
         callback_= PolishedUtility_.callback(callback_);
         find({id: data_.id}, {success: function(tx, results){
+            console.log(results);
             if(results._number_rows > 0)
                 update({id: data_.id}, data_, callback_);
             else
