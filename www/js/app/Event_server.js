@@ -4,6 +4,7 @@ var Event_server= (function () {
     var pickup_noti_new= [];
     var delivery_noti_update= [];
     var delivery_noti_new= [];
+    var is_process_runing= false;
 
     function reset_vars(){
         pickup_noti_update= [];
@@ -32,6 +33,8 @@ var Event_server= (function () {
     }
     
     function process_server_events(server_events) {
+        if(is_process_runing)return false;
+        is_process_runing= true;
         reset_vars();
 
         $.each(server_events.events, function(index, event){
@@ -63,10 +66,13 @@ var Event_server= (function () {
             }else if(pickup_noti_update > 1){
                 Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
             }
+        }catch (e){
+            alert(e.message);
+        }
 
-            reset_vars();
+        reset_vars();
+        is_process_runing= false;
 
-        }catch (e){ alert(e.message);}
         if(server_events.events.length>0){
             navigator.vibrate([1000]);
             navigator.notification.beep(1);
@@ -80,23 +86,23 @@ var Event_server= (function () {
                     App.operations.pickups= results._all;
                 }});
                 Event_server.delete_event_in_server(event.id);
+                if(event.event === 'creation')
+                    pickup_noti_new.push({
+                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_pickup', pickup: event.data}
+                    });
+                if(event.event === 'actualization')
+                    pickup_noti_update.push({
+                        'message': event.data.number+' actualizada'+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_pickup', pickup: event.data}
+                    });
             },
             fail: function(){
                 Notification.event_server_pickup_danger ('Error procesando evento - '+event.data.number);
             }
         });
-        if(event.event === 'creation')
-            pickup_noti_new.push({
-                'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                'title': undefined,
-                'data': {action: 'show_pickup', pickup: event.data}
-            });
-        if(event.event === 'actualization')
-            pickup_noti_update.push({
-                'message': event.data.number+' actualizada'+' / '+event.data.date,
-                'title': undefined,
-                'data': {action: 'show_pickup', pickup: event.data}
-            });
     }
 
     function process_deliveries(event){
@@ -106,23 +112,23 @@ var Event_server= (function () {
                     App.operations.deliveries= results._all;
                 }});
                 Event_server.delete_event_in_server(event.id);
+                if(event.event === 'creation')
+                    delivery_noti_new.push({
+                        'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_delivery', delivery: event.data}
+                    });
+                if(event.event === 'actualization')
+                    delivery_noti_update.push({
+                        'message': event.data.number+' actualizada'+' / '+event.data.date,
+                        'title': undefined,
+                        'data': {action: 'show_delivery', delivery: event.data}
+                    });
             },
             fail: function(){
                 Notification.event_server_delivery_danger('Error procesando evento de - '+event.data.number);
             }
         });
-        if(event.event === 'creation')
-            delivery_noti_new.push({
-                'message': 'Creada número '+event.data.number+' / '+event.data.date,
-                'title': undefined,
-                'data': {action: 'show_delivery', delivery: event.data}
-            });
-        if(event.event === 'actualization')
-            delivery_noti_update.push({
-                'message': event.data.number+' actualizada'+' / '+event.data.date,
-                'title': undefined,
-                'data': {action: 'show_delivery', delivery: event.data}
-            });
     }
 
     function delete_event_in_server(id){
