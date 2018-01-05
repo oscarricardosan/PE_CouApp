@@ -42,6 +42,13 @@ var Event_server= (function () {
             if(event.collection === "deliveries")process_deliveries(event);
         });
 
+        DeliveriesModel.get({success: function(tx, results){
+            App.operations.deliveries= results._all;
+        }});
+
+        PickupModel.get({success: function(tx, results){
+            App.operations.pickups= results._all;
+        }});
         try{
             if(delivery_noti_new.length === 1){
                 Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
@@ -82,9 +89,6 @@ var Event_server= (function () {
     function process_pickups(event) {
         PickupModel.insertOrUpdateById(event.data, {
             success: function(){
-                PickupModel.get({success: function(tx, results){
-                    App.operations.pickups= results._all;
-                }});
                 Event_server.delete_event_in_server(event.id);
                 if(event.event === 'creation')
                     pickup_noti_new.push({
@@ -108,9 +112,6 @@ var Event_server= (function () {
     function process_deliveries(event){
         DeliveriesModel.insertOrUpdateById(event.data, {
             success: function(){
-                DeliveriesModel.get({success: function(tx, results){
-                    App.operations.deliveries= results._all;
-                }});
                 Event_server.delete_event_in_server(event.id);
                 if(event.event === 'creation')
                     delivery_noti_new.push({
