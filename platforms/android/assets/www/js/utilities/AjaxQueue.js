@@ -1,6 +1,7 @@
 var AjaxQueue= (function () {
 
     var is_running= false;
+    var ids_processed= [];
 
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
@@ -82,11 +83,23 @@ var AjaxQueue= (function () {
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
             is_running= false;
+            ids_processed= [];
             callbacks.empty();
             return false;
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
         properties.data= (typeof properties.data === 'string')?JSON.parse(properties.data):properties.data;
+
+        console.log(ids_processed);
+        console.log(queues[0].id);
+
+        if(ids_processed.has_element(queues[0].id)){
+            is_running= false;
+            ids_processed= [];
+            LogModel.store_fail(properties.process_name, {message: 'ID '+queues[0].id+' ya procesado' });
+            return false;
+        }
+
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
             type: properties.type,
@@ -104,11 +117,13 @@ var AjaxQueue= (function () {
                         Ajax_queueModel.countRaw("", {success:function(tx, results) {
                             App.ajax_queue_count= results._count;
                         }});
+                        ids_processed.push(properties.id);
                         check_queue(callbacks);
                     }});
                 } else {
                     eval("false||"+properties.fail)(data);
                     is_running= false;
+                    ids_processed= [];
                     callbacks.fail(data);
                     LogModel.store_fail(properties.process_name, {properties: properties, response: response});
                 }
@@ -120,6 +135,7 @@ var AjaxQueue= (function () {
                     Ajax_queueModel.countRaw("", {success:function(tx, results) {
                         App.ajax_queue_count= results._count;
                     }});
+                    ids_processed.push(properties.id);
                     check_queue(callbacks);
                 }});
             }
@@ -134,6 +150,7 @@ var AjaxQueue= (function () {
             validate_request_fail(jqXHR);
             eval("false||"+properties.fail)(properties.data);
             is_running= false;
+            ids_processed= [];
             callbacks.fail(properties.data);
         });
 

@@ -50,7 +50,10 @@ var Login= (function () {
     };
 
     var logout= function (callback) {
-        callback= (callback===undefined)?function(){}:callback;
+        callback= (callback===undefined)?function(){
+            window.location.href= 'login.html';
+            alert('Cesión cerrada');
+        }:callback;
         DeliveriesModel.clearTable({success: function(){
             PickupModel.clearTable({success: function(){
                 UserModel.clearTable({success: function(){
