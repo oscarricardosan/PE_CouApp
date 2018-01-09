@@ -1,27 +1,51 @@
 function initializeApp(){
 
-    SettingsModel.get({
-        success: function(tx, results) {
-            if(results._number_rows === 0){
-                do{
+    function intializeSettings(){
+        SettingsModel.get({
+            success: function(tx, results) {
+                if(results._number_rows === 0){
                     var domain= prompt("Ingresa el dominio de tu empresa, ejemplo: demo.savne.net");
                     domain= domain===null?'':domain;
                     domain= $.trim(domain.toLowerCase());
-                    var domain_data= _.findWhere(CustomerSettings, {domain: domain});
-                    if(domain_data === undefined){
-                        alert('Lo sentimos el dominio "'+domain+'" no esta registrado en nuestro sistema');
+
+                    if(domain === ''){
+                        alert('Debes ingresar un dominio.')
+                        intializeSettings();
+                        return false;
                     }
-                }while(domain_data === undefined);
-                SettingsModel.insert(domain_data, {
-                    success: function(){
-                        load_settings();
-                    }
-                });
-            }else{
-                load_settings();
+                    $('#formLogin').loading();
+                    var request = $.ajax({
+                        url: 'https://courier-app.savne.net/mobile_api/get_customer_setup',
+                        type: 'post',
+                        dataType: "json",
+                        data: SecurityUtility_.add_token_to_server({domain: domain})
+                    });
+                    request.done(function (response) {
+                        $('#formLogin').unloading();
+                        if(response.success){
+                            SettingsModel.insert(response.setup_data, {
+                                success: function(){
+                                    load_settings();
+                                }
+                            });
+                        }else{
+                            alert(response.message)
+                            intializeSettings();
+                        }
+                    });
+                    request.fail(function (jqXHR, textStatus) {
+                        AjaxUtility_.processFailRequest(jqXHR, textStatus);
+                        $('#formLogin').unloading();
+                        intializeSettings();
+                    });
+                }else{
+                    load_settings();
+                }
             }
-        }
-    });
+        });
+    }
+
+    intializeSettings();
 
     function load_settings() {
         SettingsModel.get({
