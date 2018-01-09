@@ -1,5 +1,7 @@
 var AjaxQueue= (function () {
 
+    var is_running= false;
+
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
         properties.created_at= MomentUtility_.now();
@@ -63,11 +65,13 @@ var AjaxQueue= (function () {
     var check_queue= function(callbacks_first){
         if(navigator.connection.type === Connection.WIFI){
             Ajax_queueModel.get({success:function(tx, results) {
+                is_running= true;
                 process_quee(callbacks_first, results._all);
             }});
         }else{
             Ajax_queueModel.findRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
                 success:function(tx, results) {
+                    is_running= true;
                     process_quee(callbacks_first, results._all);
                 }
             });
@@ -75,8 +79,10 @@ var AjaxQueue= (function () {
     };
 
     function process_quee(callbacks, queues){
+        if(is_running)return false;
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
+            is_running= false;
             callbacks.empty();
             return false;
         }
@@ -99,10 +105,11 @@ var AjaxQueue= (function () {
                         Ajax_queueModel.countRaw("", {success:function(tx, results) {
                             App.ajax_queue_count= results._count;
                         }});
-                        AjaxQueue.check_queue(callbacks);
+                        check_queue(callbacks);
                     }});
                 } else {
                     eval("false||"+properties.fail)(data);
+                    is_running= false;
                     callbacks.fail(data);
                     LogModel.store_fail(properties.process_name, {properties: properties, response: response});
                 }
@@ -114,7 +121,7 @@ var AjaxQueue= (function () {
                     Ajax_queueModel.countRaw("", {success:function(tx, results) {
                         App.ajax_queue_count= results._count;
                     }});
-                    AjaxQueue.check_queue(callbacks);
+                    check_queue(callbacks);
                 }});
             }
         });
@@ -127,6 +134,7 @@ var AjaxQueue= (function () {
             }});
             validate_request_fail(jqXHR);
             eval("false||"+properties.fail)(properties.data);
+            is_running= false;
             callbacks.fail(properties.data);
         });
 
@@ -153,7 +161,7 @@ var AjaxQueue= (function () {
 
     var check_queue_from_element= function(element){
         element.loading();
-        AjaxQueue.check_queue({
+        check_queue({
             empty:function(){
                 Ajax_queueModel.countRaw("", {success:function(tx, results) {
                     App.ajax_queue_count= results._count;
