@@ -181,7 +181,7 @@ function initializePage() {
              */
             DeliveriesModel.get({success: function (tx, results) {
                 App_.operations.deliveries = results._all;
-                DeliveriesModel.get({success: function (tx, results) {
+                PickupsModel.get({success: function (tx, results) {
                     App_.operations.pickups = results._all;
                 }});
             }});
