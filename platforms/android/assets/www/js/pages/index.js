@@ -121,6 +121,55 @@ function initializePage(){
                 return Haversine.mtrs_to_text(mts);
             }
         },
+        computed: {
+            percentage_of_collected: function(){
+                var App_= this;
+                var collected= _.where(App_.operations.pickups, {state_id: 200}).length;
+                return accounting.formatNumber(
+                    (collected * 100) / App_.operations.pickups.length, 2, ',', '.'
+                );
+            },
+            percentage_of_collected_exception: function(){
+                var App_= this;
+                var collected= _.where(App_.operations.pickups, {state_id: 300}).length;
+                return accounting.formatNumber(
+                    (collected * 100) / App_.operations.pickups.length, 2, ',', '.'
+                );
+            },
+            percentage_not_collected: function(){
+                var App_= this;
+                var collected= _.where(App_.operations.pickups, {state_id: 200}).length;
+                var exceptions= _.where(App_.operations.pickups, {state_id: 300}).length;
+                var not_collected= App_.operations.pickups.length - (collected+exceptions);
+                return accounting.formatNumber(
+                    (not_collected* 100) / App_.operations.pickups.length, 2, ',', '.'
+                );
+            },
+
+            percentage_of_delivered: function(){
+                var App_= this;
+                var delivered= _.where(App_.operations.deliveries, {state_id: 200}).length;
+                return accounting.formatNumber(
+                    (delivered * 100) / App_.operations.deliveries.length, 2, ',', '.'
+                );
+            },
+            percentage_of_delivered_exception: function(){
+                var App_= this;
+                var exceptions= _.where(App_.operations.deliveries, {state_id: 300}).length;
+                return accounting.formatNumber(
+                    (exceptions * 100) / App_.operations.deliveries.length, 2, ',', '.'
+                );
+            },
+            percentage_not_delivered: function(){
+                var App_= this;
+                var delivered= _.where(App_.operations.deliveries, {state_id: 200}).length;
+                var exceptions= _.where(App_.operations.deliveries, {state_id: 300}).length;
+                var not_delivered= App_.operations.deliveries.length - (delivered+exceptions);
+                return accounting.formatNumber(
+                    (not_delivered* 100) / App_.operations.deliveries.length, 2, ',', '.'
+                );
+            }
+        },
         watch: {
             "operations.deliveries": function(newVal, oldVal){
                 var App_= this;

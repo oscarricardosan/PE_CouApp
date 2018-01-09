@@ -163,17 +163,121 @@
                     </li>
                     <!-- Notifications: style can be found in dropdown.less -->
                     <li class="dropdown notifications-menu">
-                        <a href="#">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-truck"></i>
                             <span class="label label-success">{{ operations.pickups.length }}</span>
                         </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">
+                                Número total de recolecciones: <strong> {{ operations.pickups.length }} </strong>
+                                <li>
+                                    <ul class="menu" style="max-height: 280px !important;height: 280px !important;">
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Recogidas exitosas: {{ _.where(operations.pickups, {state_id: 200}).length}}
+                                                    <small class="pull-right">{{ percentage_of_collected }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-green" :style="'width: '+percentage_of_collected+'%'" role="progressbar" :aria-valuenow="percentage_of_collected" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_collected }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Recogidas fallidas: {{ _.where(operations.pickups, {state_id: 300}).length}}
+                                                    <small class="pull-right">{{ percentage_of_collected_exception }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-red" :style="'width: '+percentage_of_collected_exception+'%'" role="progressbar" :aria-valuenow="percentage_of_collected_exception" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_collected_exception }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Sin recoger: {{
+                                                    operations.pickups.length -
+                                                    _.where(operations.pickups, {state_id: 200}).length -
+                                                    _.where(operations.pickups, {state_id: 300}).length
+                                                    }}
+                                                    <small class="pull-right">{{ percentage_not_collected }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-yellow" :style="'width: '+percentage_not_collected+'%'" role="progressbar" :aria-valuenow="percentage_not_collected" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_not_collected }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </li>
+                        </ul>
                     </li>
                     <!-- Tasks: style can be found in dropdown.less -->
                     <li class="dropdown notifications-menu">
-                        <a href="#">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-tags"></i>
                             <span class="label label-danger">{{ operations.deliveries.length }}</span>
                         </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">
+                                Número total de entregas: <strong> {{ operations.deliveries.length }} </strong>
+                                <li>
+                                    <ul class="menu" style="max-height: 280px !important;height: 280px !important;">
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Entregas exitosas: {{ _.where(operations.deliveries, {state_id: 200}).length}}
+                                                    <small class="pull-right">{{ percentage_of_delivered }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-green" :style="'width: '+percentage_of_delivered+'%'" role="progressbar" :aria-valuenow="percentage_of_delivered" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_delivered }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Entregas fallidas: {{ _.where(operations.deliveries, {state_id: 300}).length}}
+                                                    <small class="pull-right">{{ percentage_of_delivered_exception }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-red" :style="'width: '+percentage_of_delivered_exception+'%'" role="progressbar" :aria-valuenow="percentage_of_delivered_exception" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_delivered_exception }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Sin entregar: {{
+                                                        operations.deliveries.length -
+                                                        _.where(operations.deliveries, {state_id: 200}).length -
+                                                        _.where(operations.deliveries, {state_id: 300}).length
+                                                    }}
+                                                    <small class="pull-right">{{ percentage_not_delivered }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-yellow" :style="'width: '+percentage_not_delivered+'%'" role="progressbar" :aria-valuenow="percentage_not_delivered" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_not_delivered }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </li>
+                        </ul>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
