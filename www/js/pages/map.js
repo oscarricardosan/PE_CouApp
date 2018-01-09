@@ -72,16 +72,14 @@ function initializePage() {
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                    this.date_to_filter= this.dates_to_filter[0];
+                this.date_to_filter= this.dates_to_filter[0];
             },
             "operations.pickups": function(newVal, oldVal){
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                    this.date_to_filter= this.dates_to_filter[0];
+                this.date_to_filter= this.dates_to_filter[0];
             },
             date_to_filter: function(date){
                 var App_= this;
@@ -181,9 +179,14 @@ function initializePage() {
              */
             DeliveriesModel.get({success: function (tx, results) {
                 App_.operations.deliveries = results._all;
-                PickupModel.get({success: function (tx, results) {
-                    App_.operations.pickups = results._all;
-                }});
+                setTimeout(function(){
+                    App_.date_to_filter= undefined;
+                }, 125);
+                setTimeout(function(){
+                    PickupModel.get({success: function (tx, results) {
+                        App_.operations.pickups = results._all;
+                    }});
+                }, 250);
             }});
 
 

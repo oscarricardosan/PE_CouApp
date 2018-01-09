@@ -90,9 +90,6 @@ var AjaxQueue= (function () {
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
         properties.data= (typeof properties.data === 'string')?JSON.parse(properties.data):properties.data;
 
-        console.log(ids_processed);
-        console.log(queues[0].id);
-
         if(ids_processed.has_element(queues[0].id)){
             is_running= false;
             ids_processed= [];
