@@ -53,7 +53,6 @@ var Event_server= (function () {
     }
     
     function process_pickups(pickups, index) {
-        console.log((index+' === '+pickups.length));
         if(index !== pickups.length){
             var event= pickups[index];
             PickupModel.insertOrUpdateById(event.data, {
@@ -84,7 +83,6 @@ var Event_server= (function () {
     }
 
     function process_deliveries(deliveries, index){
-        console.log((index+' === '+deliveries.length));
         if(index !== deliveries.length){
             var event= deliveries[index];
             DeliveriesModel.insertOrUpdateById(event.data, {
@@ -135,7 +133,6 @@ var Event_server= (function () {
     }
 
     function show_notifications(total_events){
-        console.log(total_processed_events +"<"+ total_events);
         if(total_processed_events < total_events){
             setTimeout(function(){ show_notifications(total_events); }, 300);
             return false;

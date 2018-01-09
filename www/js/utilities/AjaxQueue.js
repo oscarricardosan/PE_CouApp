@@ -79,7 +79,6 @@ var AjaxQueue= (function () {
     };
 
     function process_quee(callbacks, queues){
-        if(is_running)return false;
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
             is_running= false;
@@ -160,6 +159,10 @@ var AjaxQueue= (function () {
     }
 
     var check_queue_from_element= function(element){
+        if(is_running){
+            alert('Proceso de transmisión ya se encuentra activo');
+            return false;
+        }
         element.loading();
         check_queue({
             empty:function(){
@@ -189,12 +192,17 @@ var AjaxQueue= (function () {
         });
     };
 
+    function get_is_running() {
+        return is_running;
+    }
+
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             add                         : add,
             check_queue                 : check_queue,
             check_queue_from_element    : check_queue_from_element,
+            is_running                  : get_is_running,
         }
-    };
+    }
     return {construct:construct};//retorna los metodos publicos
 })().construct();

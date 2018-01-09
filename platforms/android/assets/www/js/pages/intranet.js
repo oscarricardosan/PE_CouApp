@@ -15,7 +15,10 @@ function initializeIntranet(){
     $(document).ready(function(){
         $('.logout').click(function(event){
             event.preventDefault();
-            Login.logout();
+            Login.logout(function () {
+                alert('Cesión cerrada');
+                navigator.app.exitApp();
+            });
         });
     });
 

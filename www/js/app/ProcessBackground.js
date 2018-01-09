@@ -49,7 +49,7 @@ var ProcessBackground= (function () {
     };
 
     function check_ajax_queue() {
-        if(App.ajax_queue_count>0) {
+        if(App.ajax_queue_count>0 && AjaxQueue.is_running() === false) {
             //navigator.vibrate(1000);
             AjaxQueue.check_queue({
                 fail: function (properties, jqXHR, textStatus) {
