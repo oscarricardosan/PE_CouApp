@@ -23,11 +23,19 @@ function initializeApp(){
                     request.done(function (response) {
                         $('#formLogin').unloading();
                         if(response.success){
-                            SettingsModel.insert(response.setup_data, {
-                                success: function(){
-                                    load_settings();
-                                }
-                            });
+                            Exception_to_pickupModel.clearTable( { success: function(){
+                                Exception_to_deliveryModel.clearTable( { success: function(){
+                                    Exception_to_deliveryModel.insert_multiple( response.setup_data.exceptions.to_deliveries, { success: function(){
+                                        Exception_to_pickupModel.insert_multiple( response.setup_data.exceptions.to_pickups, { success: function(){
+                                            SettingsModel.insert({
+                                                domain: response.setup_data.domain, url_server: response.setup_data.url_server
+                                            }, {success: function(){
+                                                load_settings();
+                                            }});
+                                        }});
+                                    }});
+                                }});
+                            }});
                         }else{
                             alert(response.message)
                             intializeSettings();

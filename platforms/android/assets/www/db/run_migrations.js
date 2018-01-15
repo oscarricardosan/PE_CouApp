@@ -6,8 +6,11 @@ var Migrations= (function () {
                 function(tx, result) {
                     MigrationModel.get_version({
                         success: function(tx, results){
+                            console.log(results._first.version);
                             if(results._first.version === null){
                                 run_migration_0();
+                            }else if(results._first.version == 1) {
+                                run_migration_1();
                             }else{
                                 runApp();
                             }
@@ -133,7 +136,7 @@ var Migrations= (function () {
                                 desc: 'Migracion inicial'
                             }, {
                                 success: function(){
-                                    runApp();
+                                    run_migration_1();
                                 }
                             });
                         },
@@ -144,6 +147,60 @@ var Migrations= (function () {
         };
         try{
             create_table.user();
+        }catch (e){alert(e.message);}
+    }
+
+    function run_migration_1(){
+        var create_table= {
+            exceptions_to_pickup: function(){
+                DB.transaction(function(transaction) {
+                    transaction.executeSql(
+                        'CREATE TABLE IF NOT EXISTS exceptions_to_pickup (id integer primary key, name text)', [],
+                        function (tx, result) {
+                            Exception_to_pickupModel.insert_multiple([
+                                {name: 'Nadie en casa'},
+                                {name: 'En vacaciones'},
+                                {name: 'Dirección errada'},
+                                {name: 'Otros'}
+                            ], {success: function(){
+                                create_table.exceptions_to_delivery();
+                            }});
+
+                        },
+                        function (error) {alert("Error creando exceptions_to_pickup user. " + error.message);}
+                    );
+                });
+            },
+            exceptions_to_delivery: function(){
+                DB.transaction(function(transaction) {
+                    transaction.executeSql(
+                        'CREATE TABLE IF NOT EXISTS exceptions_to_delivery (id integer primary key, name text)', [],
+                        function (tx, result) {
+                            Exception_to_deliveryModel.insert_multiple([
+                                {name: 'Nadie en casa'},
+                                {name: 'En vacaciones'},
+                                {name: 'Dirección errada'},
+                                {name: 'Otros'}
+                            ], {success: function(){
+                                    MigrationModel.insert({
+                                        id: 2,
+                                        version: 2,
+                                        desc: 'Se crean tablas para excepciones'
+                                    }, {
+                                        success: function(){
+                                            runApp();
+                                        }
+                                    });
+                            }});
+
+                        },
+                        function (error) {alert("Error creando tabla exceptions_to_delivery. " + error.message);}
+                    );
+                });
+            }
+        };
+        try{
+            create_table.exceptions_to_pickup();
         }catch (e){alert(e.message);}
     }
 

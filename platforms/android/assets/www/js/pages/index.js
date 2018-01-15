@@ -30,7 +30,9 @@ function initializePage(){
             ready: true,
             pickups_sorted: [],
             deliveries_sorted: [],
-            visible_states: {}
+            visible_states: {},
+            exceptions_to_pickup: [],
+            exceptions_to_delivery: [],
         },
         methods: {
             synchronize_data_operations: function(e) {
@@ -269,6 +271,13 @@ function initializePage(){
                 SettingsModel.get({success: function(tx, results){
                     App_.transmit_delivery_photos_only_wifi= results._first.transmit_delivery_photos_only_wifi == 'true';
                     App_.transmit_pickup_photos_only_wifi= results._first.transmit_pickup_photos_only_wifi == 'true';
+                }});
+
+                Exception_to_pickupModel.get({success: function(tx, results){
+                    App_.exceptions_to_pickup= results._all;
+                }});
+                Exception_to_deliveryModel.get({success: function(tx, results){
+                    App_.exceptions_to_delivery= results._all;
                 }});
 
                 if(url_params.search !== undefined)
