@@ -1,3 +1,6 @@
+*{
+    font-size: 15px;
+}
 .numeric{ text-align: right; }
 .modal .btn-app{
     margin-right: 0px!important;

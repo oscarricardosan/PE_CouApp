@@ -1,8 +1,10 @@
 var Settings= {
+    domain: null,
     url_server: null,
     setSettings: function(settings){
         if(settings !== null && settings !== undefined) {
             this.url_server = settings.url_server;
+            this.domain = settings.domain;
         }
     },
     route_api_pasar: function(route){

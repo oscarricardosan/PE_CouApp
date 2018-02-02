@@ -96,7 +96,18 @@ function initializeApp(){
                     token_generated_at: response.token_generated_at,
                 };
                 UserModel.insert(user, {
-                    success: function(){ window.location.href= 'index.html';}
+                    success: function(){
+                        SettingsModel.clearTable({
+                            success: function(){
+                                SettingsModel.insert({
+                                    domain: response.setup_data.domain, url_server: response.setup_data.url_server
+                                }, {success: function(){
+                                    load_settings();
+                                    window.location.href= 'index.html';
+                                }});
+                            }
+                        });
+                    }
                 });
                 alert(response.message);
             },failure: function(jqXHR, textStatus){

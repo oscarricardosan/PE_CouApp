@@ -9,8 +9,17 @@ var SecurityUtility_= (function () {
     };
 
     var add_user_authenticated= function(data){
+        var current_position= {latitude: null, longitude: null};
+        if(typeof(App) === "object"){
+            if(typeof(App.current_position) === "object"){
+                if(App.current_position.latitude !== undefined && App.current_position.longitude !== undefined){
+                    current_position= App.current_position;
+                }
+            }
+        }
+
         data= add_token_to_server(data);
-        data.user= {email: user.email, token_mobile: user.token_mobile};
+        data.user= {email: user.email, token_mobile: user.token_mobile, current_position: current_position};
         return data;
     };
 

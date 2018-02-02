@@ -15,6 +15,10 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
+                App.current_position= {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
                 optimal_conditions_for_execution_are({
                    yes: function(){
                        update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
@@ -32,6 +36,10 @@ var Gps= (function () {
     };
 
     function store_position_from_background(location) {
+        App.current_position= {
+            latitude: location.latitude,
+            longitude: location.longitude
+        };
         optimal_conditions_for_execution_are({
             yes: function(){
                 update_current_position(location);
@@ -49,10 +57,6 @@ var Gps= (function () {
 
     function update_current_position(position){
         GpsModel.clearTable({success: function(){
-            App.current_position= {
-                latitude: position.latitude,
-                longitude: position.longitude
-            };
             GpsModel.insert(App.current_position);
             DeliveriesModel.update_distances_in_mtrs(App.current_position, {success: function(){
                 DeliveriesModel.get({success: function(tx, results){

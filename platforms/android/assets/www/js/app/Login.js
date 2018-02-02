@@ -13,7 +13,8 @@ var Login= (function () {
                 dataType: "json",
                 data: SecurityUtility_.add_token_to_server({
                     email: email,
-                    password: password
+                    password: password,
+                    domain: Settings.domain
                 })
             });
             request.done(function (response) {

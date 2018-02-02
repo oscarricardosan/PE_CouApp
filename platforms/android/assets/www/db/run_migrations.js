@@ -6,7 +6,6 @@ var Migrations= (function () {
                 function(tx, result) {
                     MigrationModel.get_version({
                         success: function(tx, results){
-                            console.log(results._first.version);
                             if(results._first.version === null){
                                 run_migration_0();
                             }else if(results._first.version == 1) {
