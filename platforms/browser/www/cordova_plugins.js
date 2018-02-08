@@ -240,6 +240,22 @@ module.exports = [
         "clobbers": [
             "SQLitePlugin"
         ]
+    },
+    {
+        "file": "plugins/uk.co.workingedge.phonegap.plugin.launchnavigator/www/common.js",
+        "id": "uk.co.workingedge.phonegap.plugin.launchnavigator.Common",
+        "pluginId": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+        "clobbers": [
+            "launchnavigator"
+        ]
+    },
+    {
+        "file": "plugins/uk.co.workingedge.phonegap.plugin.launchnavigator/www/localforage.v1.5.0.min.js",
+        "id": "uk.co.workingedge.phonegap.plugin.launchnavigator.LocalForage",
+        "pluginId": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+        "clobbers": [
+            "localforage"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -265,7 +281,8 @@ module.exports.metadata =
     "call-number": "1.0.4",
     "cordova-plugin-network-information": "1.3.3",
     "cordova-sqlite-storage": "2.1.2",
-    "cordova-sqlite-evcore-extbuild-free": "0.9.0"
+    "cordova-sqlite-evcore-extbuild-free": "0.9.0",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": "4.1.3"
 }
 // BOTTOM OF METADATA
 });

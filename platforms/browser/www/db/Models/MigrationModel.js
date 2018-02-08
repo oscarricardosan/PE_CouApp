@@ -1,75 +1,38 @@
 
 var MigrationModel= (function () {
 
-    var collection_name= 'migrations';
+    var table= 'migrations';
 
-    var loaded_Callback= [];
-    var isLoaded= false;
-    /**
-     * Carga los datos si ya estan en localstorage
-     */
-    /*db.collection(collection_name).load(function (err, tableStats, metaStats) {
-        if (!err) {
-            $.each(loaded_Callback, function(){
-                this();
-            });
-            isLoaded= true;
-        }else{
-            alert('Error al cargar colección '+collection_name)
-        }
-    });*/
-
-    /**
-     * @returns {boolean}
-     */
-    var collectionExists= function(){
-        return db.collection(collection_name).find().length > 0;
-    };
-
-    /**
-     * @param migration_id
-     * @returns {boolean}
-     */
-    var migrationWasExecuted = function(migration_id){
-        return db.collection(collection_name).find({_id: migration_id}).length > 0;
-    };
-
-    /**
-     * @param migration_id
-     * @param description
-     */
-    var store = function(migration_id, description){
-        db.collection(collection_name).insert({
-            _id: migration_id,
-            descripcion: description
+    var insert= function(data, callback){
+        callback= PolishedUtility_.callback_SQLinsert(callback);
+        DB.transaction(function (tx) {
+            tx.executeSql(
+                "INSERT INTO "+table+" ("+DB_Utility_.get_keys(data)+") VALUES ("+DB_Utility_.get_interrogations(data)+")",
+                DB_Utility_.get_values(data),
+                callback.success,
+                callback.fail
+            );
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
-
-        db.collection(collection_name).save(function (err) {
-            if (!err) {/* Save was successful */}
-            else{ alert('Error al guardar en '+collection_name);}
-        });
-    };
-
-    var loaded= function(callback){
-        if(isLoaded)
-            callback();
-        else
-            loaded_Callback.push(callback);
     };
 
     var get_version= function(callback){
         callback= PolishedUtility_.callback_SQLselect(callback);
         DB.transaction(function(transaction) {
-            transaction.executeSql('SELECT max(id) as version FROM '+collection_name, [], callback.success, callback.fail);
+            transaction.executeSql('SELECT max(id) as version FROM '+table, [], callback.success, callback.fail);
+        }, function(error) {
+            alert('Transaction '+table+' :' + error.message);
+        }, function() {
+            //alert('transaction ok');
         });
     };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
-            collectionExists    : collectionExists,
-            migrationWasExecuted    : migrationWasExecuted,
-            store    : store,
-            loaded    : loaded,
+            insert       : insert,
             get_version  : get_version,
         }
     };

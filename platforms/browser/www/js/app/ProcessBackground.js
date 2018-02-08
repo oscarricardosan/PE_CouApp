@@ -11,52 +11,73 @@ var ProcessBackground= (function () {
 
     var run= function (){
 
-        if(Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue)){
-            check_ajax_queue();
-        }
-        if(Process.it_can_be_executed('get_events_from_server', Settings.timer_get_events_from_server)){
-            Event_server.get_events_from_server();
-        }
-        if(Process.it_can_be_executed('alert_by_proximity', Settings.timer_run_alert_proximity)){
-            Alert_proximity.run();
-        }
-        if(Process.it_can_be_executed('alert_by_time', Settings.timer_run_alert_time)){
-            Alert_time.run();
-        }
+        Process.it_can_be_executed('check_ajax_queue', Settings.timer_check_ajax_queue, {yes: function(){
+            try{
+                check_ajax_queue();
+            }catch (e){
+                alert('Background check_ajax_queue: '+e.message);
+            }
+        }});
+
+        Process.it_can_be_executed('get_events', Settings.timer_get_events_from_server, {yes: function(){
+            try{
+                Event_server.get_events_from_server();
+            }catch (e){
+                alert('Background get_events: '+e.message);
+            }
+        }});
+
+        Process.it_can_be_executed('proximity_alert', Settings.timer_run_alert_proximity, {yes: function(){
+            try{
+                Alert_proximity.run();
+            }catch (e){
+                alert('Background proximity_alert: '+e.message);
+            }
+        }});
+
+        Process.it_can_be_executed('time_alert', Settings.timer_run_alert_time, {yes: function(){
+            try{
+                Alert_time.run();
+            }catch (e){
+                alert('Background time_alert: '+e.message);
+            }
+        }});
+
         cordova.plugins.backgroundMode.configure({text: get_message_to_notification_bar()});
         index_executionBack++;
         first_execution= false;
     };
 
     function check_ajax_queue() {
-        if(App.ajax_queue_count>0) {
+        if(App.ajax_queue_count>0 && AjaxQueue.is_running() === false) {
             //navigator.vibrate(1000);
             AjaxQueue.check_queue({
                 fail: function (properties, jqXHR, textStatus) {
-                    App_.ajax_queue_count = Ajax_queueModel.get().length;
-                    LogModel.store({
-                        message: 'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
-                        status: 'danger',
-                        data: JSON.stringify({
-                            jqXHR: jqXHR, textStatus: textStatus, properties: properties
-                        })
-                    });
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
+                    LogModel.store_fail(
+                        'BACKGROUND: Error al transmitir al servidor petición online, procesamiento de cola.',
+                        {jqXHR: jqXHR, textStatus: textStatus, properties: properties}
+                    );
                     ProcessBackground.set_main_message_notification_bar('Cola: Fallo transmisión de peticiones');
                 },
                 success: function (properties, response) {
-                    App_.ajax_queue_count = Ajax_queueModel.get().length;
-                    LogModel.store({
-                        message: 'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
-                        status: 'success',
-                        data: {properties: properties, response: response}
-                    });
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
+                    LogModel.store_success(
+                        'BACKGROUND: Transmisión de petición online a servidor exitosa, procesamiento de cola.',
+                        {properties: properties, response: response}
+                    );
                     ProcessBackground.set_main_message_notification_bar('Cola: Petición transmitida');
                 },
                 empty: function(){
-                    var wifi_queues= Ajax_queueModel.find({
-                        $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                    Ajax_queueModel.countRaw("transmit_only_with_wifi= 'true' or transmit_only_with_wifi is null", {
+                        success:function(tx, results) {
+                            ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+results._count);
+                        }
                     });
-                    ProcessBackground.set_main_message_notification_bar('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
                 }
             });
             Process.store_last_attempt('check_ajax_queue');
@@ -73,13 +94,13 @@ var ProcessBackground= (function () {
         var sin_entregar= 0;
         var sin_recoger= 0;
         try {
-            DeliveriesModel.loaded(function(){
-                sin_entregar= DeliveriesModel.find({delivery_state_id: 100}).length + DeliveriesModel.find({delivery_state_id: 50}).length;
+            DeliveriesModel.get({success: function(tx, results){
+                sin_entregar= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
                 notify_message.deliveries =
                     (sin_entregar>0)?'Sin Entregar ' + sin_entregar:'Todo entregado';
 
-                PickupModel.loaded(function(){
-                    sin_recoger= PickupModel.find({pickup_state_id: 100}).length + PickupModel.find({pickup_state_id: 50}).length;
+                PickupModel.get({success: function(tx, results){
+                    sin_recoger= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
                     notify_message.pickups=
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 
@@ -91,10 +112,10 @@ var ProcessBackground= (function () {
                         notify_message.icon= 'warning';
 
                     callback();
-                });
-            });
+                }});
+            }});
         }catch (error){
-            alert(JSON.stringify(error));
+            alert('ProcessBackground: '+error.message);
         }
     }
 

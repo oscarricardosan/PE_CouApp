@@ -1,5 +1,8 @@
 var AjaxQueue= (function () {
 
+    var is_running= false;
+    var ids_processed= [];
+
     var add= function(properties){
         properties= PolishedUtility_.ajaxQueueProperties(properties);
         properties.created_at= MomentUtility_.now();
@@ -22,10 +25,13 @@ var AjaxQueue= (function () {
                         LogModel.store_success(properties.process_name, {response: response, properties: properties});
                     }else{
                         var data= {properties: properties, response: {response: response, properties: properties}};
-                        properties.fail(data);
                         LogModel.store_fail(properties.process_name, data);
-                        Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-                        App.ajax_queue_count= Ajax_queueModel.get().length;
+                        Ajax_queueModel.insert(properties, {success: function(data){
+                            properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
+                        }});
+                        Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                            App.ajax_queue_count= results._count;
+                        }});
                     }
                 }else{
                     properties.success(response, properties);
@@ -35,33 +41,61 @@ var AjaxQueue= (function () {
             request.fail(function(jqXHR, textStatus) {
                 var data= {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
                 LogModel.store_fail(properties.process_name, data);
-                Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-                App.ajax_queue_count= Ajax_queueModel.get().length;
+                Ajax_queueModel.insert(properties, {
+                    success: function(tx, results){
+                        properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
+                    }
+                });
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                }});
                 validate_request_fail(jqXHR);
             });
         }else{//Solo se puede por wifi y no hay wifi
             var data= {properties: properties, fail_message: 'Solo transmite con Wifi, conexión actual '+navigator.connection.type};
             LogModel.store_fail(properties.process_name+' solo con Wifi', data);
-            Ajax_queueModel.store(properties, {success: function(){properties.fail(data);}});
-            App.ajax_queue_count= Ajax_queueModel.get().length;
+            Ajax_queueModel.insert(properties, {success: function(data){
+                properties.fail(typeof properties.data === 'string'?JSON.parse(properties.data):properties.data);
+            }});
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App.ajax_queue_count= results._count;
+            }});
         }
     };
 
-    var check_queue= function(callbacks){
-        var queues;
+    var check_queue= function(callbacks_first){
         if(navigator.connection.type === Connection.WIFI){
-            queues= Ajax_queueModel.get();
+            Ajax_queueModel.get({success:function(tx, results) {
+                is_running= true;
+                process_quee(callbacks_first, results._all);
+            }});
         }else{
-            queues= Ajax_queueModel.find({
-                $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+            Ajax_queueModel.findRaw("transmit_only_with_wifi= 'false' or transmit_only_with_wifi is null", {
+                success:function(tx, results) {
+                    is_running= true;
+                    process_quee(callbacks_first, results._all);
+                }
             });
         }
+    };
+
+    function process_quee(callbacks, queues){
         callbacks= PolishedUtility_.queue(callbacks);
         if(queues.length===0){
+            is_running= false;
+            ids_processed= [];
             callbacks.empty();
             return false;
         }
         var properties= PolishedUtility_.ajaxQueueProperties(queues[0]);
+        properties.data= (typeof properties.data === 'string')?JSON.parse(properties.data):properties.data;
+
+        if(ids_processed.has_element(queues[0].id)){
+            is_running= false;
+            ids_processed= [];
+            LogModel.store_fail(properties.process_name, {message: 'ID '+queues[0].id+' ya procesado' });
+            return false;
+        }
 
         var request = $.ajax({
             url: Settings.route_api_pasar(properties.url),
@@ -70,39 +104,54 @@ var AjaxQueue= (function () {
             data: SecurityUtility_.add_user_authenticated(properties.data)
         });
         request.done(function (response) {
+            var data= (typeof properties.data === 'string')?JSON.parse(properties.data):properties.data;
             if (properties.dataType === 'json') {
                 if (response.success) {
-                    properties.success(response, properties);
+                    eval("false||"+properties.success)(response, properties);
                     callbacks.success(response, properties);
                     LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                    Ajax_queueModel.remove({_id: properties._id}, function () {
-                        AjaxQueue.check_queue(callbacks);
-                    });
+                    Ajax_queueModel.remove({id: properties.id}, {success: function () {
+                        Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                            App.ajax_queue_count= results._count;
+                        }});
+                        ids_processed.push(properties.id);
+                        check_queue(callbacks);
+                    }});
                 } else {
-                    var data = {properties: properties, response: response};
-                    properties.fail(data);
+                    eval("false||"+properties.fail)(data);
+                    is_running= false;
+                    ids_processed= [];
                     callbacks.fail(data);
-                    LogModel.store_fail(properties.process_name, data);
+                    LogModel.store_fail(properties.process_name, {properties: properties, response: response});
                 }
             } else {
+                eval("false||"+properties.success)(response, properties);
                 callbacks.success(response, properties);
-                properties.success(response, properties);
                 LogModel.store_success(properties.process_name, {response: response, properties: properties});
-                Ajax_queueModel.remove({_id: properties._id}, function () {
-                    AjaxQueue.check_queue(callbacks);
-                });
+                Ajax_queueModel.remove({id: properties.id}, {success: function () {
+                    Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                        App.ajax_queue_count= results._count;
+                    }});
+                    ids_processed.push(properties.id);
+                    check_queue(callbacks);
+                }});
             }
-            App.ajax_queue_count = Ajax_queueModel.get().length;
         });
         request.fail(function (jqXHR, textStatus) {
-            var data = {properties: properties, textStatus: textStatus, jqXHR: jqXHR};
-            LogModel.store_fail(properties.process_name, data);
-            App.ajax_queue_count = Ajax_queueModel.get().length;
+            LogModel.store_fail(properties.process_name, {
+                properties: properties, textStatus: textStatus, jqXHR: jqXHR
+            });
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App.ajax_queue_count= results._count;
+            }});
             validate_request_fail(jqXHR);
-            properties.fail(data);
-            callbacks.fail(data);
+            eval("false||"+properties.fail)(properties.data);
+            is_running= false;
+            ids_processed= [];
+            callbacks.fail(properties.data);
         });
-    };
+
+    }
 
     function validate_request_fail(jqXHR){
         if(jqXHR.status===422){
@@ -124,25 +173,41 @@ var AjaxQueue= (function () {
     }
 
     var check_queue_from_element= function(element){
+        if(is_running){
+            alert('Proceso de transmisión ya se encuentra activo');
+            return false;
+        }
         element.loading();
-        AjaxQueue.check_queue({
+        check_queue({
             empty:function(){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
-                element.unloading();
-                var wifi_queues= Ajax_queueModel.find({
-                    $or: [{transmit_only_with_WiFi: false}, {transmit_only_with_WiFi: undefined}]
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                    element.unloading();
+                }});
+
+                Ajax_queueModel.countRaw("transmit_only_with_wifi= 'true' or transmit_only_with_wifi is null", {
+                    success:function(tx, results) {
+                        Alert_('Cola vacía. Peticiones pendientes por wifi '+results._count);
+                    }
                 });
-                Alert_('Cola vacía. Peticiones pendientes por wifi '+wifi_queues.length);
             },
             fail: function(data){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
-                element.unloading();
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                    element.unloading();
+                }});
                 Alert_('Fallo transmisión de cola');
             },
             success: function(data){
-                App.ajax_queue_count= Ajax_queueModel.get().length;
+                Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                    App.ajax_queue_count= results._count;
+                }});
             }
         });
+    };
+
+    function get_is_running() {
+        return is_running;
     }
 
     function construct(){//Funcion que controla cuales son los metodos publicos
@@ -150,7 +215,8 @@ var AjaxQueue= (function () {
             add                         : add,
             check_queue                 : check_queue,
             check_queue_from_element    : check_queue_from_element,
+            is_running                  : get_is_running,
         }
-    };
+    }
     return {construct:construct};//retorna los metodos publicos
 })().construct();

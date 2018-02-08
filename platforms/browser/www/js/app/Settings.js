@@ -1,8 +1,10 @@
 var Settings= {
+    domain: null,
     url_server: null,
     setSettings: function(settings){
         if(settings !== null && settings !== undefined) {
             this.url_server = settings.url_server;
+            this.domain = settings.domain;
         }
     },
     route_api_pasar: function(route){
@@ -20,17 +22,23 @@ var Settings= {
         message: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/chat-128.png",
         danger: "https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/racingflags-128.png"
     },
-    gps:{
-        start_hour: 5,
-        end_hour: 23
-    },
     alert: {
         minimum_meters: 1000,
         minimum_minutes: 10,
         attempt_gps: 1
+    },
+    delivery_state: {
+        50: {name: 'Sin coordenadas', "class": 'fuchsia'},
+        100: {name: 'Sin entregar', "class": 'yellow'},
+        200: {name: 'Realizada', "class": 'green'},
+        300: {name: 'Excepción', "class": 'red'},
+        400: {name: 'Cancelada', "class": 'gray'}
+    },
+    pickup_state: {
+        50: {name: 'Sin coordenadas', "class": 'fuchsia'},
+        100: {name: 'Sin recoger', "class": 'yellow'},
+        200: {name: 'Realizada', "class": 'green'},
+        300: {name: 'Excepción', "class": 'red'},
+        400: {name: 'Cancelada', "class": 'gray'}
     }
 };
-
-SettingsModel.loaded(function () {
-    Settings.setSettings(SettingsModel.get());
-});

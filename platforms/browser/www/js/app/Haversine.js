@@ -14,8 +14,8 @@ var Haversine= (function () {
     var distance= function (a, b) {
         var aLat = a.latitude || a.lat;
         var bLat = b.latitude || b.lat;
-        var aLng = a.longitude || a.lng || a.lon;
-        var bLng = b.longitude || b.lng || b.lon;
+        var aLng = a.longitude || a.lng || a.lon || a.long;
+        var bLng = b.longitude || b.lng || b.lon || b.long;
 
         var dLat = toRad(bLat - aLat);
         var dLon = toRad(bLng - aLng);
@@ -28,6 +28,16 @@ var Haversine= (function () {
 
     var distance_in_text= function(point_a, point_b){
         var error= undefined;
+
+        if(point_a === undefined || point_a === null)point_a= {};
+        if(point_b === undefined || point_b === null)point_b= {};
+
+        if(point_a.long!==undefined && point_a.longitude===undefined)point_a.longitude=point_a.long;
+        if(point_a.lat!==undefined && point_a.latitude===undefined)point_a.latitude=point_a.lat;
+
+        if(point_b.long!==undefined && point_b.longitude===undefined)point_b.longitude=point_b.long;
+        if(point_b.lat!==undefined && point_b.latitude===undefined)point_b.latitude=point_b.lat;
+
         if(point_a === undefined || point_a === null)error= 'Posición actual no definida';
         else if(point_b === undefined || point_b === null)error= 'Posición de objetivo no definida';
         else if(point_a.longitude === undefined)error= 'Sin información de longitud';
@@ -53,6 +63,9 @@ var Haversine= (function () {
     };
 
     var mtrs_to_text= function(mts){
+        if(isNaN(mts))
+            return '0 mts';
+
         if(mts>1000)
             return accounting.formatNumber(mts/1000, 2, '.', ',')+' km';
         else

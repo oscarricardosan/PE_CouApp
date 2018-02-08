@@ -24,6 +24,9 @@
     },
     "cordova-sqlite-evcore-extbuild-free": {
       "PACKAGE_NAME": "savne.courier_app"
+    },
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": {
+      "PACKAGE_NAME": "savne.courier_app"
     }
   },
   "dependent_plugins": {

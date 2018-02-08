@@ -15,40 +15,60 @@ var Gps= (function () {
         clear_watches();
         var watchId = navigator.geolocation.watchPosition(
             function(position) {
-                if(optimal_conditions_for_execution_are()) {
-                    update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
-                    store_position(position);
-                    Process.store_last_attempt('gps_tracking');
-                }
+                App.current_position= {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
+                optimal_conditions_for_execution_are({
+                   yes: function(){
+                       update_current_position({latitude: position.coords.latitude, longitude: position.coords.longitude});
+                       store_position(position);
+                       Process.store_last_attempt('gps_tracking');
+                   }
+                });
             },
-            function (error) {ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message); },
+            function (error) {
+                ProcessBackground.set_main_message_notification_bar('GPS: Error '+error.message);
+            },
             { maximumAge: 5000, timeout: 7000, enableHighAccuracy: true }
         );
         watches_id.push(watchId);
     };
 
     function store_position_from_background(location) {
-        if(optimal_conditions_for_execution_are()) {
-            update_current_position(location);
-            store_position({
-                coords: {
-                    latitude: location.latitude,
-                    longitude: location.longitude
-                }
-            });
-            Process.store_last_attempt('gps_tracking');
-        }
+        App.current_position= {
+            latitude: location.latitude,
+            longitude: location.longitude
+        };
+        optimal_conditions_for_execution_are({
+            yes: function(){
+                update_current_position(location);
+                store_position({
+                    coords: {
+                        latitude: location.latitude,
+                        longitude: location.longitude
+                    }
+                });
+                Process.store_last_attempt('gps_tracking');
+            }
+        });
         backgroundGeoLocation.finish();
     }
 
     function update_current_position(position){
-        GpsModel.loaded(function(){
-            App.current_position= {
-                latitude: position.latitude,
-                longitude: position.longitude
-            };
-            GpsModel.store(App.current_position);
-        });
+        GpsModel.clearTable({success: function(){
+            GpsModel.insert(App.current_position);
+            DeliveriesModel.update_distances_in_mtrs(App.current_position, {success: function(){
+                DeliveriesModel.get({success: function(tx, results){
+                    App.operations.deliveries= results._all;
+                }});
+            }});
+            PickupModel.update_distances_in_mtrs(App.current_position, {success: function(){
+                PickupModel.get({success: function(tx, results){
+                    App.operations.pickups= results._all;
+                }});
+            }});
+        }});
     }
 
     function store_position(position) {
@@ -65,9 +85,10 @@ var Gps= (function () {
         });
     }
 
-    function optimal_conditions_for_execution_are() {
-        return Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps) &&
-            (moment().hour() >= Settings.gps.start_hour && moment().hour()  <= Settings.gps.end_hour);
+    function optimal_conditions_for_execution_are(callback) {
+        try{
+            Process.it_can_be_executed('gps_tracking', Settings.timer_to_gps, callback);
+        }catch(e){ alert(e.message); }
     }
     
     var clear_watches= function(){

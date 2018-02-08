@@ -1,7 +1,8 @@
 //Convierte a primer letra en mayuscula el resto en minuscula
 String.prototype.capitalizeFirstLetter = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};
+
 //El :contains de Jquery diferencia entre minusculas y mayusculas, esta sección crea :icontains que no hace distinción.
 jQuery.expr[':'].icontains = function(a, i, m) {
     return jQuery(a).text().toUpperCase()
@@ -19,6 +20,10 @@ $.fn.sumValues = function() {
         sum += parseFloat( ('0' + val).replace(/[^0-9-\.]/g, ''), 10 );
     });
     return accounting.formatNumber(sum,2);
+};
+
+Array.prototype.has_element = function(element) {
+    return $.inArray( element, this) !== -1;
 };
 
 $.fn.loading = function(label) {
@@ -101,4 +106,23 @@ $.fn.submitWithValidator= function(callback) {
         });
 
     });
+};
+
+$.fn.isOnScreen = function(){
+
+    var win = $(window);
+
+    var viewport = {
+        top : win.scrollTop(),
+        left : win.scrollLeft()
+    };
+    viewport.right = viewport.left + win.width();
+    viewport.bottom = viewport.top + win.height();
+
+    var bounds = this.offset();
+    bounds.right = bounds.left + this.outerWidth();
+    bounds.bottom = bounds.top + this.outerHeight();
+
+    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
+
 };

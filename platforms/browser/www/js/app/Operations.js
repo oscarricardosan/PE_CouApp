@@ -5,7 +5,7 @@ var Operations= (function () {
         if(date === undefined)
             date= MomentUtility_.current_date();
 
-        ToastrUtility_.info('Conecatando a servidor, espere por favor.');
+        ToastrUtility_.info('Conectando a servidor, espere por favor.');
         var request = $.ajax({
             url: Settings.route_api_pasar("operations_data"),
             type: 'post',
@@ -15,9 +15,12 @@ var Operations= (function () {
             })
         });
         request.done(function(response){
-            ToastrUtility_.success('Conexión exitosa.');
-            callback.success(response);
-            Event_server.clear_events_in_server();
+            try{
+                callback.success(response);
+                Event_server.clear_events_in_server();
+            }catch (e){
+                alert('Operations get_data: '+e.message);
+            }
         });
         request.fail(function(jqXHR, textStatus) {
             callback.fail(jqXHR, textStatus);
@@ -29,41 +32,40 @@ var Operations= (function () {
     var synchronize_data_operations= function (external_callbacks){
         var external_callbacks= PolishedUtility_.callback(external_callbacks);
         try{
-            Operations.get_data(MomentUtility_.current_date(), {
-                success: function(response){
-                    App.date_to_filter= null;
-                    if(!response.deliveries.success){
-                        alert(response.deliveries.message);
-                    }else{
-                        DeliveriesModel.remove({}, function(){
-                            App.operations.deliveries= [];
-                            DeliveriesModel.store(response.deliveries.data, {
-                                success:function(){
-                                    App.operations.deliveries= DeliveriesModel.get();
-                                }
-                            });
-
-                        });
-                    }
-
-                    if(!response.pickups.success){
-                        alert(response.deliveries.message);
-                    }else{
-                        PickupModel.remove({}, function(){
-                            App.operations.pickups= [];
-                            PickupModel.store(response.pickups.data, {
-                                success:function(){
-                                    App.operations.pickups= PickupModel.get();
-                                }
-                            });
-                        });
-                    }
-                    external_callbacks.success();
-
-                },fail: function(){
-                    external_callbacks.fail();
-                }
-            });
+            DeliveriesModel.clearTable({success: function(){
+                App.operations.deliveries= [];
+                PickupModel.clearTable({success: function(){
+                    App.operations.pickups= [];
+                    Operations.get_data(MomentUtility_.current_date(), {
+                        success: function(response){
+                            App.date_to_filter= null;
+                            if(!response.deliveries.success){
+                                alert(response.deliveries.message);
+                            }else {
+                                DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
+                                    Process.reset_last_attempt('gps_tracking');
+                                    DeliveriesModel.get({success: function (tx, results) {
+                                        App.operations.deliveries = results._all;
+                                    }});
+                                }});
+                            }
+                            if(!response.pickups.success){
+                                alert(response.deliveries.message);
+                            }else{
+                                PickupModel.insert_multiple(response.pickups.data, {success:function(){
+                                    Process.reset_last_attempt('gps_tracking');
+                                    PickupModel.get({success: function(tx, results){
+                                        App.operations.pickups= results._all;
+                                    }});
+                                }});
+                            }
+                            external_callbacks.success();
+                        },fail: function(){
+                            external_callbacks.fail();
+                        }
+                    });
+                }});
+            }});
         }catch(e){alert(e.message);}
     };
 

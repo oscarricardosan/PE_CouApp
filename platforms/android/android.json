@@ -79,6 +79,14 @@
             {
               "xml": "<feature name=\"SQLitePlugin\"><param name=\"android-package\" value=\"io.sqlc.SQLitePlugin\" /></feature>",
               "count": 2
+            },
+            {
+              "xml": "<feature name=\"ActionSheet\"><param name=\"android-package\" value=\"nl.xservices.plugins.actionsheet.ActionSheet\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"LaunchNavigator\"><param name=\"android-package\" value=\"uk.co.workingedge.phonegap.plugin.LaunchNavigator\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -144,7 +152,7 @@
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
-              "count": 1
+              "count": 2
             }
           ],
           "/manifest/application": [
@@ -456,6 +464,12 @@
     },
     "cordova-sqlite-evcore-extbuild-free": {
       "PACKAGE_NAME": "savne.courier_app"
+    },
+    "cordova-plugin-actionsheet": {
+      "PACKAGE_NAME": "savne.courier_app"
+    },
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": {
+      "PACKAGE_NAME": "savne.courier_app"
     }
   },
   "dependent_plugins": {},
@@ -664,6 +678,38 @@
       "clobbers": [
         "SQLitePlugin"
       ]
+    },
+    {
+      "id": "cordova-plugin-actionsheet.ActionSheet",
+      "file": "plugins/cordova-plugin-actionsheet/www/ActionSheet.js",
+      "pluginId": "cordova-plugin-actionsheet",
+      "clobbers": [
+        "window.plugins.actionsheet"
+      ]
+    },
+    {
+      "id": "uk.co.workingedge.phonegap.plugin.launchnavigator.Common",
+      "file": "plugins/uk.co.workingedge.phonegap.plugin.launchnavigator/www/common.js",
+      "pluginId": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+      "clobbers": [
+        "launchnavigator"
+      ]
+    },
+    {
+      "id": "uk.co.workingedge.phonegap.plugin.launchnavigator.LocalForage",
+      "file": "plugins/uk.co.workingedge.phonegap.plugin.launchnavigator/www/localforage.v1.5.0.min.js",
+      "pluginId": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+      "clobbers": [
+        "localforage"
+      ]
+    },
+    {
+      "id": "uk.co.workingedge.phonegap.plugin.launchnavigator.LaunchNavigator",
+      "file": "plugins/uk.co.workingedge.phonegap.plugin.launchnavigator/www/android/launchnavigator.js",
+      "pluginId": "uk.co.workingedge.phonegap.plugin.launchnavigator",
+      "merges": [
+        "launchnavigator"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -685,6 +731,8 @@
     "de.appplant.cordova.plugin.local-notification": "0.8.5",
     "cordova-plugin-network-information": "1.3.3",
     "cordova-sqlite-storage": "2.1.2",
-    "cordova-sqlite-evcore-extbuild-free": "0.9.0"
+    "cordova-sqlite-evcore-extbuild-free": "0.9.0",
+    "cordova-plugin-actionsheet": "2.3.3",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": "4.1.3"
   }
 }

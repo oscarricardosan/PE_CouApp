@@ -1,38 +1,32 @@
 
 
-//initializeIntranet();
-/** Ready on mobiles **/
-document.addEventListener("deviceready", onDeviceReadyIntranet, false);
-function onDeviceReadyIntranet() {
+function initializeApp(){
     Check_hardware.diagnostic_in_intranet();
 }
 
 function initializeIntranet(){
-    $(document).ready(function(){
-        Login.is_logged_in(function(success, user){
-            if(!success){
-                alert('Debes iniciar sesión para continuar');
-                window.location.href= 'login.html';
-            }
-        });
+    Login.is_logged_in(function(success, user){
+        if(!success){
+            alert('Debes iniciar sesión para continuar');
+            window.location.href= 'login.html';
+        }
+    });
 
+    $(document).ready(function(){
         $('.logout').click(function(event){
             event.preventDefault();
-            Login.logout();
+            Login.logout(function () {
+                alert('Cesión cerrada');
+                navigator.app.exitApp();
+            });
         });
     });
 
-
-
-    /** Ready on mobiles **/
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-
+    (function setup_processes(){
         var backgroundProcessTimer= undefined;
         var foreGroundProcessTimer= undefined;
 
         window.open = cordova.InAppBrowser.open;
-
 
         /** BACKGROUND PROCESS**/
         //Override the back button on Android to go to background instead of closing the app.
@@ -40,6 +34,7 @@ function initializeIntranet(){
         //active background process
         cordova.plugins.backgroundMode.enable();
         cordova.plugins.backgroundMode.disableWebViewOptimizations();
+
 
         initializeBackgroundProcess();
         initializeGpsBackground();
@@ -56,7 +51,7 @@ function initializeIntranet(){
                 //Ejecuta proceso de fondo cada 5 segundos
                 backgroundProcessTimer= setInterval(function () {ProcessBackground.run();}, 5000);
             }catch(e){
-                Notification.event_server_pickup_message('Background 2 '+e.message);
+                Notification.event_server_pickup_message('Background 1 '+e.message);
             }
         });
 
@@ -117,23 +112,27 @@ function initializeIntranet(){
 
         function initializeActionsInLocalNotifications() {
             cordova.plugins.notification.local.on("click", function (notification) {
-                var data= notification.data;
-                if(typeof notification.data === 'string') data= JSON.parse(data);
-                switch(data.action){
+                var data = notification.data;
+                if (typeof notification.data === 'string') data = JSON.parse(data);
+                data= (data===undefined)?{}:data;
+                switch (data.action) {
                     case "show_delivery":
-                        var delivery= data.delivery;
-                        window.location= 'index.html?filter_date='+delivery.delivery_date+'&search='+delivery.delivery_number+'&tab=tab_deliveries';
+                        var delivery = data.delivery;
+                        window.location = 'index.html?filter_date=' + delivery.date + '&search=' + delivery.number+ '&tab=tab_deliveries';
                         break;
                     case "show_pickup":
-                        var pickup= data.pickup;
-                        window.location= 'index.html?filter_date='+pickup.pickup_date+'&search='+pickup.pickup_number+'&tab=tab_pickups';
+                        var pickup = data.pickup;
+                        window.location = 'index.html?filter_date=' + pickup.date + '&search=' + pickup.number + '&tab=tab_pickups';
                         break;
                 }
             });
         }
-        /** CLOSE BACKGROUND PROCESS**/
-    }
 
+        /** CLOSE BACKGROUND PROCESS**/
+
+        /** INITIALIZE UTILITIES **/
+        SecurityUtility_.load_user_data();
+    })();
     $(document).bind("mobileinit", function(){
         $.mobile.allowCrossDomainPages = true;
     });

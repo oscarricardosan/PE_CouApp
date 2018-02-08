@@ -26,15 +26,12 @@ function initializePage() {
         },
         methods: {
             synchronize_data_operations: function (e) {
-                var element = $(e.target);
+                var element= $(e.target);
                 element.loading();
+                App.ready= false;
                 Operations.synchronize_data_operations({
-                    success: function () {
-                        element.unloading();
-                    },
-                    fail: function () {
-                        element.unloading();
-                    }
+                    success: function(){element.unloading(); App.ready= true; alert('Sincronización finalizada');},
+                    fail: function(){ element.unloading(); App.ready= true; alert('Error al sincronizar');}
                 });
             },
             check_ajax_queue: function(e) {
@@ -58,84 +55,56 @@ function initializePage() {
                     shadowSize: [41, 41]
                 });
             },
-            distance_to_pickup: function (App, pickup){
-                var App_= this;
-                var distance= Haversine.distance_in_text(App_.current_position, pickup);
-                if(distance.success){
-                    if(pickup.distance_in_mts !== distance.distance_in_mts){
-                        pickup.distance_in_mts= distance.distance_in_mts;
-                        PickupModel.update({id: pickup.id}, pickup, {
-                            success: function(){
-                                App_.operations.pickups= PickupModel.get();
-                            }
-                        });
-                    }
-                }
-                return distance.message;
-            },
-            distance_to_delivery: function (App, delivery){
-                var App_= this;
-                var distance= Haversine.distance_in_text(App_.current_position, delivery);
-                if(distance.success){
-                    if(delivery.distance_in_mts !== distance.distance_in_mts){
-                        delivery.distance_in_mts= distance.distance_in_mts;
-                        DeliveriesModel.update({id: delivery.id}, delivery, {
-                            success: function(){
-                                App_.operations.deliveries= DeliveriesModel.get();
-                            }
-                        });
-                    }
-                }
-                return distance.message;
-            },
             centerLeafletMapOnMarker: function (marker) {
                 var latLngs = [ marker.getLatLng() ];
                 var markerBounds = L.latLngBounds(latLngs);
                 App_.map.fitBounds(markerBounds);
+            },
+        },
+        filters: {
+            mtrs_to_text: function (mts) {
+                return Haversine.mtrs_to_text(mts);
             }
         },
-        filters: { },
         watch: {
             "operations.deliveries": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                    this.date_to_filter= this.dates_to_filter[0];
+                this.date_to_filter= this.dates_to_filter[0];
             },
             "operations.pickups": function(newVal, oldVal){
-                App_= this;
-                var pickup_dates= _(App.operations.pickups).chain().groupBy('pickup_date').keys().value();
-                var delivery_dates= _(App.operations.deliveries).chain().groupBy('delivery_date').keys().value();
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
-                if(this.date_to_filter === undefined && this.dates_to_filter.length > 0)
-                    this.date_to_filter= this.dates_to_filter[0];
+                this.date_to_filter= this.dates_to_filter[0];
             },
             date_to_filter: function(date){
                 var App_= this;
                 this.remove_markers_in_map();
-                this.deliveries_to_show= _.where(App_.operations.deliveries, {delivery_date: date});
-                this.pickups_to_show= _.where(App_.operations.pickups, {pickup_date: date});
+                this.deliveries_to_show= _.where(App_.operations.deliveries, {date: date});
+                this.pickups_to_show= _.where(App_.operations.pickups, {date: date});
             },
             pickups_to_show: function(pickups){
                 var App_= this;
                 var url_params= UrlUtility_.getParams();
                 $.each(pickups, function (index, pickup) {
-                    if(pickup.longitude !== null && pickup.latitude !== null) {
-                        var icon = App_.new_icon('images/map_icons/pickup_' + pickup.pickup_state.class + '.png?1');
+                    if(pickup.long !== null && pickup.lat !== null) {
+                        var icon = App_.new_icon('images/map_icons/pickup_'+Settings.pickup_state[pickup.state_id].class+'.png?1');
 
                         var marker = new L.marker().setLatLng({
-                            lng: pickup.longitude,
-                            lat: pickup.latitude
+                            lng: pickup.long,
+                            lat: pickup.lat
                         }).setIcon(icon).addTo(App_.map).bindPopup(
-                            "<div style='text-align:center;'>Recolección <span class='label bg-" + pickup.pickup_state.class + "'>" + pickup.pickup_state.name + "</span></div>" +
-                            "<i class='fa fa-user'></i>" + pickup.courier.email + " - <b>" + pickup.pickup_number + "</b><br>" +
+                            "<div style='text-align:center;'>Recolección <span class='label bg-"+Settings.pickup_state[pickup.state_id].class+"'>"+Settings.pickup_state[pickup.state_id].name+"</span></div>" +
+                            "<b>" + pickup.number + "</b><br>" +
                             "<b>Dirección: </b> " + pickup.address + " <br>" +
                             "<b>Observaciones dirección: </b> " + pickup.long_address + "<br>" +
-                            "<i class='fa fa-clock-o'></i>" + pickup.pickup_start_time + " y " + pickup.pickup_end_time + " <br>" +
+                            "<i class='fa fa-clock-o'></i>" + pickup.start_time + " y " + pickup.end_time + " <br>" +
                             "<i class='fa fa-globe'></i> A " + Haversine.mtrs_to_text(pickup.distance_in_mts) + "  <br>" +
-                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date=" + pickup.pickup_date + "&search=" + pickup.pickup_number + "&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>" +
+                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date=" + pickup.date + "&search=" + pickup.number + "&tab=tab_pickups'> <i class='fa fa-external-link'></i> Ver </a><br>" +
                             "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
                         );
                         if (url_params.show_pickup_id !== undefined && url_params.show_pickup_id == pickup.id)
@@ -150,20 +119,20 @@ function initializePage() {
                 var App_= this;
                 var url_params= UrlUtility_.getParams();
                 $.each(deliveries, function (index, delivery) {
-                    if(delivery.longitude !== null && delivery.latitude !== null){
-                        var icon = App_.new_icon('images/map_icons/delivery_' + delivery.delivery_state.class + '.png?1');
+                    if(delivery.long !== null && delivery.lat !== null){
+                        var icon = App_.new_icon('images/map_icons/delivery_'+Settings.delivery_state[delivery.state_id].class+'.png?1');
 
                         var marker= new L.marker().setLatLng({
-                            lng: delivery.longitude,
-                            lat: delivery.latitude
+                            lng: delivery.long,
+                            lat: delivery.lat
                         }).setIcon(icon).addTo(App_.map).bindPopup(
-                            "<div style='text-align:center;'>Entrega <span class='label bg-" + delivery.delivery_state.class + "'>" + delivery.delivery_state.name + "</span></div>" +
-                            "<i class='fa fa-user'></i>" + delivery.courier.email + " - <b>" + delivery.delivery_number + "</b><br>" +
+                            "<div style='text-align:center;'>Entrega <span class='label bg-"+Settings.delivery_state[delivery.state_id].class+"'>"+Settings.delivery_state[delivery.state_id].name+"</span></div>" +
+                            "<b>" + delivery.number + "</b><br>" +
                             "<b>Dirección: </b> " + delivery.address + " <br>" +
                             "<b>Observaciones dirección: </b> " + delivery.long_address + "<br>" +
-                            "<i class='fa fa-clock-o'></i>" + delivery.delivery_start_time + " y " + delivery.delivery_end_time + " <br>"+
+                            "<i class='fa fa-clock-o'></i>" + delivery.start_time + " y " + delivery.end_time + " <br>"+
                             "<i class='fa fa-globe'></i> A "+Haversine.mtrs_to_text(delivery.distance_in_mts)+"  <br>"+
-                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.delivery_date+"&search="+delivery.delivery_number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"+
+                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date="+delivery.date+"&search="+delivery.number+"&tab=tab_deliveries'> <i class='fa fa-external-link'></i> Ver </a><br>"+
                             "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
                         );
                         if(url_params.show_delivery_id !== undefined && url_params.show_delivery_id == delivery.id)
@@ -173,10 +142,6 @@ function initializePage() {
                             App_.centerLeafletMapOnMarker(marker);
                     }
                 });
-            },
-            current_position: function(current_position){
-                if(this.can_refresh_position)
-                    App_.map.locate({maxZoom: 12});
             }
         },
         mounted: function () {
@@ -197,31 +162,32 @@ function initializePage() {
             App_.map.on('locationfound', onLocationFound);
             App_.map.on('locationerror', onLocationError);
 
-            GpsModel.loaded(function () {
-                App_.current_position= GpsModel.get();
-            });
-            UserModel.loaded(function () {
-                var user = UserModel.get();
-                if (user !== null) {
-                    App_.user.email = user.user_data.email;
-                    App_.user.name = user.user_data.name;
-                }
-            });
-
-            Ajax_queueModel.loaded(function(){
-                App_.ajax_queue_count= Ajax_queueModel.get().length;
-            });
+            GpsModel.get({success: function(tx, results){
+                App_.current_position= results._first;
+            }});
+            UserModel.get({success: function(tx, results){
+                App_.user.name= results._first.name;
+                App_.user.email= results._first.email;
+            }});
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App_.ajax_queue_count= results._count;
+            }});
 
 
             /**
              * CARGA MARCAS
              */
-            DeliveriesModel.loaded(function () {
-                App_.operations.deliveries = DeliveriesModel.get();
-                PickupModel.loaded(function () {
-                    App_.operations.pickups = PickupModel.get();
-                });
-            });
+            DeliveriesModel.get({success: function (tx, results) {
+                App_.operations.deliveries = results._all;
+                setTimeout(function(){
+                    App_.date_to_filter= undefined;
+                }, 125);
+                setTimeout(function(){
+                    PickupModel.get({success: function (tx, results) {
+                        App_.operations.pickups = results._all;
+                    }});
+                }, 250);
+            }});
 
 
         }

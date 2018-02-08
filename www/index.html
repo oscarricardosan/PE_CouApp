@@ -596,6 +596,10 @@
                                     <i class="fa fa-phone"></i> Llamar a {{ operations.current_pickup.phone}}
                                 </button>
                             </div>
+                            <button class="btn btn-block btn-flat btn-app bg-navy" onclick="" type="button"
+                                    @click.prevent="open_navigation(operations.current_pickup)">
+                                <i class="fa fa-map"></i> Navegar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -930,6 +934,10 @@
                                     <i class="fa fa-phone"></i> Llamar a {{ operations.current_delivery.phone}}
                                 </button>
                             </div>
+                            <button class="btn btn-block btn-flat btn-app bg-navy" onclick="" type="button"
+                                    @click.prevent="open_navigation(operations.current_delivery)">
+                                <i class="fa fa-map"></i> Navegar
+                            </button>
                         </div>
                     </div>
                 </div>

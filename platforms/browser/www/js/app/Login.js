@@ -6,52 +6,70 @@ var Login= (function () {
      * @param callback json
      */
     var login= function(email, password, callback){
-        var request = $.ajax({
-            url: Settings.route_api_pasar("login"),
-            type: 'post',
-            dataType: "json",
-            data: SecurityUtility_.add_token_to_server({
-                email: email,
-                password: password
-            })
-        });
-        request.done(function(response){
-            response.token_generated_at= MomentUtility_.numericDate();
-            callback.success(response);
-        });
-        request.fail(function(jqXHR, textStatus) {
-            callback.failure(jqXHR, textStatus);
-            AjaxUtility_.processFailRequest(jqXHR, textStatus);
-        });
+        UserModel.clearTable({success: function() {
+            var request = $.ajax({
+                url: Settings.route_api_pasar("login"),
+                type: 'post',
+                dataType: "json",
+                data: SecurityUtility_.add_token_to_server({
+                    email: email,
+                    password: password,
+                    domain: Settings.domain
+                })
+            });
+            request.done(function (response) {
+                response.token_generated_at = MomentUtility_.numericDate();
+                if (response.success)
+                    callback.success(response);
+                else
+                    callback.failure();
+            });
+            request.fail(function (jqXHR, textStatus) {
+                callback.failure(jqXHR, textStatus);
+                AjaxUtility_.processFailRequest(jqXHR, textStatus);
+            });
+        }});
     };
 
     var is_logged_in= function (callback) {
-        UserModel.loaded(function(){
-            var user= UserModel.get();
-            var nowadte= MomentUtility_.numericDate();
-            var success= false;
-            if(!UserModel.isEmpty() && user.token_generated_at === nowadte)
-                success= true;
-            callback(success, user)
+        UserModel.get({
+            success: function(tx, results){
+                var success= false;
+                var user= {};
+                if(results._number_rows===0){
+                    success= false;
+                }else{
+                    user= results._first;
+                    var nowadte= MomentUtility_.numericDate();
+                    success= user.token_generated_at === nowadte;
+                    if(!success)
+                        UserModel.clearTable({success: function() {}});
+                }
+                callback(success, user)
+            }
         });
-    }
+    };
 
     var logout= function (callback) {
-        DeliveriesModel.drop(function(){
-            PickupModel.drop(function(){
-                UserModel.drop(function(){
-                    window.location.href= 'login.html';
-                });
-            });
-        });
-    }
+        callback= (callback===undefined)?function(){
+            window.location.href= 'login.html';
+            alert('Cesión cerrada');
+        }:callback;
+        DeliveriesModel.clearTable({success: function(){
+            PickupModel.clearTable({success: function(){
+                UserModel.clearTable({success: function(){
+                    callback();
+                }});
+            }});
+        }});
+    };
 
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
             login        : login,
             is_logged_in : is_logged_in,
-            logout       : logout,
+            logout       : logout
         }
-    };
+    }
     return {construct:construct};//retorna los metodos publicos
 })().construct();

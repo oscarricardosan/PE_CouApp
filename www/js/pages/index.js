@@ -874,6 +874,13 @@ function scanBluetoohtDevices(){
     );
 }
 
+function open_navigation(object){
+    if(object.long === null ||  object.lat=== null || object.long ===""  || object.lat === "")
+        launchnavigator.navigate(object.long_address);
+    else
+        launchnavigator.navigate([object.long, object.lat]);
+}
+
 function printText() {
 
     window.DatecsPrinter.feedPaper(1);

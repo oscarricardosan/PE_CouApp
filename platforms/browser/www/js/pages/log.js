@@ -64,29 +64,23 @@ function initializePage() {
             };
 
             App_ = this;
-            UserModel.loaded(function () {
-                var user = UserModel.get();
-                if (user !== null) {
-                    App_.user.email = user.user_data.email;
-                    App_.user.name = user.user_data.name;
-                }
-            });
+            UserModel.get({success: function(tx, results){
+                App_.user.name= results._first.name;
+                App_.user.email= results._first.email;
+            }});
+            DeliveriesModel.get({success: function(tx, results){
+                App_.operations.deliveries= results._all;
+            }});
+            PickupModel.get({success: function(tx, results){
+                App_.operations.pickups= results._all;
+            }});
+            Ajax_queueModel.countRaw("", {success:function(tx, results) {
+                App_.ajax_queue_count= results._count;
+            }});
 
-            DeliveriesModel.loaded(function () {
-                App_.operations.deliveries = DeliveriesModel.get();
-            });
-
-            PickupModel.loaded(function () {
-                App_.operations.pickups = PickupModel.get();
-            });
-
-            Ajax_queueModel.loaded(function () {
-                App_.ajax_queue_count = Ajax_queueModel.get().length;
-            });
-
-            LogModel.loaded(function () {
-                App_.Log = LogModel.get();
-            });
+            LogModel.get({success: function(tx, results){
+                App_.Log = results._all;
+            }});
         }
     });
 }

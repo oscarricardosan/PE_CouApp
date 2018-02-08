@@ -2,13 +2,9 @@ var Alert_time= (function () {
 
     var conditional_of_time;
     var run= function(){
-        DeliveriesModel.loaded(function(){
-            PickupModel.loaded(function(){
-                conditional_of_time= get_conditional_of_time();
-                alerts_by_proximity();
-                Process.store_last_attempt('alert_by_time');
-            });
-        });
+        conditional_of_time= get_conditional_of_time();
+        alerts_by_proximity();
+        Process.store_last_attempt('time_alert');
     };
     
     function alerts_by_proximity() {
@@ -17,41 +13,49 @@ var Alert_time= (function () {
     }
 
     function alerts_by_proximity_deliveries(){
-        var deliveries= DeliveriesModel.find({
-            delivery_start_time: conditional_of_time,
-            delivery_state_id:100,
-            delivery_date: MomentUtility_.current_date()
-        });
-        $.each(deliveries, function(index, delivery){
-            Notification.event_server_delivery_message(
-                delivery.delivery_number+' a las '+delivery.delivery_start_time,
-                undefined,
-                {action: 'show_delivery', delivery: delivery}
-            );
-        });
-        if(deliveries.length>=1){
-            navigator.vibrate([1000]);
-            navigator.notification.beep(1);
-        }
+        DeliveriesModel.findRaw(
+            "start_time in ("+conditional_of_time+") and " +
+            "state_id in (100, 50) and " +
+            "date= '"+MomentUtility_.current_date()+"'",
+            {
+                success:function(tx, results){
+                    $.each(results._all, function(index, delivery){
+                        Notification.event_server_delivery_message(
+                            delivery.number+' a las '+delivery.start_time,
+                            undefined,
+                            {action: 'show_delivery', delivery: delivery}
+                        );
+                    });
+                    if(results._all>=1){
+                        navigator.vibrate([1000]);
+                        navigator.notification.beep(1);
+                    }
+                }
+            }
+        );
     }
 
     function alerts_by_proximity_pickups(){
-        var pickups= PickupModel.find({
-            pickup_start_time: conditional_of_time,
-            pickup_state_id:100,
-            pickup_date: MomentUtility_.current_date()
-        });
-        $.each(pickups, function(index, pickup){
-            Notification.event_server_pickup_message(
-                pickup.pickup_number+' a las '+pickup.pickup_start_time,
-                undefined,
-                {action: 'show_pickup', pickup: pickup}
-            );
-        });
-        if(pickups.length>=1){
-            navigator.vibrate([1000]);
-            navigator.notification.beep(1);
-        }
+        PickupModel.findRaw(
+            "start_time in ("+conditional_of_time+") and " +
+            "state_id in (100, 50) and " +
+            "date= '"+MomentUtility_.current_date()+"'",
+            {
+                success:function(tx, results){
+                    $.each(results._all, function(index, pickup){
+                        Notification.event_server_pickup_message(
+                            pickup.number+' a las '+pickup.start_time,
+                            undefined,
+                            {action: 'show_pickup', pickup: pickup}
+                        );
+                    });
+                    if(results._all>=1){
+                        navigator.vibrate([1000]);
+                        navigator.notification.beep(1);
+                    }
+                }
+            }
+        );
     }
 
     function get_conditional_of_time() {
@@ -61,9 +65,9 @@ var Alert_time= (function () {
             var hour= time_search.hour()<10?'0'+time_search.hour()*1:time_search.hour();
             var minute= time_search.minute()-i;
             var minute_= minute<10?'0'+minute*1:minute;
-            times.push({delivery_start_time: hour+':'+minute_+':00'});
+            times.push(hour+':'+minute_+':00');
         }
-        return times;
+        return "'"+times.join("', '")+"'";
     }
     function construct(){//Funcion que controla cuales son los metodos publicos
         return {
