@@ -384,7 +384,7 @@ function initializePage(){
                 url: 'delivery/attach_photo',
                 dataType: 'json',
                 data: data,
-                transmit_only_with_WiFi: App.transmit_photo_only_with_WiFi,
+                transmit_only_with_WiFi: App.transmit_delivery_photos_only_wifi,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);
@@ -419,7 +419,7 @@ function initializePage(){
                 url: 'pickup/attach_photo',
                 dataType: 'json',
                 data: data,
-                transmit_only_with_WiFi: App.transmit_photo_only_with_WiFi,
+                transmit_only_with_WiFi: App.transmit_pickup_photos_only_wifi,
                 success: function(response){
                     if(!cordova.plugins.backgroundMode.isActive()){
                         ToastrUtility_.success(response.message);
@@ -875,10 +875,7 @@ function scanBluetoohtDevices(){
 }
 
 function open_navigation(object){
-    if(object.long === null ||  object.lat=== null || object.long ===""  || object.lat === "")
-        launchnavigator.navigate(object.long_address);
-    else
-        launchnavigator.navigate([object.lat, object.long]);
+    launchnavigator.navigate(object.address+', '+object.city);
 }
 
 function printText() {
