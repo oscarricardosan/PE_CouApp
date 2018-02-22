@@ -486,8 +486,10 @@ function initializePage(){
                             }});
                             if (!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                                if(_data.recoleccion_id == App.operations.current_pickup.id)
+                                if(_data.recoleccion_id == App.operations.current_pickup.id){
+                                    App.operations.current_pickup.state_id= 300;
                                     $('#pickup_exception_modal').modal('hide');
+                                }
                             }
                         }
                     });
@@ -532,8 +534,10 @@ function initializePage(){
                             }});
                             if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                                if(_data.entrega_id == App.operations.current_delivery.id)
+                                if(_data.entrega_id == App.operations.current_delivery.id){
+                                    App.operations.current_delivery.state_id= 300;
                                     $('#delivery_exception_modal').modal('hide');
+                                }
                             }
                         }
                     });
@@ -591,8 +595,10 @@ function initializePage(){
                             }});
                             if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                                if(_data.recoleccion_id == App.operations.current_pickup.id)
+                                if(_data.recoleccion_id == App.operations.current_pickup.id){
+                                    App.operations.current_pickup.state_id= 200;
                                     $('#pickup_success_modal').modal('hide');
+                                }
                             }
                         }
                     });
@@ -637,8 +643,10 @@ function initializePage(){
                             }});
                             if(!cordova.plugins.backgroundMode.isActive()) {
                                 ToastrUtility_.warning("Sin conexion a servidor, se transmitira más tarde.");
-                                if(_data.entrega_id == App.operations.current_delivery.id)
+                                if(_data.entrega_id == App.operations.current_delivery.id){
+                                    App.operations.current_delivery.state_id= 200;
                                     $('#delivery_success_modal').modal('hide');
+                                }
                             }
                         }
                     });
