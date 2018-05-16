@@ -194,7 +194,7 @@ function initializePage(){
                 return accounting.formatNumber(
                     (not_delivered* 100) / App_.operations.deliveries.length, 2, ',', '.'
                 );
-            }
+            },
 
             percentage_of_visited: function(){
                 var App_= this;
