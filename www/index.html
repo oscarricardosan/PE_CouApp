@@ -175,7 +175,7 @@
                     <li class="dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-truck"></i>
-                            <span class="label label-warning">{{ operations.pickups.length }}</span>
+                            <span class="label label-success">{{ operations.pickups.length }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">
@@ -234,7 +234,7 @@
                     <li class="dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-tags"></i>
-                            <span class="label label-warning">{{ operations.deliveries.length }}</span>
+                            <span class="label label-primary">{{ operations.deliveries.length }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">
@@ -476,7 +476,7 @@
                             </li>
                             <li>
                                 <a href="#tab_visits" data-toggle="tab">
-                                    Visitas <span class="label bg-blue">
+                                    Visitas <span class="label bg-yellow">
                                         {{ visits_in_list }} de {{ operations.visits.length }}
                                     </span>
                                 </a>
@@ -1458,7 +1458,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Registrar entrega</button>
+                        <button type="submit" class="btn btn-success">Registrar visita</button>
                     </div>
                 </div>
             </form>
@@ -1585,7 +1585,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">
-                            Entrega {{ operations.current_visit.number }}
+                            Visita {{ operations.current_visit.number }}
                             <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
                                 Guía(s): {{ operations.current_visit.consignments }}
                             </div>

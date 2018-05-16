@@ -132,7 +132,7 @@ var Notification= (function () {
             event_server_delivery_danger      : event_server_delivery_danger,
             event_server_visit_message        : event_server_visit_message,
             event_server_visit_danger         : event_server_visit_danger,
-            alert                             : alert,
+            alert                             : alert
         }
     }
     return {construct:construct};//retorna los metodos publicos
