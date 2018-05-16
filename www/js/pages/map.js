@@ -12,9 +12,11 @@ function initializePage() {
             operations: {
                 deliveries: [],
                 pickups: [],
+                visits: [],
             },
             deliveries_to_show: [],
             pickups_to_show: [],
+            visits_to_show: [],
             ajax_queue_count: 0,
             current_position: undefined,
             current_position_marker: undefined,
@@ -71,14 +73,24 @@ function initializePage() {
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
-                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
                 this.date_to_filter= this.dates_to_filter[0];
             },
             "operations.pickups": function(newVal, oldVal){
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
-                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates));
+                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
+                this.date_to_filter= this.dates_to_filter[0];
+            },
+            "operations.visits": function(newVal, oldVal){
+                var App_= this;
+                var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
+                var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
+                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
                 this.date_to_filter= this.dates_to_filter[0];
             },
             date_to_filter: function(date){
@@ -86,6 +98,35 @@ function initializePage() {
                 this.remove_markers_in_map();
                 this.deliveries_to_show= _.where(App_.operations.deliveries, {date: date});
                 this.pickups_to_show= _.where(App_.operations.pickups, {date: date});
+                this.visits_to_show= _.where(App_.operations.visits, {date: date});
+            },
+            visits_to_show: function(visits){
+                var App_= this;
+                var url_params= UrlUtility_.getParams();
+                $.each(visits, function (index, visit) {
+                    if(visit.long !== null && visit.lat !== null) {
+                        var icon = App_.new_icon('images/map_icons/visit_'+Settings.visit_state[visit.state_id].class+'.png?1');
+
+                        var marker = new L.marker().setLatLng({
+                            lng: visit.long,
+                            lat: visit.lat
+                        }).setIcon(icon).addTo(App_.map).bindPopup(
+                            "<div style='text-align:center;'>Visita <span class='label bg-"+Settings.visit_state[visit.state_id].class+"'>"+Settings.visit_state[visit.state_id].name+"</span></div>" +
+                            "<b>" + visit.number + "</b><br>" +
+                            "<b>Dirección: </b> " + visit.address + " <br>" +
+                            "<b>Observaciones dirección: </b> " + visit.long_address + "<br>" +
+                            "<i class='fa fa-clock-o'></i>" + visit.start_time + " y " + visit.end_time + " <br>" +
+                            "<i class='fa fa-globe'></i> A " + Haversine.mtrs_to_text(visit.distance_in_mts) + "  <br>" +
+                            "<a class='btn btn-primary btn-block' style='color: white!important;' href='index.html?filter_date=" + visit.date + "&search=" + visit.number + "&tab=tab_visits'> <i class='fa fa-external-link'></i> Ver </a><br>" +
+                            "<a class='a-popup-close-button btn btn-danger btn-block' style='color: white!important;' href='#close'> <i class='fa fa-times'></i> Ocultar </a><br>"
+                        );
+                        if (url_params.show_visit_id !== undefined && url_params.show_visit_id == visit.id)
+                            marker.openPopup();
+                        App_.map_markers.push(marker);
+                        if (url_params.show_visit_id !== undefined && url_params.show_visit_id == visit.id)
+                            App_.centerLeafletMapOnMarker(marker);
+                    }
+                });
             },
             pickups_to_show: function(pickups){
                 var App_= this;
@@ -185,6 +226,11 @@ function initializePage() {
                 setTimeout(function(){
                     PickupModel.get({success: function (tx, results) {
                         App_.operations.pickups = results._all;
+                    }});
+                }, 250);
+                setTimeout(function(){
+                    VisitModel.get({success: function (tx, results) {
+                        App_.operations.visits = results._all;
                     }});
                 }, 250);
             }});

@@ -79,6 +79,32 @@ var Notification= (function () {
         });
     };
 
+    var event_server_visit_message= function(message, title, data){
+        title= title===undefined?'CourierApp Visita':title;
+        cordova.plugins.notification.local.schedule({
+            id: generate_random_id(),
+            title: title,
+            text: message,
+            icon: Settings.icon.message,
+            foreground: true,
+            sound: false,
+            data: data
+        });
+    };
+
+    var event_server_visit_danger= function(message, title, data){
+        title= title===undefined?'CourierApp Visita':title;
+        cordova.plugins.notification.local.schedule({
+            id: generate_random_id(),
+            title: title,
+            text: message,
+            icon: Settings.icon.danger,
+            foreground: true,
+            sound: false,
+            data: data
+        });
+    };
+
     var alert= function(message, title, data){
         title= title===undefined?'CourierApp Alerta':title;
         cordova.plugins.notification.local.schedule({
@@ -104,6 +130,8 @@ var Notification= (function () {
             event_server_pickup_danger        : event_server_pickup_danger,
             event_server_delivery_message     : event_server_delivery_message,
             event_server_delivery_danger      : event_server_delivery_danger,
+            event_server_visit_message        : event_server_visit_message,
+            event_server_visit_danger         : event_server_visit_danger,
             alert                             : alert,
         }
     }

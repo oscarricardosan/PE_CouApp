@@ -59,6 +59,16 @@ var Operations= (function () {
                                     }});
                                 }});
                             }
+                            if(!response.visits.success){
+                                alert(response.visits.message);
+                            }else{
+                                VisitModel.insert_multiple(response.visits.data, {success:function(){
+                                    Process.reset_last_attempt('gps_tracking');
+                                    VisitModel.get({success: function(tx, results){
+                                        App.operations.visits= results._all;
+                                    }});
+                                }});
+                            }
                             external_callbacks.success();
                         },fail: function(){
                             external_callbacks.fail();

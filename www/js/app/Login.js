@@ -57,8 +57,10 @@ var Login= (function () {
         }:callback;
         DeliveriesModel.clearTable({success: function(){
             PickupModel.clearTable({success: function(){
-                UserModel.clearTable({success: function(){
-                    callback();
+                VisitModel.clearTable({success: function(){
+                    UserModel.clearTable({success: function(){
+                        callback();
+                    }});
                 }});
             }});
         }});

@@ -10,6 +10,7 @@ function initializePage() {
             operations: {
                 deliveries: [],
                 pickups: [],
+                visits: []
             },
             ajax_queue_count: 0,
             ajax_queues: [],
@@ -104,6 +105,9 @@ function initializePage() {
             }});
             PickupModel.get({success: function(tx, results){
                 App_.operations.pickups= results._all;
+            }});
+            VisitModel.get({success: function(tx, results){
+                App_.operations.visits= results._all;
             }});
 
             Ajax_queueModel.get({success: function(tx, results){

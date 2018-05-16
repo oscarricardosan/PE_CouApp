@@ -4,6 +4,8 @@ var Event_server= (function () {
     var pickup_noti_new= [];
     var delivery_noti_update= [];
     var delivery_noti_new= [];
+    var visit_noti_update= [];
+    var visit_noti_new= [];
     var is_process_runing= false;
     var total_processed_events= 0;
 
@@ -12,6 +14,8 @@ var Event_server= (function () {
         pickup_noti_new= [];
         delivery_noti_update= [];
         delivery_noti_new= [];
+        visit_noti_update= [];
+        visit_noti_new= [];
         total_processed_events= 0;
     }
 
@@ -41,13 +45,16 @@ var Event_server= (function () {
 
         var pickups= [];
         var deliveries= [];
+        var visits= [];
         $.each(server_events.events, function(index, event){
             if(event.collection === "pickups")pickups.push(event);
             if(event.collection === "deliveries")deliveries.push(event);
+            if(event.collection === "visits")visits.push(event);
         });
 
         if(pickups.length > 0)process_pickups(pickups, 0);
         if(deliveries.length > 0)process_deliveries(deliveries, 0);
+        if(visits.length > 0)process_visits(visits, 0);
 
         show_notifications(server_events.events.length);
     }
@@ -112,6 +119,36 @@ var Event_server= (function () {
         }
     }
 
+    function process_visits(visits, index){
+        if(index !== visits.length){
+            var event= visits[index];
+            VisitModel.insertOrUpdateById(event.data, {
+                success: function(){
+                    Event_server.delete_event_in_server(event.id);
+                    if(event.event === 'creation')
+                        visit_noti_new.push({
+                            'message': 'Creada número '+event.data.number+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_visit', visit: event.data}
+                        });
+                    if(event.event === 'actualization')
+                        visit_noti_update.push({
+                            'message': event.data.number+' actualizada'+' / '+event.data.date,
+                            'title': undefined,
+                            'data': {action: 'show_visit', visit: event.data}
+                        });
+                    total_processed_events++;
+                    process_visits(visits, index+1);
+                },
+                fail: function(){
+                    Notification.event_server_visit_danger('Error procesando evento de - '+event.data.number);
+                    total_processed_events++;
+                    process_visits(visits, index+1);
+                }
+            });
+        }
+    }
+
     function delete_event_in_server(id){
         AjaxQueue.add({
             process_name: 'Eliminar evento en servidor',
@@ -145,6 +182,10 @@ var Event_server= (function () {
             App.operations.pickups= results._all;
         }});
 
+        VisitModel.get({success: function(tx, results){
+            App.operations.visits= results._all;
+        }});
+
         try{
             if(delivery_noti_new.length === 1){
                 Notification.event_server_pickup_message(delivery_noti_new[0].message, delivery_noti_new[0].title, delivery_noti_new[0].data);
@@ -169,6 +210,19 @@ var Event_server= (function () {
                 Notification.event_server_pickup_message(pickup_noti_update[0].message, pickup_noti_update[0].title, pickup_noti_update[0].data);
             }else if(pickup_noti_update.length > 1){
                 Notification.event_server_pickup_message(pickup_noti_update.length+' recolecciones actualizadas.');
+            }
+
+
+            if(visit_noti_new.length === 1){
+                Notification.event_server_visit_message(visit_noti_new[0].message, visit_noti_new[0].title, visit_noti_new[0].data);
+            }else if(visit_noti_new.length > 1){
+                Notification.event_server_visit_message(visit_noti_new.length+' nuevas visitas.');
+            }
+
+            if(visit_noti_update.length === 1){
+                Notification.event_server_visit_message(visit_noti_update[0].message, visit_noti_update[0].title, visit_noti_update[0].data);
+            }else if(visit_noti_update.length > 1){
+                Notification.event_server_visit_message(visit_noti_update.length+' visitas actualizadas.');
             }
         }catch (e){
             alert(e.message);

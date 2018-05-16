@@ -124,6 +124,10 @@ function initializeIntranet(){
                         var pickup = data.pickup;
                         window.location = 'index.html?filter_date=' + pickup.date + '&search=' + pickup.number + '&tab=tab_pickups';
                         break;
+                    case "show_visit":
+                        var visit = data.visit;
+                        window.location = 'index.html?filter_date=' + visit.date + '&search=' + visit.number + '&tab=tab_visits';
+                        break;
                 }
             });
         }

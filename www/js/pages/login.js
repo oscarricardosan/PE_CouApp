@@ -25,12 +25,16 @@ function initializeApp(){
                         if(response.success){
                             Exception_to_pickupModel.clearTable( { success: function(){
                                 Exception_to_deliveryModel.clearTable( { success: function(){
-                                    Exception_to_deliveryModel.insert_multiple( response.setup_data.exceptions.to_deliveries, { success: function(){
-                                        Exception_to_pickupModel.insert_multiple( response.setup_data.exceptions.to_pickups, { success: function(){
-                                            SettingsModel.insert({
-                                                domain: response.setup_data.domain, url_server: response.setup_data.url_server
-                                            }, {success: function(){
-                                                load_settings();
+                                    Exception_to_visitModel.clearTable( { success: function(){
+                                        Exception_to_visitModel.insert_multiple( response.setup_data.exceptions.to_visits, { success: function(){
+                                            Exception_to_deliveryModel.insert_multiple( response.setup_data.exceptions.to_deliveries, { success: function(){
+                                                Exception_to_pickupModel.insert_multiple( response.setup_data.exceptions.to_pickups, { success: function(){
+                                                    SettingsModel.insert({
+                                                        domain: response.setup_data.domain, url_server: response.setup_data.url_server
+                                                    }, {success: function(){
+                                                        load_settings();
+                                                    }});
+                                                }});
                                             }});
                                         }});
                                     }});

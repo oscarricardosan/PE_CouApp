@@ -15,8 +15,10 @@
     <script type="application/javascript" src="db/Models/SettingsModel.js"></script>
     <script type="application/javascript" src="db/Models/Exception_to_deliveryModel.js"></script>
     <script type="application/javascript" src="db/Models/Exception_to_pickupModel.js"></script>
+    <script type="application/javascript" src="db/Models/Exception_to_visitModel.js"></script>
     <script type="application/javascript" src="db/Models/DeliveriesModel.js"></script>
     <script type="application/javascript" src="db/Models/PickupModel.js"></script>
+    <script type="application/javascript" src="db/Models/VisitModel.js"></script>
     <script type="application/javascript" src="db/Models/Ajax_queueModel.js"></script>
     <script type="application/javascript" src="db/Models/LogModel.js"></script>
     <script type="application/javascript" src="db/Models/PrinterModel.js"></script>
@@ -111,6 +113,13 @@
             border-left: none;
             border-right: none;
         }
+        .visits .visit:first-child{
+            border-top: none;
+        }
+        .visits .visit{
+            border-left: none;
+            border-right: none;
+        }
         .nav.navbar-nav>li>a{
             font-size: 21px;
             padding-left: 15px;
@@ -166,7 +175,7 @@
                     <li class="dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-truck"></i>
-                            <span class="label label-success">{{ operations.pickups.length }}</span>
+                            <span class="label label-warning">{{ operations.pickups.length }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">
@@ -225,7 +234,7 @@
                     <li class="dropdown notifications-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             <i class="fa fa-tags"></i>
-                            <span class="label label-danger">{{ operations.deliveries.length }}</span>
+                            <span class="label label-warning">{{ operations.deliveries.length }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">
@@ -271,6 +280,64 @@
                                                 <div class="progress xs">
                                                     <div class="progress-bar progress-bar-yellow" :style="'width: '+percentage_not_delivered+'%'" role="progressbar" :aria-valuenow="percentage_not_delivered" aria-valuemin="0" aria-valuemax="100">
                                                         <span class="sr-only">{{ percentage_not_delivered }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <i class="fa fa-ticket"></i>
+                            <span class="label label-warning">{{ operations.visits.length }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">
+                                Número total de visitas: <strong> {{ operations.visits.length }} </strong>
+                                <li>
+                                    <ul class="menu" style="max-height: 280px !important;height: 280px !important;">
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Visitas exitosas: {{ _.where(operations.visits, {state_id: 200}).length}}
+                                                    <small class="pull-right">{{ percentage_of_visited }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-green" :style="'width: '+percentage_of_visited+'%'" role="progressbar" :aria-valuenow="percentage_of_visited" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_visited }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Visitas fallidas: {{ _.where(operations.visits, {state_id: 300}).length}}
+                                                    <small class="pull-right">{{ percentage_of_visited_exception }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-red" :style="'width: '+percentage_of_visited_exception+'%'" role="progressbar" :aria-valuenow="percentage_of_visited_exception" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_of_visited_exception }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <h4>
+                                                    Sin visitar: {{
+                                                        operations.visits.length -
+                                                        _.where(operations.visits, {state_id: 200}).length -
+                                                        _.where(operations.visits, {state_id: 300}).length
+                                                    }}
+                                                    <small class="pull-right">{{ percentage_not_visited }}%</small>
+                                                </h4>
+                                                <div class="progress xs">
+                                                    <div class="progress-bar progress-bar-yellow" :style="'width: '+percentage_not_visited+'%'" role="progressbar" :aria-valuenow="percentage_not_visited" aria-valuemin="0" aria-valuemax="100">
+                                                        <span class="sr-only">{{ percentage_not_visited }}% Complete</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -407,6 +474,13 @@
                                     </span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="#tab_visits" data-toggle="tab">
+                                    Visitas <span class="label bg-blue">
+                                        {{ visits_in_list }} de {{ operations.visits.length }}
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content no-padding">
                             <div class="tab-pane active" id="tab_pickups">
@@ -472,6 +546,40 @@
                                             <div class="text-muted" style="text-align: right">
                                                 <i class="fa fa-globe"></i>
                                                 {{ delivery.distance_in_mts | mtrs_to_text }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_visits">
+                                <div class="list-group visits">
+                                    <a href="#" class="visit list-group-item"
+                                       v-for="(visit, index) in visits_sorted"
+                                       @click.prevent="showVisitModal(visit)" data-picked="1"
+                                       v-if="($.trim(number_search)!='' && (contains(number_search, visit.number) || contains(number_search, visit.consignments))) || ($.trim(number_search)=='' && visible_states[visit.state_id] === true)"
+                                    >
+                                        <span class="text-muted pull-right concealable">
+                                            <i class="fa fa-clock-o"></i>
+                                            {{ visit.start_time.substr(0, 5) }} - {{ visit.end_time.substr(0, 5) }}
+                                        </span>
+                                        <span :class="['label bg-'+Settings.visit_state[visit.state_id].class]">
+                                            {{ index+1 }}) {{ Settings.visit_state[visit.state_id].name }}- {{ visit.number }}
+                                        </span>
+                                        <br>
+                                        <div class="concealable">
+                                            <i class="fa fa-map-marker"></i> <b>Dirección:</b> {{ visit.address }}<br>
+                                            <span v-if="visit.long_address != ''">
+                                                {{ visit.long_address }}<br>
+                                            </span>
+                                            <i class="fa fa-id-badge"></i>
+                                            <span v-if="visit.company!=''"> <b>Empresa:</b> {{ visit.company }}</span> <b> {{ visit.doc }}</b><br>
+                                            <i class="fa fa-user"></i> <b>Contacto:</b> {{ visit.contact }}<br>
+                                        </div>
+                                            <i class="fa fa-bars"></i> <b>Guías:</b> {{ visit.consignments }}<br>
+                                        <div class="concealable">
+                                            <div class="text-muted" style="text-align: right">
+                                                <i class="fa fa-globe"></i>
+                                                {{ visit.distance_in_mts | mtrs_to_text }}
                                             </div>
                                         </div>
                                     </a>
@@ -1201,6 +1309,293 @@
                             <div class="callout callout-info">
                                 <p>
                                     <b>Observaciones: </b> {{ operations.current_delivery.obs }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-flat btn-block btn-default scan_barcode_update_consigment" type="button">
+                                <i class="fa fa-barcode"></i> Leer código de barras
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Guías:</label>
+                            <textarea class="form-control" name="guias" rows="6" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Asociar guías</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL ACTION VISIT -->
+    <div class="modal" id="visit_action_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        Visita {{ operations.current_visit.number }}
+                        <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
+                            Guía(s): {{ operations.current_visit.consignments }}
+                        </div>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 no-padding">
+                            <div class=" col-xs-6" v-if="operations.current_visit.state_id == 100 || operations.current_visit.state_id == 50">
+                                <button class="btn btn-block btn-flat btn-app bg-green" data-toggle="modal" data-target="#visit_success_modal">
+                                    <i class="fa fa-check-circle"></i> Registrar visita
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_visit.state_id  == 100 || operations.current_visit.state_id == 50">
+                                <button class="btn btn-block btn-flat btn-app bg-red" data-toggle="modal" data-target="#visit_exception_modal">
+                                    <i class="fa fa-ban"></i> Registrar excepción
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-purple" data-toggle="modal" data-target="#visit_attach_photo">
+                                    <i class="fa fa-camera"></i> Asociar foto
+                                </button>
+                            </div>
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-yellow" data-toggle="modal" data-target="#visit_consignments_modal">
+                                    <i class="fa fa-bars"></i> Asociar guías
+                                </button>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_visit.state_id != 50">
+                                <a class="btn btn-block btn-flat btn-app bg-maroon" :href="'map.html?show_visit_id='+operations.current_visit.id">
+                                    <i class="fa fa-globe"></i> Ver en mapa
+                                </a>
+                            </div>
+                            <div class=" col-xs-6" v-if="operations.current_visit.phone != null">
+                                <button class="btn btn-block btn-flat btn-app bg-aqua" onclick="" type="button"
+                                        @click.prevent="window.plugins.CallNumber.callNumber(function(){}, function(){}, operations.current_visit.phone, true)">
+                                    <i class="fa fa-phone"></i> Llamar a {{ operations.current_visit.phone}}
+                                </button>
+                            </div>
+
+                            <div class=" col-xs-6">
+                                <button class="btn btn-block btn-flat btn-app bg-navy" onclick="" type="button"
+                                        @click.prevent="open_navigation(operations.current_visit)">
+                                    <i class="fa fa-map"></i> Navegar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL SUCCESS VISIT -->
+    <div class="modal" id="visit_success_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            Visita {{ operations.current_visit.number }}
+                            <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
+                                Guía(s): {{ operations.current_visit.consignments }}
+                            </div>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="callout callout-info">
+                                <p>
+                                    <b>Observaciones: </b> {{ operations.current_visit.obs }
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar-o"></i>
+                                </div>
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="bootstrap-timepicker">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+
+                        <div class="form-group" style="text-align: right; margin: 0;">
+                            <a href="#" @click.prevent="$('.extra_data').css('display', 'block')">
+                                <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> Información adicional
+                            </a>
+                        </div>
+                        <div class="form-group extra_data" hidde>
+                            <label class="control-label">Temperatura:</label>
+                            <input class="form-control" type="number" step="0.01" name="informacion_adicional[0][value]"  default-value="">
+                            <input type="hidden" name="informacion_adicional[0][label]" default-value="Temperatura">
+                            <input type="hidden" name="informacion_adicional[0][name]" default-value="temperatura">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Registrar entrega</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- MODAL ATTACH PHOTO VISIT-->
+    <div class="modal" id="visit_attach_photo" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        Visita {{ operations.current_visit.number }}
+                        <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
+                            Guía(s): {{ operations.current_visit.consignments }}
+                        </div>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row" style="text-align: center;">
+                            <div class="col-xs-12" style="padding-bottom: 20px;">
+                                <img class="photo_of_camera" style="max-height: 200px; max-width: 100%;" :src="current_photo">
+                            </div>
+                            <div class="col-xs-6">
+                                <button class="takePhoto btn btn-block btn-primary">
+                                    <i class="fa fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="col-xs-6">
+                                <button class="selectPhoto btn btn-block btn-primary">
+                                    <i class="fa fa-picture-o"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="checkbox" style="text-align: center;">
+                            <label>
+                                <input type="checkbox" v-model="transmit_visit_photos_only_wifi">
+                                Transmitir foto solo con Wifi
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="submit btn btn-success attach_photo_to_visit">Transmitir foto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL EXCEPTION VISIT -->
+    <div class="modal" id="visit_exception_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            Visita {{ operations.current_visit.number }}
+                            <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
+                                Guía(s): {{ operations.current_visit.consignments }}
+                            </div>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="callout callout-info">
+                                <p>
+                                    <b>Observaciones: </b> {{ operations.current_visit.obs }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar-o"></i>
+                                </div>
+                                <input name="fecha" type="date" class="form-control" current_date required placeholder="YYYY-mm-dd" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="bootstrap-timepicker">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input name="hora" type="time" placeholder="HH:mm:ss" class="form-control" current_time required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Motivo excepción:</label>
+                            <select class="form-control" name="razon_excepcion" required>
+                                <option disabled readonly selected value="">Seleccciona motivo</option>
+                                <option v-for="exception in exceptions_to_visit" :value="exception.name">{{ exception.name }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Persona que atendió:</label>
+                            <input type="text" class="form-control" name="persona_que_atendio">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Observaciones:</label>
+                            <textarea class="form-control" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Registrar exepción</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL CONSIGNMENTS VISIT -->
+    <div class="modal" id="visit_consignments_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            Entrega {{ operations.current_visit.number }}
+                            <div v-if="operations.current_visit.consignments !== null && $.trim(operations.current_visit.consignments) != ''">
+                                Guía(s): {{ operations.current_visit.consignments }}
+                            </div>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="callout callout-info">
+                                <p>
+                                    <b>Observaciones: </b> {{ operations.current_visit.obs }}
                                 </p>
                             </div>
                         </div>

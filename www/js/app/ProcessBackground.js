@@ -3,6 +3,7 @@ var ProcessBackground= (function () {
     var notify_message= {
         pickups: '',
         deliveries: '',
+        visits: '',
         main_message: '',
     };
 
@@ -86,13 +87,14 @@ var ProcessBackground= (function () {
 
     function get_message_to_notification_bar() {
         var main_message = (notify_message.main_message !== '') ? notify_message.main_message + "\n" : '';
-        return main_message + notify_message.deliveries + "\n" + notify_message.pickups;
+        return main_message + notify_message.deliveries + "\n" + notify_message.pickups + "\n" + notify_message.visits;
     }
 
     function reload_message_to_notification_bar(callback) {
         if(callback === undefined)callback= function(){};
         var sin_entregar= 0;
         var sin_recoger= 0;
+        var sin_visitar= 0;
         try {
             DeliveriesModel.get({success: function(tx, results){
                 sin_entregar= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
@@ -104,14 +106,20 @@ var ProcessBackground= (function () {
                     notify_message.pickups=
                         (sin_recoger>0)?'Sin Recoger ' + sin_recoger:'Todo recogido';
 
-                    if(sin_recoger === 0 && sin_entregar === 0)
-                        notify_message.icon= 'success';
-                    else if(sin_recoger > 0 && sin_entregar > 0)
-                        notify_message.icon= 'danger';
-                    else
-                        notify_message.icon= 'warning';
+                    VisitModel.get({success: function(tx, results){
+                        sin_visitar= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
+                        notify_message.visits=
+                            (sin_visitar>0)?'Sin visitar ' + sin_recoger:'Todo visitado';
 
-                    callback();
+                        if(sin_recoger === 0 && sin_entregar === 0 && sin_visitar === 0)
+                            notify_message.icon= 'success';
+                        else if(sin_recoger > 0 && sin_entregar > 0 && sin_visitar > 0)
+                            notify_message.icon= 'danger';
+                        else
+                            notify_message.icon= 'warning';
+
+                        callback();
+                    }});
                 }});
             }});
         }catch (error){

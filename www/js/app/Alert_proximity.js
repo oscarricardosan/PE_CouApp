@@ -9,6 +9,7 @@ var Alert_proximity= (function () {
         try{
             alerts_by_proximity_deliveries();
             alerts_by_proximity_pickups();
+            alerts_by_proximity_visits();
         }catch (e){
             alert('Alert_proximity: '+e.message);
         }
@@ -53,6 +54,31 @@ var Alert_proximity= (function () {
                             pickup.number+' a '+accounting.formatNumber(pickup.distance_in_mts, 2, '.', ',')+' mts',
                             undefined,
                             {action: 'show_pickup', pickup: pickup}
+                        );
+                    });
+                    if(results._all>=1){
+                        navigator.vibrate([1000]);
+                        navigator.notification.beep(1);
+                    }
+                }
+            }
+        );
+    }
+
+    function alerts_by_proximity_visits(){
+        VisitModel.findRaw(
+            "distance_in_mts<= "+Settings.alert.minimum_meters+" and " +
+            "(attemp_gps_alert < "+Settings.alert.attempt_gps+" or attemp_gps_alert is NULL) and " +
+            "state_id in (100, 50) and " +
+            "date= '"+MomentUtility_.current_date()+"'",
+            {
+                success:function(tx, results){
+                    $.each(results._all, function(index, visit){
+                        VisitModel.increment_attemp_gps_alert(visit);
+                        Notification.event_server_pickup_message(
+                            visit.number+' a '+accounting.formatNumber(visit.distance_in_mts, 2, '.', ',')+' mts',
+                            undefined,
+                            {action: 'show_visit', visit: visit}
                         );
                     });
                     if(results._all>=1){

@@ -10,6 +10,8 @@ var Migrations= (function () {
                                 run_migration_0();
                             }else if(results._first.version == 1) {
                                 run_migration_1();
+                            }else if(results._first.version == 2) {
+                                run_migration_2();
                             }else{
                                 runApp();
                             }
@@ -187,7 +189,7 @@ var Migrations= (function () {
                                         desc: 'Se crean tablas para excepciones'
                                     }, {
                                         success: function(){
-                                            runApp();
+                                            run_migration_2();
                                         }
                                     });
                             }});
@@ -200,6 +202,70 @@ var Migrations= (function () {
         };
         try{
             create_table.exceptions_to_pickup();
+        }catch (e){alert(e.message);}
+    }
+
+    function run_migration_2(){
+        var create_table= {
+            visits: function(){
+                DB.transaction(function(transaction) {
+                    transaction.executeSql(
+                        'CREATE TABLE IF NOT EXISTS visits ' +
+                        '(id integer primary key, date text, start_time text, end_time text, number text, ' +
+                        'company text, address text, long_address text, doc text, contact text, phone text, ' +
+                        'obs text, state text, city text, lat text, long text, ' +
+                        'state_id integer, consignments text, distance_in_mts real, attemp_gps_alert integer' +
+                        ')',
+                        [],
+                        function (tx, result) {
+                            create_table.add_col_to_settings();
+                        },
+                        function (error) {alert("Error creando tabla visits. " + error.message);}
+                    );
+                });
+            },
+            add_col_to_settings: function(){
+                DB.transaction(function(transaction) {
+                    transaction.executeSql(
+                        'ALTER TABLE settings ADD COLUMN transmit_visit_photos_only_wifi text',
+                        [],
+                        function (tx, result) {
+                            create_table.exceptions_to_visit();
+                        },
+                        function (error) {alert("Error agregando columna a settings. " + error.message);}
+                    );
+                });
+            },
+            exceptions_to_visit: function(){
+                DB.transaction(function(transaction) {
+                    transaction.executeSql(
+                        'CREATE TABLE IF NOT EXISTS exceptions_to_visit (id integer primary key, name text)', [],
+                        function (tx, result) {
+                            Exception_to_visitModel.insert_multiple([
+                                {name: 'Nadie en casa'},
+                                {name: 'En vacaciones'},
+                                {name: 'Dirección errada'},
+                                {name: 'Otros'}
+                            ], {success: function(){
+                                    MigrationModel.insert({
+                                        id: 3,
+                                        version: 3,
+                                        desc: 'Se crean tablas para visitas'
+                                    }, {
+                                        success: function(){
+                                            runApp();
+                                        }
+                                    });
+                            }});
+
+                        },
+                        function (error) {alert("Error creando tabla exceptions_to_visit. " + error.message);}
+                    );
+                });
+            }
+        };
+        try{
+            create_table.visits();
         }catch (e){alert(e.message);}
     }
 

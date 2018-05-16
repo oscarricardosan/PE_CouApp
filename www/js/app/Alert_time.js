@@ -58,6 +58,29 @@ var Alert_time= (function () {
         );
     }
 
+    function alerts_by_proximity_pickups(){
+        VisitModel.findRaw(
+            "start_time in ("+conditional_of_time+") and " +
+            "state_id in (100, 50) and " +
+            "date= '"+MomentUtility_.current_date()+"'",
+            {
+                success:function(tx, results){
+                    $.each(results._all, function(index, visit){
+                        Notification.event_server_pickup_message(
+                            visit.number+' a las '+visit.start_time,
+                            undefined,
+                            {action: 'show_visit', visit: visit}
+                        );
+                    });
+                    if(results._all>=1){
+                        navigator.vibrate([1000]);
+                        navigator.notification.beep(1);
+                    }
+                }
+            }
+        );
+    }
+
     function get_conditional_of_time() {
         var times= [];
         for(var i = 0; i< Settings.timer_run_alert_time; i++){

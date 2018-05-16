@@ -68,6 +68,11 @@ var Gps= (function () {
                     App.operations.pickups= results._all;
                 }});
             }});
+            VisitModel.update_distances_in_mtrs(App.current_position, {success: function(){
+                VisitModel.get({success: function(tx, results){
+                    App.operations.visits= results._all;
+                }});
+            }});
         }});
     }
 

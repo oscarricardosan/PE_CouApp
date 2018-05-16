@@ -40,5 +40,12 @@ var Settings= {
         200: {name: 'Realizada', "class": 'green'},
         300: {name: 'Excepción', "class": 'red'},
         400: {name: 'Cancelada', "class": 'gray'}
+    },
+    visit_state: {
+        50: {name: 'Sin coordenadas', "class": 'fuchsia'},
+        100: {name: 'Sin visitar', "class": 'yellow'},
+        200: {name: 'Realizada', "class": 'green'},
+        300: {name: 'Excepción', "class": 'red'},
+        400: {name: 'Cancelada', "class": 'gray'}
     }
 };
