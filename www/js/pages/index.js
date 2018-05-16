@@ -317,24 +317,19 @@ function initializePage(){
                 var url_params= UrlUtility_.getParams();
                 var App_= this;
 
-                alert('index'+0);
                 UserModel.get({success: function(tx, results){
                     App_.user.name= results._first.name;
                     App_.user.email= results._first.email;
                 }});
-                alert('index'+1);
                 DeliveriesModel.get({success: function(tx, results){
                     App_.operations.deliveries= results._all;
                 }});
-                alert('index'+2);
                 PickupModel.get({success: function(tx, results){
                     App_.operations.pickups= results._all;
                 }});
-                alert('index'+3);
                 VisitModel.get({success: function(tx, results){
                     App_.operations.visits= results._all;
                 }});
-                alert('index'+4);
                 Ajax_queueModel.countRaw("", {success:function(tx, results) {
                     App_.ajax_queue_count= results._count;
                 }});

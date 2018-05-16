@@ -109,7 +109,7 @@ var ProcessBackground= (function () {
                     VisitModel.get({success: function(tx, results){
                         sin_visitar= _.where(results._all,{state_id: 100}).length + _.where(results._all,{state_id: 50}).length;
                         notify_message.visits=
-                            (sin_visitar>0)?'Sin visitar ' + sin_recoger:'Todo visitado';
+                            (sin_visitar>0)?'Sin visitar ' + sin_visitar:'Todo visitado';
 
                         if(sin_recoger === 0 && sin_entregar === 0 && sin_visitar === 0)
                             notify_message.icon= 'success';

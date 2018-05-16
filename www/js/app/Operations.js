@@ -44,7 +44,6 @@ var Operations= (function () {
                                 if(!response.deliveries.success){
                                     alert(response.deliveries.message);
                                 }else {
-                                    alert('operations deliveries');
                                     DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
                                         Process.reset_last_attempt('gps_tracking');
                                         DeliveriesModel.get({success: function (tx, results) {
@@ -55,7 +54,6 @@ var Operations= (function () {
                                 if(!response.pickups.success){
                                     alert(response.deliveries.message);
                                 }else{
-                                    alert('operations pickups');
                                     PickupModel.insert_multiple(response.pickups.data, {success:function(){
                                         Process.reset_last_attempt('gps_tracking');
                                         PickupModel.get({success: function(tx, results){
@@ -66,7 +64,6 @@ var Operations= (function () {
                                 if(!response.visits.success){
                                     alert(response.visits.message);
                                 }else{
-                                    alert('operations visits');
                                     VisitModel.insert_multiple(response.visits.data, {success:function(){
                                         Process.reset_last_attempt('gps_tracking');
                                         VisitModel.get({success: function(tx, results){

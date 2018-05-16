@@ -66,7 +66,7 @@ var Alert_time= (function () {
             {
                 success:function(tx, results){
                     $.each(results._all, function(index, visit){
-                        Notification.event_server_pickup_message(
+                        Notification.event_server_visit_message(
                             visit.number+' a las '+visit.start_time,
                             undefined,
                             {action: 'show_visit', visit: visit}

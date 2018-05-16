@@ -73,7 +73,7 @@ function initializePage() {
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
-                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                var visit_dates= _(App_.operations.visits).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
                 this.date_to_filter= this.dates_to_filter[0];
             },
@@ -81,7 +81,7 @@ function initializePage() {
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
-                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                var visit_dates= _(App_.operations.visits).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
                 this.date_to_filter= this.dates_to_filter[0];
             },
@@ -89,7 +89,7 @@ function initializePage() {
                 var App_= this;
                 var pickup_dates= _(App_.operations.pickups).chain().groupBy('date').keys().value();
                 var delivery_dates= _(App_.operations.deliveries).chain().groupBy('date').keys().value();
-                var visit_dates= _(App_.operations.visis).chain().groupBy('date').keys().value();
+                var visit_dates= _(App_.operations.visits).chain().groupBy('date').keys().value();
                 this.dates_to_filter= _.sortBy(_.union(pickup_dates, delivery_dates, visit_dates));
                 this.date_to_filter= this.dates_to_filter[0];
             },
