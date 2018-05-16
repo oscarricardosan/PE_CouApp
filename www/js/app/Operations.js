@@ -36,43 +36,47 @@ var Operations= (function () {
                 App.operations.deliveries= [];
                 PickupModel.clearTable({success: function(){
                     App.operations.pickups= [];
-                    Operations.get_data(MomentUtility_.current_date(), {
-                        success: function(response){
-                            App.date_to_filter= null;
-                            if(!response.deliveries.success){
-                                alert(response.deliveries.message);
-                            }else {
-                                DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
-                                    Process.reset_last_attempt('gps_tracking');
-                                    DeliveriesModel.get({success: function (tx, results) {
-                                        App.operations.deliveries = results._all;
+                    VisitModel.clearTable({success: function(){
+                        App.operations.visits= [];
+                        Operations.get_data(MomentUtility_.current_date(), {
+                            success: function(response){
+                                App.date_to_filter= null;
+                                if(!response.deliveries.success){
+                                    alert(response.deliveries.message);
+                                }else {
+                                    DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
+                                        Process.reset_last_attempt('gps_tracking');
+                                        DeliveriesModel.get({success: function (tx, results) {
+                                            App.operations.deliveries = results._all;
+                                        }});
                                     }});
-                                }});
-                            }
-                            if(!response.pickups.success){
-                                alert(response.deliveries.message);
-                            }else{
-                                PickupModel.insert_multiple(response.pickups.data, {success:function(){
-                                    Process.reset_last_attempt('gps_tracking');
-                                    PickupModel.get({success: function(tx, results){
-                                        App.operations.pickups= results._all;
+                                }
+                                if(!response.pickups.success){
+                                    alert(response.deliveries.message);
+                                }else{
+                                    PickupModel.insert_multiple(response.pickups.data, {success:function(){
+                                        Process.reset_last_attempt('gps_tracking');
+                                        PickupModel.get({success: function(tx, results){
+                                            App.operations.pickups= results._all;
+                                        }});
                                     }});
-                                }});
-                            }
-                            if(!response.visits.success){
-                                alert(response.visits.message);
-                            }else{
-                                VisitModel.insert_multiple(response.visits.data, {success:function(){
-                                    Process.reset_last_attempt('gps_tracking');
-                                    VisitModel.get({success: function(tx, results){
-                                        App.operations.visits= results._all;
+                                }
+                                alert(JSON.stringify(response.visits));
+                                if(!response.visits.success){
+                                    alert(response.visits.message);
+                                }else{
+                                    VisitModel.insert_multiple(response.visits.data, {success:function(){
+                                        Process.reset_last_attempt('gps_tracking');
+                                        VisitModel.get({success: function(tx, results){
+                                            App.operations.visits= results._all;
+                                        }});
                                     }});
-                                }});
+                                }
+                                external_callbacks.success();
+                            },fail: function(){
+                                external_callbacks.fail();
                             }
-                            external_callbacks.success();
-                        },fail: function(){
-                            external_callbacks.fail();
-                        }
+                        });
                     });
                 }});
             }});
