@@ -30,7 +30,7 @@ var Operations= (function () {
 
 
     var synchronize_data_operations= function (external_callbacks){
-        var external_callbacks= PolishedUtility_.callback(external_callbacks);
+        external_callbacks= PolishedUtility_.callback(external_callbacks);
         try{
             DeliveriesModel.clearTable({success: function(){
                 App.operations.deliveries= [];
@@ -44,6 +44,7 @@ var Operations= (function () {
                                 if(!response.deliveries.success){
                                     alert(response.deliveries.message);
                                 }else {
+                                    alert('operations deliveries');
                                     DeliveriesModel.insert_multiple(response.deliveries.data, {success: function () {
                                         Process.reset_last_attempt('gps_tracking');
                                         DeliveriesModel.get({success: function (tx, results) {
@@ -54,6 +55,7 @@ var Operations= (function () {
                                 if(!response.pickups.success){
                                     alert(response.deliveries.message);
                                 }else{
+                                    alert('operations pickups');
                                     PickupModel.insert_multiple(response.pickups.data, {success:function(){
                                         Process.reset_last_attempt('gps_tracking');
                                         PickupModel.get({success: function(tx, results){
@@ -61,10 +63,10 @@ var Operations= (function () {
                                         }});
                                     }});
                                 }
-                                alert(JSON.stringify(response.visits));
                                 if(!response.visits.success){
                                     alert(response.visits.message);
                                 }else{
+                                    alert('operations visits');
                                     VisitModel.insert_multiple(response.visits.data, {success:function(){
                                         Process.reset_last_attempt('gps_tracking');
                                         VisitModel.get({success: function(tx, results){
@@ -77,7 +79,7 @@ var Operations= (function () {
                                 external_callbacks.fail();
                             }
                         });
-                    });
+                    }});
                 }});
             }});
         }catch(e){alert(e.message);}
