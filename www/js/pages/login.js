@@ -90,7 +90,6 @@ function initializeApp(){
 
         Login.login(email, $('#userpassword').val(), {
             success: function(response){
-                alert(JSON.stringify(response));
                 var user= {
                     id: response.id,
                     success: response.success,
@@ -100,22 +99,20 @@ function initializeApp(){
                     name: response.user_data.name,
                     token_generated_at: response.token_generated_at,
                 };
-                SettingsModel.clearTable({
+                UserModel.insert(user, {
                     success: function(){
-                        alert(JSON.stringify(response));
-                        SettingsModel.insert({
-                            domain: response.setup_data.domain, url_server: response.setup_data.url_server
-                        }, {success: function(){
-                            UserModel.insert(user, {
-                                success: function(){
+                        SettingsModel.clearTable({
+                            success: function(){
+                                SettingsModel.insert({
+                                    domain: response.setup_data.domain, url_server: response.setup_data.url_server
+                                }, {success: function(){
                                     load_settings();
                                     window.location.href= 'index.html';
-                                }
-                            });
-                        }});
+                                }});
+                            }
+                        });
                     }
                 });
-
                 alert(response.message);
             },failure: function(jqXHR, textStatus){
                 form.unloading();
