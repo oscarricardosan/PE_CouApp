@@ -106,7 +106,6 @@ function initializeApp(){
                                 SettingsModel.insert({
                                     domain: response.setup_data.domain, url_server: response.setup_data.url_server
                                 }, {success: function(){
-                                    load_settings();
                                     window.location.href= 'index.html';
                                 }});
                             }
